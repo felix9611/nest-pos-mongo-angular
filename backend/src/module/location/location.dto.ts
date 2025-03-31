@@ -23,4 +23,5 @@ export interface ListLocationRequestDto {
     limit: number
     name?: string
     place?: string
+    contact?: string
 }

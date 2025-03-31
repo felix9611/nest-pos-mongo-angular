@@ -3,72 +3,51 @@ import { LocationService } from './location.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from '../../tool/open-api-body'
+import { CreateLocationDto, ListLocationRequestDto, UpdateLocationDto } from './location.dto'
 
 @Controller('base/location')
 export class LocationController {
-   // constructor(private deptService: DepartmentService){}
+    constructor(private locationService: LocationService){}
 
-  /*  @ApiOperation({ summary: 'Create Department' })
-    @ApiBody({ type: CreateDeptBody })
-    @ApiResponse({ description: 'If save successful', status: 201, type: DepartmentBody })
-    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: UpdateDeptDto) {
-        return await this.deptService.create(createData)
+    async create(@Body() createData: UpdateLocationDto) {
+        return await this.locationService.create(createData)
     }
-
-    @ApiOperation({ summary: 'Update Department' })
-    @ApiBody({ type: UpdateDeptBody })
-    @ApiResponse({ description: 'If not save successful',status: 200,type: ReturnMsg })
+   
     @Post('update')
     @UseGuards(AuthGuard)
-    async update(@Body() updateDto: UpdateDeptDto) {
-        return await this.deptService.update(updateDto)
+    async update(@Body() updateDto: UpdateLocationDto) {
+        return await this.locationService.update(updateDto)
     }
 
-    @ApiOperation({ summary: 'Get One by Id' })
-    @ApiResponse({ status: 201, type: DepartmentBody })
-    @ApiResponse({ description: 'If no data', status: 200, type: ReturnMsg })
     @Get('one/:id')
     @UseGuards(AuthGuard)
     async getOneById(@Param('id') id: string) {
-        return await this.deptService.getOneById(id)
+        return await this.locationService.getOneById(id)
     }
 
-    @ApiOperation({ summary: 'Void One by Id' })
-    @ApiResponse({  description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
-        return await this.deptService.invalidateDepartment(id)
+        return await this.locationService.invalidate(id)
     }
 
-    @ApiOperation({ summary: 'Get all data' })
-    @ApiResponse({ status: 201, type: [DepartmentBody] })
     @Get('getAll')
     @UseGuards(AuthGuard)
     async getAll() {
-        return this.deptService.findAll()
-    }
-    
-    @ApiOperation({ summary: 'Lsit and page' })
-    @ApiBody({ type: ListDepartmentQuery })
-    @ApiResponse({ status: 200,  type: ListDepartmentQueryRes })
-    @Post('list')
-    @UseGuards(AuthGuard)
-    async listAndPage(@Body() req: ListDeptRequestDto) {
-        return this.deptService.listPageRole(req)
+        return this.locationService.findAll()
     }
 
-    @ApiOperation({ summary: 'Batch Create Department' })
-    @ApiBody({ type: [CreateDeptBody] })
-    @ApiResponse({ description: 'If save successful', status: 201, type: DepartmentBody })
-    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @Post('list')
+    @UseGuards(AuthGuard)
+    async listAndPage(@Body() req: ListLocationRequestDto) {
+        return this.locationService.listPageRole(req)
+    }
+
     @Post('batch-create')
     @UseGuards(AuthGuard)
-    async importData(@Body() createDatas: UpdateDeptBody[]) {
-        return await this.deptService.importData(createDatas)
-    }*/
-    
+    async importData(@Body() createDatas: CreateLocationDto[]) {
+        return await this.locationService.importData(createDatas)
+    }
 }

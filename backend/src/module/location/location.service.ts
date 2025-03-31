@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Location } from './location.schame'
 import { Model } from 'mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
-import { UpdateLocationDto } from './location.dto'
+import { CreateLocationDto, ListLocationRequestDto, UpdateLocationDto } from './location.dto'
 
 @Injectable()
 export class LocationService {
@@ -19,68 +19,63 @@ export class LocationService {
     }
 
     async create(createData: UpdateLocationDto) {
+        const { _id, placeCode, placeName, ..._data } = createData
 
-    }
+        const checkData = await this.locationModel.findOne({ placeCode, placeName, status: 1 }).exec()
 
- /*   async create(createData: UpdateDeptDto) {
-        const { deptCode, deptName, _id, ..._data } = createData
-
-        const checkData = await this.departmentModel.findOne({ deptCode, deptName, status: 1})
-
-        if (checkData) {
+        if (checkData?._id) {
             await this.actionRecordService.saveRecord({
-                actionName: 'Create Department',
+                actionName: 'Create Location',
                 actionMethod: 'POST',
-                actionFrom: 'Department',
+                actionFrom: 'Location',
                 actionData: createData,
                 actionSuccess: 'FAILURE',
                 createdAt: new Date()
             })
 
             return {
-                msg: 'This department already exist!'
+                msg: 'This location already exist!'
             }
         } else {
             const finalData = {
                 ..._data,
-                deptCode,
-                deptName,
+                placeCode, 
+                placeName,
                 status: 1,
                 createdAt: new Date()
             }
 
             await this.actionRecordService.saveRecord({
-                actionName: 'Create Department',
+                actionName: 'Create Location',
                 actionMethod: 'POST',
-                actionFrom: 'Department',
+                actionFrom: 'Location',
                 actionData: finalData,
                 actionSuccess: 'Success',
                 createdAt: new Date()
             })
 
-            const create = new this.departmentModel(finalData)
+            const create = new this.locationModel(finalData)
             return await create.save()
         }
     }
 
-    async update(updateData: UpdateDeptDto) {
+    async update(updateData: UpdateLocationDto) {
         const { _id, ...data } = updateData
 
-        const checkData = await this.departmentModel.findOne({ _id }).exec()
+        const checkData = await this.locationModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
-
             await this.actionRecordService.saveRecord({
-                actionName: 'Update Department',
+                actionName: 'Update Location',
                 actionMethod: 'POST',
-                actionFrom: 'Department',
+                actionFrom: 'Location',
                 actionData: updateData,
                 actionSuccess: 'FAILURE',
                 createdAt: new Date()
             })
 
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                msg: 'This location has been invalidated! Please contact admin!'
             }
         } else {
             const finalData = {
@@ -89,39 +84,39 @@ export class LocationService {
             }
 
             await this.actionRecordService.saveRecord({
-                actionName: 'Update Department',
+                actionName: 'Update Location',
                 actionMethod: 'POST',
-                actionFrom: 'Department',
+                actionFrom: 'Location',
                 actionData: finalData,
                 actionSuccess: 'Sussess',
                 createdAt: new Date()
             })
 
-            return await this.departmentModel.updateOne({ _id}, finalData).exec()
+            return await this.locationModel.updateOne({ _id }, finalData).exec()
         }
     }
 
     async getOneById(_id: string) {
-        const data = await this.departmentModel.findOne({ _id, status: 1}).exec()
+        const data = await this.locationModel.findOne({ _id, status: 1 }).exec()
 
         if (data) {
             return data
         } else {
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                msg: 'This location has been invalidated! Please contact admin!'
             }
         }
     }
 
-    async invalidateDepartment(_id: string) {
-        const checkData = await this.departmentModel.findOne({ _id }).exec()
+    async invalidate(_id: string) {
+        const checkData = await this.locationModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
 
             await this.actionRecordService.saveRecord({
-                actionName: 'Void Department',
+                actionName: 'Void Location',
                 actionMethod: 'GET',
-                actionFrom: 'Department',
+                actionFrom: 'Location',
                 actionData: {
                     _id
                 },
@@ -130,19 +125,19 @@ export class LocationService {
             })
 
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                msg: 'This location has been invalidated! Please contact admin!'
             }
         } else {
-            const res = await this.departmentModel.updateOne({ _id}, {
+            const res = await this.locationModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
             }).exec()
         
             if (res.modifiedCount === 1) {
                 await this.actionRecordService.saveRecord({
-                    actionName: 'Void Department',
+                    actionName: 'Void Location',
                     actionMethod: 'GET',
-                    actionFrom: 'Department',
+                    actionFrom: 'Location',
                     actionData: {
                         _id,
                         status: 0,
@@ -164,49 +159,74 @@ export class LocationService {
         }
     }
 
-    async listPageRole(request: ListDeptRequestDto) {
-            const { page, limit, name } = request
-    
-            const skip = (page - 1) * limit
-    
-            const filters = {
-                ...name? {
-                    $or: [
-                        {
-                            deptName: { $regex: name, $options: 'i' }
-                        },
-                        {
-                            deptCode: { $regex: name, $options: 'i' }
-                        }
-                    ],
-                } : {},
-                status: 1
-            }
-    
-            const lists = await this.departmentModel.find(filters).skip(skip)
+    async listPageRole(request: ListLocationRequestDto) {
+        const { page, limit, name, place, contact } = request
+
+        const skip = (page - 1) * limit
+
+        const filters = {
+            ...name? {
+                $or: [
+                    {
+                        placeName: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        placeCode: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        placeOtherName: { $regex: name, $options: 'i' }
+                    }
+                ],
+            } : {},
+            ...place ? {
+                $or: [
+                    {
+                        country: { $regex: place, $options: 'i' }
+                    },
+                    {
+                        address: { $regex: place, $options: 'i' }
+                    },
+                    {
+                        zipCode: { $regex: place, $options: 'i' }
+                    },
+                ]
+            } : {},
+            ...contact ? {
+                $or: [
+                    {
+                        phone: { $regex: contact, $options: 'i' }
+                    },
+                    {
+                        fax: { $regex: contact, $options: 'i' }
+                    }
+                ]
+            } : {},
+            status: 1
+        }
+
+        const lists = await this.locationModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.departmentModel.countDocuments().exec()
+        const total = await this.locationModel.countDocuments().exec()
     
-            return {
-                total,
-                page,
-                limit,
-                totalPages: Math.ceil(total / limit),
-                lists,
-            }
+        return {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+            lists,
+        }
     }
 
-    async importData(data: CreateDeptDto[]) {
+    async importData(data: CreateLocationDto[]) {
         for (const item of data) {
-            const { deptCode, deptName, remark } = item
-            const checkData = await this.departmentModel.findOne({ deptCode, deptName, status: 1 }).exec()
+            const { placeCode, placeName, ..._data } = item
 
-            if (checkData) {
-                await this.update({ deptCode, deptName, remark, _id: checkData._id.toString() })
-            } else {
-                await this.create({ deptCode, deptName, remark })
-            } 
-        } 
-    }*/
+            const checkData = await this.locationModel.findOne({ placeCode, placeName, status: 1 }).exec()
+
+            if (checkData) { } else {
+                await this.create({ placeCode, placeName, ..._data })
+            }
+        }
+    }
 }
