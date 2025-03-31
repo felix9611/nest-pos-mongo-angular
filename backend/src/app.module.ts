@@ -18,23 +18,17 @@ import { LoggerMiddleware } from './tool/request-logger.middleware'
 import { SysMenuMoudule } from './module/sys-menu/sys-menu.module'
 import { ExcelFieldMatchModule } from './module/excelFieldMatch/excelFieldMatch.module'
 import { SysUserSchema } from './module/sys-user/sysUser.schame'
+import { LocationMoudule } from './module/location/location.module'
 
 @Module({
   imports: [
     ActionRecordMoudule,
-  //  AssetListMoudule,
-  //  WriteOffModule,
-  //  AssetTypeMoudule,
     AuthModule, 
-  //  BudgetMoudule,
     CodeTypeMoudule,
     DepartmentMoudule,
-  //  InvRecordModule,
-  //  LocationMoudule,
-  //  RepairRecordMoudule,
     VendorMoudule,
     TaxInformationMoudule,
-  //  StockTakeMoudule,
+    LocationMoudule,
     SysRoleMoudule,
     SysUserMoudule,
     SysMenuMoudule,
