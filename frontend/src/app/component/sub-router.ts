@@ -31,26 +31,8 @@ export const pagesRoutes: Routes = [
         component: ActionRecordComponent,
         canActivate: [AuthGuard]
     },
-    {
-        path: 'asset-lists',
-        component: AssetListComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'asset-list-all',
-        component: AssetListAllComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'asset-create',
-        component: AssetFormComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'asset-update',
-        component: AssetFormComponent,
-        canActivate: [AuthGuard]
-    },
+    
+   
     {
         path: 'dashboard',
         component: DashboardComponent,
@@ -61,26 +43,7 @@ export const pagesRoutes: Routes = [
         component: ExcelFieldMatchComponent,
         canActivate: [AuthGuard]
     },
-    {
-        path: 'write-off',
-        component: WriteOffFormComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'write-off-list',
-        component: WriteOffListComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'asset-type',
-        component: AssetTypeComponent, 
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'budget',
-        component: BudgetComponent,
-        canActivate: [AuthGuard]
-    },
+   
     {
         path: 'code-type',
         component: CodeTypeComponent,
@@ -91,11 +54,7 @@ export const pagesRoutes: Routes = [
         component: DepartmentComponent,
         canActivate: [AuthGuard]
     },
-    {
-        path: 'inventory-record',
-        component: InventoryRecordListComponent,
-        canActivate: [AuthGuard]
-    },
+   
     {
         path: 'location',
         component: LocationComponent,
@@ -106,26 +65,13 @@ export const pagesRoutes: Routes = [
         component: TaxInformationComponent,
         canActivate: [AuthGuard]
     },
-    {
-        path: 'repair-records',
-        component: RepairRecordListComponent,
-        canActivate: [AuthGuard]
-    }, 
+   
     {
         path: 'role',
         component: RoleComponent,
         canActivate: [AuthGuard]
     },
-    {
-        path: 'stock-takes',
-        component: StockTakeListComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'stock-take-form',
-        component: StockTakeFormComponent,
-        canActivate: [AuthGuard]
-    },
+   
     {
         path: 'menu',
         component: MenuListComponent,

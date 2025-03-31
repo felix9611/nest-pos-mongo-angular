@@ -39,13 +39,13 @@ import { UploadDialogComponent } from '../../components/upload-dialog-component/
     styleUrl: './code-type.component.css',
 })
 export class CodeTypeComponent {
-    private rightSubscription: Subscription
+   // private rightSubscription: Subscription
     
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService
     ) {
-        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+       /* this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Code Type', 'code-type')
             this.userRightInside = {
                 read: answer?.read ?? false,
@@ -57,12 +57,12 @@ export class CodeTypeComponent {
             }
             this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
             this.preLoadExcelSetting()
-        })
+        }) */
     }
 
     ngOnDestroy() {
         if (this.userStoreService.menuRole$) {
-            this.rightSubscription.unsubscribe()
+         //   this.rightSubscription.unsubscribe()
         }
     }
 
