@@ -1,68 +1,68 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Location } from './location.schame'
+import { ProductType } from './product-type.schame'
 import { Model } from 'mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
-import { CreateLocationDto, ListLocationRequestDto, UpdateLocationDto } from './location.dto'
+import { CreateproductTypeModelDto, ListproductTypeModelRequestDto, UpdateproductTypeModelDto } from './product-type.dto'
 
 @Injectable()
-export class LocationService {
+export class ProductTypeService {
     constructor(
-        @InjectModel(Location.name) private locationModel: Model<Location>,
+        @InjectModel(ProductType.name) private productTypeModel: Model<ProductType>,
         private actionRecordService: ActionRecordService
     ) {}
 
-    async findAll(): Promise<Location[]> {
-        return this.locationModel.find({
+    async findAll(): Promise<ProductType[]> {
+        return this.productTypeModel.find({
             status: 1
         }).exec()
     }
 
-    async create(createData: UpdateLocationDto) {
-        const { _id, placeCode, placeName, ..._data } = createData
+    async create(createData: UpdateproductTypeModelDto) {
+        const { _id, typeCode, typeName, ..._data } = createData
 
-        const checkData = await this.locationModel.findOne({ placeCode, placeName, status: 1 }).exec()
+        const checkData = await this.productTypeModel.findOne({ typeCode, typeName, status: 1 }).exec()
 
         if (checkData?._id) {
             await this.actionRecordService.saveRecord({
-                actionName: 'Create Location',
+                actionName: 'Create Product Type',
                 actionMethod: 'POST',
-                actionFrom: 'Location',
+                actionFrom: 'Product Type',
                 actionData: createData,
                 actionSuccess: 'FAILURE',
                 createdAt: new Date()
             })
 
             return {
-                msg: 'This location already exist!'
+                msg: 'This product type already exist!'
             }
         } else {
             const finalData = {
                 ..._data,
-                placeCode, 
-                placeName,
+                typeCode, 
+                typeName,
                 status: 1,
                 createdAt: new Date()
             }
 
             await this.actionRecordService.saveRecord({
-                actionName: 'Create Location',
+                actionName: 'Create Product Type',
                 actionMethod: 'POST',
-                actionFrom: 'Location',
+                actionFrom: 'Product Type',
                 actionData: finalData,
                 actionSuccess: 'Success',
                 createdAt: new Date()
             })
 
-            const create = new this.locationModel(finalData)
+            const create = new this.productTypeModel(finalData)
             return await create.save()
         }
     }
 
-    async update(updateData: UpdateLocationDto) {
+    async update(updateData: UpdateproductTypeModelDto) {
         const { _id, ...data } = updateData
 
-        const checkData = await this.locationModel.findOne({ _id }).exec()
+        const checkData = await this.productTypeModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
             await this.actionRecordService.saveRecord({
@@ -84,39 +84,39 @@ export class LocationService {
             }
 
             await this.actionRecordService.saveRecord({
-                actionName: 'Update Location',
+                actionName: 'Update Product Type',
                 actionMethod: 'POST',
-                actionFrom: 'Location',
+                actionFrom: 'Product Type',
                 actionData: finalData,
                 actionSuccess: 'Sussess',
                 createdAt: new Date()
             })
 
-            return await this.locationModel.updateOne({ _id }, finalData).exec()
+            return await this.productTypeModel.updateOne({ _id }, finalData).exec()
         }
     }
 
     async getOneById(_id: string) {
-        const data = await this.locationModel.findOne({ _id, status: 1 }).exec()
+        const data = await this.productTypeModel.findOne({ _id, status: 1 }).exec()
 
         if (data) {
             return data
         } else {
             return {
-                msg: 'This location has been invalidated! Please contact admin!'
+                msg: 'This Product Type has been invalidated! Please contact admin!'
             }
         }
     }
 
     async invalidate(_id: string) {
-        const checkData = await this.locationModel.findOne({ _id }).exec()
+        const checkData = await this.productTypeModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
 
             await this.actionRecordService.saveRecord({
-                actionName: 'Void Location',
+                actionName: 'Void Product Type',
                 actionMethod: 'GET',
-                actionFrom: 'Location',
+                actionFrom: 'Product Type',
                 actionData: {
                     _id
                 },
@@ -125,19 +125,19 @@ export class LocationService {
             })
 
             return {
-                msg: 'This location has been invalidated! Please contact admin!'
+                msg: 'This Product Type has been invalidated! Please contact admin!'
             }
         } else {
-            const res = await this.locationModel.updateOne({ _id}, {
+            const res = await this.productTypeModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
             }).exec()
         
             if (res.modifiedCount === 1) {
                 await this.actionRecordService.saveRecord({
-                    actionName: 'Void Location',
+                    actionName: 'Void Product Type',
                     actionMethod: 'GET',
-                    actionFrom: 'Location',
+                    actionFrom: 'Product Type',
                     actionData: {
                         _id,
                         status: 0,
@@ -159,8 +159,8 @@ export class LocationService {
         }
     }
 
-    async listPageRole(request: ListLocationRequestDto) {
-        const { page, limit, name, place, contact } = request
+    async listPageRole(request: ListproductTypeModelRequestDto) {
+        const { page, limit, name } = request
 
         const skip = (page - 1) * limit
 
@@ -168,46 +168,23 @@ export class LocationService {
             ...name? {
                 $or: [
                     {
-                        placeName: { $regex: name, $options: 'i' }
+                        typeName: { $regex: name, $options: 'i' }
                     },
                     {
-                        placeCode: { $regex: name, $options: 'i' }
+                        typeCode: { $regex: name, $options: 'i' }
                     },
                     {
-                        placeOtherName: { $regex: name, $options: 'i' }
+                        typeOtherName: { $regex: name, $options: 'i' }
                     }
                 ],
-            } : {},
-            ...place ? {
-                $or: [
-                    {
-                        country: { $regex: place, $options: 'i' }
-                    },
-                    {
-                        address: { $regex: place, $options: 'i' }
-                    },
-                    {
-                        zipCode: { $regex: place, $options: 'i' }
-                    },
-                ]
-            } : {},
-            ...contact ? {
-                $or: [
-                    {
-                        phone: { $regex: contact, $options: 'i' }
-                    },
-                    {
-                        fax: { $regex: contact, $options: 'i' }
-                    }
-                ]
             } : {},
             status: 1
         }
 
-        const lists = await this.locationModel.find(filters).skip(skip)
+        const lists = await this.productTypeModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-        const total = await this.locationModel.countDocuments().exec()
+        const total = await this.productTypeModel.countDocuments().exec()
     
         return {
             total,
@@ -218,16 +195,16 @@ export class LocationService {
         }
     }
 
-    async importData(data: CreateLocationDto[]) {
+    async importData(data: CreateproductTypeModelDto[]) {
         for (const item of data) {
-            const { placeCode, placeName, ..._data } = item
+            const { typeCode, typeName, ..._data } = item
 
-            const checkData = await this.locationModel.findOne({ placeCode, placeName, status: 1 }).exec()
+            const checkData = await this.productTypeModel.findOne({ typeCode, typeName, status: 1 }).exec()
 
-            if (checkData) {
-                await this.update({ placeCode, placeName, ..._data, _id: checkData._id.toString() })
+            if (checkData) { 
+                await this.update({ typeCode, typeName, ..._data, _id: checkData._id.toString() })
             } else {
-                await this.create({ placeCode, placeName, ..._data })
+                await this.create({ typeCode, typeName, ..._data })
             }
         }
     }
