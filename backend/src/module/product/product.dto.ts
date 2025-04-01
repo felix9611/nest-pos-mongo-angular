@@ -53,3 +53,9 @@ export interface StockMoveProductLocationDto {
     totalCost: number
 }
 
+export interface ListProductLocationtRequestDto {
+    page: number
+    limit: number
+    locatiionIds?: string[]
+}
+

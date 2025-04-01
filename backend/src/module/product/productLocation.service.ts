@@ -3,10 +3,11 @@ import { InjectModel } from '@nestjs/mongoose'
 import { ProductLocation } from './productLocation.schame'
 import { Model } from 'mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
-import {  StockInOutProductLocationDto, StockMoveProductLocationDto } from './product.dto'
+import {  ListProductLocationtRequestDto, StockInOutProductLocationDto, StockMoveProductLocationDto } from './product.dto'
 import { Product } from './product.schame'
 import { Location } from '../location/location.schame'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
+import { error } from 'console'
 
 @Injectable()
 export class ProductLocationService {
@@ -127,12 +128,71 @@ export class ProductLocationService {
                 const createRecord = new this.productLocationModel(createData)
                 return await createRecord.save()
             }
-
-            
         }
-
     }
 
+    async stockOut(data: StockInOutProductLocationDto) {
+        const { productCode, productId, placeCode, locationId, qty, totalCost, totalPrice } = data
+
+        const checkProduct = await this.productModel.findOne({
+            ...productCode ? { _id: productId } : {},
+            ...productCode ? { productCode } : {},
+            status: 1
+        })
+
+        const checLocation = await this.locationModel.findOne({
+            ...locationId ? { _id: locationId } : {},
+            ...placeCode ? { placeCode, } : {},
+            status: 1
+        })
+
+        if (!checkProduct) throw new Error('No any product data record!')
+
+        if (!checLocation) throw new Error('No any this location record!')
+
+        const findOldData = await this.productLocationModel.findOne({ 
+            productId: checkProduct._id, 
+            locationId: checLocation?._id 
+        }) 
+
+        if (findOldData) {
+            const finalData = {
+                qty: findOldData.qty - qty,
+                totalCost: findOldData.totalCost - totalCost,
+                totalPrice: findOldData.totalPrice - totalPrice
+            }
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Product Stock Out',
+                actionMethod: 'POST',
+                actionFrom: 'Stock Out',
+                actionData: {
+                    ...finalData,
+                    productId: checkProduct._id, 
+                    locationId: checLocation?._id 
+                },
+                actionSuccess: 'Success',
+                createdAt: new Date()
+            })
+
+            await this.invRecordService.insertRecord({
+                productId: checkProduct._id.toString(), 
+                locFrom: checLocation._id.toString(),
+                locTo: '',
+                qty: -qty,
+                cost: -totalCost,
+            })
+            
+            return await this.productLocationModel.updateOne(
+                { _id: findOldData._id },
+                finalData
+            )
+
+
+        } else {
+            throw new error('No any data record can be change!')
+        }
+    }
 
     async stockIn(data: StockInOutProductLocationDto) {
         const { productCode, productId, placeCode, locationId, qty, totalCost, totalPrice } = data
@@ -169,7 +229,11 @@ export class ProductLocationService {
                 actionName: 'Product Stock In (Update)',
                 actionMethod: 'POST',
                 actionFrom: 'Stock In',
-                actionData: finalData,
+                actionData: {
+                    ...finalData,
+                    productId: checkProduct._id, 
+                    locationId: checLocation?._id 
+                },
                 actionSuccess: 'Success',
                 createdAt: new Date()
             })
@@ -216,6 +280,28 @@ export class ProductLocationService {
             const create = new this.productLocationModel(finalData)
             return await create.save()
         }
+    }
 
+    async listPage(req: ListProductLocationtRequestDto) {
+        const { page, limit, locatiionIds } = req
+
+        const skip = (page - 1) * limit
+
+        const filters = {
+            ...locatiionIds && locatiionIds.length > 0 ? { locatiionId: { $in: locatiionIds} } : {}
+        }
+
+        const lists = await this.productLocationModel.find(filters).skip(skip)
+                .limit(limit)
+                .exec()
+        const total = await this.productLocationModel.countDocuments(filters).exec()
+    
+        return {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+            lists,
+        }
     }
 }

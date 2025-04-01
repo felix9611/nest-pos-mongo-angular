@@ -179,7 +179,7 @@ export class ProductService {
         }
     }
 
-    async listPageRole(request: ListProductRequestDto) {
+    async listPage(request: ListProductRequestDto) {
         const { page, limit, name } = request
 
         const skip = (page - 1) * limit

@@ -15,8 +15,8 @@ import { UserStoreService } from '../../state/user.service'
 export class MainComponent {
     constructor(private userStoreService: UserStoreService) {
         this.userStoreService.loadUserInfo()
-     //   this.userStoreService.loadMenus()
-      //  this.userStoreService.loadMenuRoles()
+        this.userStoreService.loadMenus()
+        this.userStoreService.loadMenuRoles()
     }
     isCollapsed = false;
 

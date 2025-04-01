@@ -3,7 +3,7 @@ import { ProductService } from './product.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from '../../tool/open-api-body'
-import { CreateProductDto, ListProductRequestDto, StockInOutProductLocationDto, StockMoveProductLocationDto, UpdateProductDto } from './product.dto'
+import { CreateProductDto, ListProductLocationtRequestDto, ListProductRequestDto, StockInOutProductLocationDto, StockMoveProductLocationDto, UpdateProductDto } from './product.dto'
 import { ProductLocationService } from './productLocation.service'
 
 @Controller('product/product-list')
@@ -52,13 +52,19 @@ export class ProductController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListProductRequestDto) {
-        return this.productService.listPageRole(req)
+        return this.productService.listPage(req)
     }
 
     @Post('batch-create')
     @UseGuards(AuthGuard)
     async importData(@Body() createDatas: CreateProductDto[]) {
         return await this.productService.importData(createDatas)
+    }
+
+    @Post('stock-out')
+    @UseGuards(AuthGuard)
+    async stockOut(@Body() data: StockInOutProductLocationDto) {
+        return await this.productLocationService.stockIn(data)
     }
 
     @Post('stock-in')
@@ -71,5 +77,11 @@ export class ProductController {
     @UseGuards(AuthGuard)
     async stockMove(@Body() data: StockMoveProductLocationDto) {
         return await this.productLocationService.stockMove(data)
+    }
+
+    @Post('location-list')
+    @UseGuards(AuthGuard)
+    async locationList(@Body() data: ListProductLocationtRequestDto) {
+        return await this.productLocationService.listPage(data)
     }
 }
