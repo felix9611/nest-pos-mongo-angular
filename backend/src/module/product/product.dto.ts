@@ -31,7 +31,7 @@ export interface ListProductRequestDto {
     vendorIds?: string[]
 }
 
-export interface StockInProductLocationDto {
+export interface StockInOutProductLocationDto {
     productCode: string
     productId: string
     placeCode: string
@@ -40,3 +40,16 @@ export interface StockInProductLocationDto {
     totalPrice: number
     totalCost: number
 }
+
+export interface StockMoveProductLocationDto {
+    productCode: string
+    productId: string
+    fromPlaceCode: string
+    fromLocationId: string
+    toPlaceCode: string
+    toLocationId: string
+    qty: number
+    totalPrice: number
+    totalCost: number
+}
+

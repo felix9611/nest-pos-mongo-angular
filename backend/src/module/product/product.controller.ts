@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Move, Param, Post, UseGuards } from '@nestjs/common'
 import { ProductService } from './product.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from '../../tool/open-api-body'
-import { CreateProductDto, ListProductRequestDto, StockInProductLocationDto, UpdateProductDto } from './product.dto'
+import { CreateProductDto, ListProductRequestDto, StockInOutProductLocationDto, StockMoveProductLocationDto, UpdateProductDto } from './product.dto'
 import { ProductLocationService } from './productLocation.service'
 
 @Controller('product/product-list')
@@ -63,7 +63,13 @@ export class ProductController {
 
     @Post('stock-in')
     @UseGuards(AuthGuard)
-    async stockIn(@Body() data: StockInProductLocationDto) {
+    async stockIn(@Body() data: StockInOutProductLocationDto) {
         return await this.productLocationService.stockIn(data)
+    }
+
+    @Post('stock-move')
+    @UseGuards(AuthGuard)
+    async stockMove(@Body() data: StockMoveProductLocationDto) {
+        return await this.productLocationService.stockMove(data)
     }
 }
