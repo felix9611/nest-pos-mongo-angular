@@ -7,14 +7,19 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
 import { ProductService } from './product.service'
 import { ProductLocation, ProductLocationSchema } from './productLocation.schame'
 import { ProductLocationService } from './productLocation.service'
+import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schame'
+import { InvRecordService } from '../InvRecord/InvRecord.service'
+import { Location, LocationSchema } from '../location/location.schame'
 
 @Module({
     imports: [MongooseModule.forFeature([
         { name: Product.name, schema: ProductSchema }, 
         { name: ProductLocation.name, schema: ProductLocationSchema },
-        { name: ActionRecord.name, schema: ActionRecordSchema }
+        { name: ActionRecord.name, schema: ActionRecordSchema },
+        { name: InvRecord.name, schema: InvRecordSchema },
+        { name: Location.name, schema: LocationSchema }
     ]), Product],
-    providers: [ActionRecordService, ProductService, ProductLocationService],
+    providers: [ActionRecordService, ProductService, ProductLocationService, InvRecordService],
     exports: [Product],
     controllers: [ProductController]
 })

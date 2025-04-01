@@ -3,11 +3,15 @@ import { ProductService } from './product.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from '../../tool/open-api-body'
-import { CreateProductDto, ListProductRequestDto, UpdateProductDto } from './product.dto'
+import { CreateProductDto, ListProductRequestDto, StockInProductLocationDto, UpdateProductDto } from './product.dto'
+import { ProductLocationService } from './productLocation.service'
 
 @Controller('product/product-list')
 export class ProductController {
-    constructor(private productService: ProductService){}
+    constructor(
+        private productService: ProductService,
+        private productLocationService: ProductLocationService
+    ){}
 
     @Post('create')
     @UseGuards(AuthGuard)
@@ -55,5 +59,11 @@ export class ProductController {
     @UseGuards(AuthGuard)
     async importData(@Body() createDatas: CreateProductDto[]) {
         return await this.productService.importData(createDatas)
+    }
+
+    @Post('stock-in')
+    @UseGuards(AuthGuard)
+    async stockIn(@Body() data: StockInProductLocationDto) {
+        return await this.productLocationService.stockIn(data)
     }
 }
