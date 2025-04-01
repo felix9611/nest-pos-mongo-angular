@@ -182,7 +182,7 @@ export class DepartmentService {
             const lists = await this.departmentModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.departmentModel.countDocuments().exec()
+            const total = await this.departmentModel.find(filters).countDocuments().exec()
     
             return {
                 total,

@@ -20,6 +20,7 @@ import { ExcelFieldMatchModule } from './module/excelFieldMatch/excelFieldMatch.
 import { SysUserSchema } from './module/sys-user/sysUser.schame'
 import { LocationMoudule } from './module/location/location.module'
 import { ProductTypeMoudule } from './module/product-type/product-type.module'
+import { ProductMoudule } from './module/product/product.module'
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ProductTypeMoudule } from './module/product-type/product-type.module'
     SysMenuMoudule,
     ExcelFieldMatchModule,
     ProductTypeMoudule,
+    ProductMoudule,
     MongooseModule.forRoot('mongodb://localhost/pos'),
     MongooseModule.forFeature([
       { name: 'SysRoles', schema: SysRoleSchema },

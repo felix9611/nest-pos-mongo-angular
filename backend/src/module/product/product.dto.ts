@@ -1,0 +1,32 @@
+import { ApiProperty } from '@nestjs/swagger'
+import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-api-body'
+
+export interface CreateProductDto {
+    productCode: string
+    productName: string
+    itemCode: string
+    brandCode: string
+    brandName: string
+    typeId: string
+    deptId: string
+    vendorId: string
+    unit: string
+    costPrice: number
+    retailPrice: number
+    description: string
+    remark: string
+}
+
+export interface UpdateProductDto extends CreateProductDto {
+    _id?: string
+}
+
+export interface ListProductRequestDto {
+    page: number
+    limit: number
+    name?: string
+    code?: string
+    typeIds?: string[]
+    deptIds?: string[]
+    vendorIds?: string[]
+}
