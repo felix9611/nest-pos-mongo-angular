@@ -30,3 +30,14 @@ export interface ListProductRequestDto {
     deptIds?: string[]
     vendorIds?: string[]
 }
+
+export interface InsertProductLocationDto {
+    productCode: string
+    productId: string
+    placeCode: string
+    locationId: string
+    qty: number
+    totalPrice: number
+    totalCost: number
+
+}

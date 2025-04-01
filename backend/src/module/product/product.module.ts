@@ -6,6 +6,7 @@ import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { ProductService } from './product.service'
 import { ProductLocation, ProductLocationSchema } from './productLocation.schame'
+import { ProductLocationService } from './productLocation.service'
 
 @Module({
     imports: [MongooseModule.forFeature([
@@ -13,7 +14,7 @@ import { ProductLocation, ProductLocationSchema } from './productLocation.schame
         { name: ProductLocation.name, schema: ProductLocationSchema },
         { name: ActionRecord.name, schema: ActionRecordSchema }
     ]), Product],
-    providers: [ActionRecordService, ProductService],
+    providers: [ActionRecordService, ProductService, ProductLocationService],
     exports: [Product],
     controllers: [ProductController]
 })

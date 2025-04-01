@@ -21,6 +21,7 @@ import { SysUserSchema } from './module/sys-user/sysUser.schame'
 import { LocationMoudule } from './module/location/location.module'
 import { ProductTypeMoudule } from './module/product-type/product-type.module'
 import { ProductMoudule } from './module/product/product.module'
+import { InvRecordMoudule } from './module/InvRecord/InvRecord.module'
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ProductMoudule } from './module/product/product.module'
     AuthModule, 
     CodeTypeMoudule,
     DepartmentMoudule,
+    InvRecordMoudule,
     VendorMoudule,
     TaxInformationMoudule,
     LocationMoudule,
