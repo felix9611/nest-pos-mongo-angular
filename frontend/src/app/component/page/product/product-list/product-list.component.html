@@ -57,7 +57,7 @@
                     }
                 </nz-select>
             </div>
-            <div (click)="loadAssetListLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
+            <div (click)="loadProductLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
                 Search
             </div>
             <div *ngIf="userRightInside.write" (click)="goToCreate()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
@@ -107,12 +107,6 @@
                         <td>
                             <div class="flex gap-3">
                                 <div 
-                                    *ngIf="userRightInside.update"
-                                    (click)="openRepairRecordDialog(data)"
-                                    class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
-                                    Repiar
-                                </div>
-                                <div 
                                     (click)="openQrCodeDialog(data)"
                                     class="w-[100px] bg-[#8ee0ff] hover:bg-[#87d3ef] border-1 border-[#408eab] text-[#408eab] text-center p-1 rounded-lg">
                                     QR Tag
@@ -126,7 +120,7 @@
                                     *ngIf="userRightInside.delete"
                                     (click)="handleRomeve(data._id)"
                                     class="w-[100px] bg-[#FFA8A8] hover:bg-[#EC7272] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
-                                    Write Off
+                                    Remove
                                 </div>
                             </div>
                         </td>
@@ -138,15 +132,15 @@
             [nzTotal]="totals" 
             nzShowSizeChanger 
             [nzPageSize]="searchForm.limit"
-            (nzPageIndexChange)="searchForm.page = $event; loadAssetListLists()"
-            (nzPageSizeChange)="searchForm.limit = $event; loadAssetListLists()"
+            (nzPageIndexChange)="searchForm.page = $event; loadProductLists()"
+            (nzPageSizeChange)="searchForm.limit = $event; loadProductLists()"
         ></nz-pagination>
 
         <nz-modal
             [(nzVisible)]="removeDialog" 
             nzTitle="Confirm"
             (nzOnCancel)="closeRemoveDialog()"
-            (nzOnOk)="goToWriteOff()"
+            (nzOnOk)="goToVoid()"
         >
             <ng-container *nzModalContent>
                 Are you sure to confirm void this record?

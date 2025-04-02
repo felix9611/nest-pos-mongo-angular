@@ -18,6 +18,7 @@ import { findMenuItem } from '../../../tool-function'
 import { Subscription } from 'rxjs'
 import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
 import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
+import { NzMessageService } from 'ng-zorro-antd/message'
 
 @Component({
     // selector: 'app-footer',
@@ -44,7 +45,8 @@ export class ProductListComponent {
     private rightSubscription: Subscription
     constructor(
         private routeTo: Router,
-        private userStoreService: UserStoreService
+        private userStoreService: UserStoreService,
+        private message: NzMessageService,
     ) {
         this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Product List', 'product-list')
@@ -88,7 +90,7 @@ export class ProductListComponent {
     handleId: string = ''
 
     ngOnInit() {
-        this.loadAssetListLists()
+        this.loadProductLists()
         this.loadTypeList()
         this.loadDeptList()
         this.loadLocationList()
@@ -109,7 +111,7 @@ export class ProductListComponent {
         this.placeLists = await getApiWithAuth('/base/location/getAll')
     }
 
-    async loadAssetListLists() {
+    async loadProductLists() {
         const res = await postApiWithAuth('/product/product-list/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
@@ -137,8 +139,12 @@ export class ProductListComponent {
         this.routeTo.navigate(['/product-create'])
     }
 
-    goToWriteOff() {
-        this.routeTo.navigate([`write-off`], { queryParams: { id: this.handleId }})
+    async goToVoid() {
+        const res = await await getApiWithAuth(`/product/product-list/remove/${this.handleId}`)
+        if (res) {
+            this.message.info(res.msg)
+            this.loadProductLists()
+        }
     }
 
     qrCodeDialog: boolean = false
