@@ -84,4 +84,10 @@ export class ProductController {
     async locationList(@Body() data: ListProductLocationtRequestDto) {
         return await this.productLocationService.listPage(data)
     }
+
+    @Get('file-remove/:id')
+    @UseGuards(AuthGuard)
+    async removeFile(@Param('id') id: string) {
+        return await this.productService.voidFileById(id)
+    }
 }

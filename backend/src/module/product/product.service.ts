@@ -3,12 +3,14 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Product } from './product.schame'
 import { Model } from 'mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
-import { CreateProductDto, ListProductRequestDto, UpdateProductDto } from './product.dto'
+import { CreateProductDto, ListProductRequestDto, ProductFileDto, UpdateProductDto } from './product.dto'
+import { ProductFile } from './product-file.schame'
 
 @Injectable()
 export class ProductService {
     constructor(
         @InjectModel(Product.name) private productModel: Model<Product>,
+        @InjectModel(ProductFile.name) private productFileModel: Model<ProductFile>,
         private actionRecordService: ActionRecordService
     ) {}
 
@@ -19,7 +21,7 @@ export class ProductService {
     }
 
     async create(createData: UpdateProductDto) {
-        let { _id, productCode, productName, ..._data } = createData
+        let { _id, productCode, productName, uploaProductFiles, ..._data } = createData
 
         const checkData = await this.productModel.findOne({ 
             productName,
@@ -63,12 +65,25 @@ export class ProductService {
             })
 
             const create = new this.productModel(finalData)
-            return await create.save()
+            const res = await create.save()
+
+            if (res) {
+
+                if (uploaProductFiles && uploaProductFiles.length > 0) {
+                    await this.uploadFile(uploaProductFiles, res._id.toString())
+                }
+
+                return res
+            } else {
+                return {
+                    msg: 'Oooops! Something wrong, please try again!'
+                }
+            }
         }
     }
 
     async update(updateData: UpdateProductDto) {
-        const { _id, ...data } = updateData
+        const { _id, uploaProductFiles, ...data } = updateData
 
         const checkData = await this.productModel.findOne({ _id }).exec()
 
@@ -100,19 +115,34 @@ export class ProductService {
                 createdAt: new Date()
             })
 
-            return await this.productModel.updateOne({ _id }, finalData).exec()
+            const res = await this.productModel.updateOne({ _id }, finalData).exec()
+
+            if (res) {
+
+                if (uploaProductFiles && uploaProductFiles.length > 0) {
+                    await this.uploadFile(uploaProductFiles, _id)
+                }
+
+
+                return res
+            } else {
+                return {
+                    msg: 'Oooops! Something wrong, please try again!'
+                }
+            }
         }
     }
 
     async getOneById(_id: string) {
-        const data = await this.productModel.findOne({ _id, status: 1 }).exec()
-
-        if (data) {
-            return data
-        } else {
+        const res: any = await this.productModel.findOne({ _id }).exec()
+        if (res?.status === 0) {
             return {
-                msg: 'This Product has been invalidated! Please contact admin!'
+                msg: 'This product maybe voided! Please contact admin!'
             }
+        } else {
+            res.productFiles = await this.getListFiles(_id)
+
+            return res
         }
     }
 
@@ -212,7 +242,7 @@ export class ProductService {
             if (checkData) { 
                 await this.update({ productCode, productName, ..._data, _id: checkData._id.toString() })
             } else {
-                await this.create({ productCode, productName, ..._data })
+                await this.create({ _id: '', productCode, productName, ..._data })
             }
         }
     }
@@ -242,5 +272,92 @@ export class ProductService {
         } else {
             return this.formatNumber(maxNumber, 6)
         }
+    }
+
+    // Product File
+
+    async uploadFile(updateFiles: ProductFileDto[], assetId: string) {
+        for (const file of updateFiles) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Upload Product Files',
+                actionMethod: 'POST',
+                actionFrom: 'Product(Files)',
+                actionData: {
+                    assetId,
+                    filename: file.fileName,
+                    fileType: file.fileType,
+                    status: 1
+                },
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
+            const create = new this.productFileModel({
+                ...file,
+                assetId,
+                status: 1
+            })
+            return create.save()
+        }
+    }
+
+    async getListFiles(assetId: string) {
+        const files = await this.productFileModel.find({ assetId, status: 1 }).exec()
+        
+        if (files.length > 0) {
+            return files
+        } else {
+            return []
+        }
+    }
+
+    async voidFileById(_id: string) {
+        const check = await this.productFileModel.findOne({ _id })
+
+        if (check) {
+            const res = await this.productFileModel.updateOne({ _id}, {
+                status: 0,
+                updateAt: new Date()
+            }).exec()
+    
+            if (res) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Void Product(File)',
+                    actionMethod: 'GET',
+                    actionFrom: 'Product(File)',
+                    actionData: {
+                        _id,
+                        status: 0,
+                        updateAt: new Date()
+                    },
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+    
+                return {
+                    finished: true,
+                    msg: 'Void successfully!'
+                }
+            }
+        } else {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Product(File)',
+                actionMethod: 'GET',
+                actionFrom: 'Product(File)',
+                actionData: {
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+            return {
+                msg: 'This file has been void! Please contact admin!'
+            }
+        }
+    }
+
+    async loadFileByAssetId(assetId: string) {
+        return this.productFileModel.find({ assetId, status: 1}).exec()
     }
 }

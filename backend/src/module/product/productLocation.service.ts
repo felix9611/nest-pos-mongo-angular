@@ -13,7 +13,7 @@ import { error } from 'console'
 export class ProductLocationService {
     constructor(
         @InjectModel(ProductLocation.name) private productLocationModel: Model<ProductLocation>,
-        @InjectModel(Product.name) private productModel: Model<ProductLocation>,
+        @InjectModel(Product.name) private productModel: Model<Product>, 
         @InjectModel(Location.name) private locationModel: Model<Location>,
         private invRecordService: InvRecordService,
         private actionRecordService: ActionRecordService

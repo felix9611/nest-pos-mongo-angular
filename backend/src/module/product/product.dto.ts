@@ -15,10 +15,11 @@ export interface CreateProductDto {
     retailPrice: number
     description: string
     remark: string
+    uploaProductFiles?: ProductFileDto[]
 }
 
 export interface UpdateProductDto extends CreateProductDto {
-    _id?: string
+    _id: string
 }
 
 export interface ListProductRequestDto {
@@ -57,5 +58,13 @@ export interface ListProductLocationtRequestDto {
     page: number
     limit: number
     locatiionIds?: string[]
+}
+
+export interface ProductFileDto {
+    _id?: string
+    assetId?: string
+    fileName: string
+    fileType: string
+    base64: string
 }
 
