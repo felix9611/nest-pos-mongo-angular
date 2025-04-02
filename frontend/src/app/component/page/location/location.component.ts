@@ -86,6 +86,13 @@ export class LocationComponent {
         _id: '',
         placeCode: '',
         placeName: '',
+        placeOtherName: '',
+        country: '',
+        address: '',
+        zipCode: '',
+        email: '',
+        phone: '',
+        fax: '',
         remark: ''
     }
 
@@ -121,6 +128,13 @@ export class LocationComponent {
                 _id: '',
                 placeCode: '',
                 placeName: '',
+                placeOtherName: '',
+                country: '',
+                address: '',
+                zipCode: '',
+                email: '',
+                phone: '',
+                fax: '',
                 remark: ''
             }
         }

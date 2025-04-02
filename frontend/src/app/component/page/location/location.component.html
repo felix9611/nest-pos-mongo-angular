@@ -98,11 +98,53 @@
                       </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Location Other Name</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <input nz-input type="text" id="placeOtherName" name="placeOtherName" [(ngModel)]="editForm.placeOtherName" />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Country</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <input nz-input type="text" id="country" name="country" [(ngModel)]="editForm.country" />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Address</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <textarea nz-input id="address" name="address" [(ngModel)]="editForm.address"></textarea>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Zip Code</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <input nz-input type="text" id="zipCode" name="zipCode" [(ngModel)]="editForm.zipCode" />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">email</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <input nz-input type="text" id="email" name="email" [(ngModel)]="editForm.email" />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="phone">Phone</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <input nz-input type="text" id="phone" name="phone" [(ngModel)]="editForm.phone" />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="fax">Fax</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <input nz-input type="text" id="fax" name="fax" [(ngModel)]="editForm.fax" />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
                         <nz-form-label [nzSpan]="6" nzFor="email">Remark</nz-form-label>
                         <nz-form-control [nzSpan]="14">
                           <textarea nz-input id="remark" name="remark" [(ngModel)]="editForm.remark"></textarea>
                         </nz-form-control>
-                      </nz-form-item>
+                    </nz-form-item>
                 </form>
             </ng-container>
            
