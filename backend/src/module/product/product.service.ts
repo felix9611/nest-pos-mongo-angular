@@ -219,9 +219,38 @@ export class ProductService {
             status: 1
         }
 
-        const lists = await this.productModel.find(filters).skip(skip)
-                .limit(limit)
-                .exec()
+        const lists = await await this.productModel.aggregate([
+            {
+                $match: filters
+            },
+            {
+                $lookup: {
+                    from: 'departments', // Ensure correct collection name
+                    let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                    as: 'department'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'producttypes', // Ensure correct collection name
+                    let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
+                    as: 'producttype'
+                }
+            },
+            { 
+                $addFields: { 
+                    productCodeInt: { $toInt: "$productCode" } 
+                } 
+            },
+            { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$producttype', preserveNullAndEmptyArrays: true } },
+            { $skip: skip },
+            { $limit: limit },
+            { $sort: { productCodeInt: 1 } } 
+        ]).exec()
+
         const total = await this.productModel.countDocuments(filters).exec()
     
         return {

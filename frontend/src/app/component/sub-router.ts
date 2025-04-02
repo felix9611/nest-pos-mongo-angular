@@ -25,6 +25,8 @@ import { MenuListComponent } from './page/menu/menu.component'
 import { ExcelFieldMatchComponent } from './page/excel-field-match/excel-field-match.component'
 import { AccessGuard } from '../../state/AccessGuard'
 import { ProductTypeComponent } from './page/product-type/product-type.component'
+import { ProductListComponent } from './page/product/product-list/product-list.component'
+import { ProductFormComponent } from './page/product/product-form/product-form.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -96,6 +98,21 @@ export const pagesRoutes: Routes = [
     {
         path: 'product-type',
         component: ProductTypeComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'product-list',
+        component: ProductListComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'product-create',
+        component: ProductFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'product-detail',
+        component: ProductFormComponent,
         canActivate: [AuthGuard]
     }
 ]
