@@ -159,7 +159,7 @@ export class MemberClassService {
         }
     }
 
-    async listPageRole(request: ListMemberClassRequestDto) {
+    async listPage(request: ListMemberClassRequestDto) {
         const { page, limit, name } = request
 
         const skip = (page - 1) * limit
@@ -170,7 +170,8 @@ export class MemberClassService {
                     { classCode: { $regex: name, $options: 'i' }},
                     { className: { $regex: name, $options: 'i' }}
                 ]
-            } : {}
+            } : {},
+            status: 1
         }
 
         const lists = await this.memberClassModel.find(filters).skip(skip)

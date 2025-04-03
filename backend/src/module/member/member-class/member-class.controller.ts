@@ -41,7 +41,7 @@ export class MemberClassController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListMemberClassRequestDto) {
-        return this.memberClassService.listPageRole(req)
+        return this.memberClassService.listPage(req)
     }
     
     @Post('batch-create')
