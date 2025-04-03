@@ -24,6 +24,7 @@ import { ProductLocationListComponent } from './page/stock/product-location/prod
 import { StockOutComponent } from './page/stock/stock-out/stock-out.component'
 import { StockMoveComponent } from './page/stock/stock-move/stock-move.component'
 import { InventoryRecordComponent } from './page/stock/inventory-record/inventory-record.component'
+import { MemberClassesComponent } from './page/member/member-class/member-class.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -135,6 +136,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'inventory-record',
         component: InventoryRecordComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'member-class',
+        component: MemberClassesComponent,
         canActivate: [AuthGuard]
     }
 ]

@@ -4,7 +4,7 @@
             <div class="w-[150px]">
                 <input class="h-full" nz-input type="text" id="name" name="name" placeholder="Input Name/Code" [(ngModel)]="searchForm.name" />
             </div>
-            <div (click)="loadLocationLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
+            <div (click)="loadMemberClassesLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
                 Search
             </div>
             <div *ngIf="userRightInside.write" (click)="showDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
@@ -34,8 +34,8 @@
             >
                 <thead>
                     <tr>
-                        <th>Location Code</th>
-                        <th>Location Name</th>
+                        <th>Class Code</th>
+                        <th>Class Name</th>
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th class="text-center">Action</th>
@@ -43,8 +43,8 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let data of dataTable.data">
-                        <td>{{data.typeCode}}</td>
-                        <td>{{data.typeName}}</td>
+                        <td>{{data.classCode}}</td>
+                        <td>{{data.className}}</td>
                         <td>{{  dateFormat(data.createdAt)  }}</td>
                         <td>{{  dateFormat(data.updatedAt)  }}</td>
                         <td>
@@ -71,8 +71,8 @@
             [nzTotal]="totals" 
             nzShowSizeChanger 
             [nzPageSize]="searchForm.limit"
-            (nzPageIndexChange)="searchForm.page = $event; loadLocationLists()"
-            (nzPageSizeChange)="searchForm.limit = $event; loadLocationLists()"
+            (nzPageIndexChange)="searchForm.page = $event; loadMemberClassesLists()"
+            (nzPageSizeChange)="searchForm.limit = $event; loadMemberClassesLists()"
         ></nz-pagination>
 
         <nz-modal 
@@ -80,28 +80,22 @@
             [(nzVisible)]="editFormDialog" 
             (nzOnCancel)="closeDialog()"
             (nzOnOk)="submitForm()"
-            nzTitle="Product Type Form"
+            nzTitle="Member Class Form"
             [nzOkText]="okText"
         >
             <ng-container *nzModalContent>
                 <form nz-form>
                     <nz-form-item>
-                      <nz-form-label [nzSpan]="6" nzFor="email">Type Code</nz-form-label>
+                      <nz-form-label [nzSpan]="6" nzFor="email">Class Code</nz-form-label>
                       <nz-form-control [nzSpan]="14">
-                        <input nz-input type="text" id="typeCode" name="typeCode" [(ngModel)]="editForm.typeCode" />
+                        <input nz-input type="text" id="classCode" name="classCode" [(ngModel)]="editForm.classCode" />
                       </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                      <nz-form-label [nzSpan]="6" nzFor="email">Type Name</nz-form-label>
+                      <nz-form-label [nzSpan]="6" nzFor="email">Class Name</nz-form-label>
                       <nz-form-control [nzSpan]="14">
-                        <input nz-input type="text" id="typeName" name="typeName" [(ngModel)]="editForm.typeName" />
+                        <input nz-input type="text" id="className" name="className" [(ngModel)]="editForm.className" />
                       </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="email">Type Other Name</nz-form-label>
-                        <nz-form-control [nzSpan]="14">
-                          <input nz-input type="text" id="typeOtherName" name="typeOtherName" [(ngModel)]="editForm.typeOtherName" />
-                        </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
                         <nz-form-label [nzSpan]="6" nzFor="email">Remark</nz-form-label>
