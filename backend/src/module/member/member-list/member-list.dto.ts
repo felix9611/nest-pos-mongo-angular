@@ -19,6 +19,7 @@ export interface CreateMemberDto {
 
 export interface UpdateMemberDto extends CreateMemberDto {
     _id?: string
+    memberCode?: string
 }
 
 export interface ListMemberRequestDto {
