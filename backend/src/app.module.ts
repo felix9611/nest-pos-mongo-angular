@@ -22,6 +22,7 @@ import { LocationMoudule } from './module/location/location.module'
 import { ProductTypeMoudule } from './module/product-type/product-type.module'
 import { ProductMoudule } from './module/product/product.module'
 import { InvRecordMoudule } from './module/InvRecord/InvRecord.module'
+import { MemberClassMoudule } from './module/member/member-class/member-class.module'
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { InvRecordMoudule } from './module/InvRecord/InvRecord.module'
     ExcelFieldMatchModule,
     ProductTypeMoudule,
     ProductMoudule,
+    MemberClassMoudule,
     MongooseModule.forRoot('mongodb://localhost/pos'),
     MongooseModule.forFeature([
       { name: 'SysRoles', schema: SysRoleSchema },
