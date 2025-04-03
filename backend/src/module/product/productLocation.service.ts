@@ -283,17 +283,39 @@ export class ProductLocationService {
     }
 
     async listPage(req: ListProductLocationtRequestDto) {
-        const { page, limit, locatiionIds } = req
+        const { page, limit, locationIds } = req
 
         const skip = (page - 1) * limit
 
         const filters = {
-            ...locatiionIds && locatiionIds.length > 0 ? { locatiionId: { $in: locatiionIds} } : {}
+            ...locationIds && locationIds.length > 0 ? { locationId: { $in: locationIds} } : {}
         }
 
-        const lists = await this.productLocationModel.find(filters).skip(skip)
-                .limit(limit)
-                .exec()
+        const lists = await await this.productLocationModel.aggregate([
+            {
+                $match: filters
+            },
+            {
+                $lookup: {
+                    from: 'products', // Ensure correct collection name
+                    let: { productIdStr: { $toObjectId: '$productId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$productIdStr'] } } }],
+                    as: 'product'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'locations', // Ensure correct collection name
+                    let: { locationIdStr: { $toObjectId: '$locationId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$locationIdStr'] } } }],
+                    as: 'location'
+                }
+            },
+            { $unwind: { path: '$product', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+            { $skip: skip },
+            { $limit: limit }
+        ]).exec()
         const total = await this.productLocationModel.countDocuments(filters).exec()
     
         return {

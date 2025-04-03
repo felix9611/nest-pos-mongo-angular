@@ -57,7 +57,7 @@ export interface StockMoveProductLocationDto {
 export interface ListProductLocationtRequestDto {
     page: number
     limit: number
-    locatiionIds?: string[]
+    locationIds?: string[]
 }
 
 export interface ProductFileDto {

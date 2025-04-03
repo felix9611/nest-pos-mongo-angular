@@ -16,6 +16,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzModalModule } from 'ng-zorro-antd/modal'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { ProductLocationListComponent } from '../product-location/product-location.component'
 
 @Component({
     imports: [
@@ -33,7 +34,8 @@ import { NzMessageService } from 'ng-zorro-antd/message'
         NzDatePickerModule,
         MatIconModule, 
         MatButtonModule,
-        NzInputNumberModule
+        NzInputNumberModule,
+        ProductLocationListComponent
     ],
     templateUrl: './stock-in.component.html'
 })
@@ -45,6 +47,8 @@ export class StockInComponent implements OnInit {
     ngOnInit(): void {
         this.loadLocationList()
     }
+
+    reloadProductLocation: boolean = true
 
     stockInForm: StockInOutProductLocationDto  = {
         productCode: '',
@@ -124,11 +128,14 @@ export class StockInComponent implements OnInit {
     }
 
     async submitForm() {
+        this.reloadProductLocation = false
         const res = await postApiWithAuth('/product/product-list/stock-in', this.stockInForm)
         if (res) {
             this.message.success('Insert success!')
+            this.reloadProductLocation = true
         } else {
             this.message.error('Something error! Please try again!')
+            this.reloadProductLocation = true
         }
     }
 }

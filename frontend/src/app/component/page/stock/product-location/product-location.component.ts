@@ -8,6 +8,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzTableModule } from 'ng-zorro-antd/table'
+import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 
 
 
@@ -28,6 +29,30 @@ import { NzTableModule } from 'ng-zorro-antd/table'
 })
 export class ProductLocationListComponent implements OnInit {
     ngOnInit(): void {
+        this.loadProductLocationLists()
+        this.loadLocationList()
+    }
+
+    searchForm: any = {
+        page: 1,
+        limit: 10
+    }
+
+    totals: number = 0
+
+    dataLists: any[] = []
+
+
+    async loadProductLocationLists() {
+        const res = await postApiWithAuth('/product/product-list/location-list', this.searchForm)
+        this.dataLists = res.lists
+        this.totals = res.total
+    }
+
+    locationList: any[] = []
+    async loadLocationList() {
+        const data = await getApiWithAuth('/base/location/getAll')
+        this.locationList = data
     }
 
 }
