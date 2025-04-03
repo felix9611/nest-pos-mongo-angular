@@ -5,10 +5,13 @@ import { BaseSchema } from '../../base/baseSchema'
 export type MemberDocument = HydratedDocument<Member>
 @Schema()
 export class Member extends BaseSchema {
+    @Prop({ type: SchemaTypes.String, required: true})
+    memberCode: string
+
     @Prop({ type: SchemaTypes.String, required: true })
     name: string
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     address: string
 
     @Prop({ type: SchemaTypes.String, required: true })
@@ -17,7 +20,7 @@ export class Member extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
     email: string
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     fax: string
 
     @Prop({ type: Types.ObjectId, required: true })

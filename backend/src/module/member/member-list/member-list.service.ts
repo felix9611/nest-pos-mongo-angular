@@ -47,8 +47,11 @@ export class MemberService {
                 msg: 'This member already exist!'
             }
         } else {
+            const memberCode = await this.createNewCode()
+
             const finalData = {
                 ..._data,
+                memberCode,
                 name,
                 phone,
                 status: 1,
@@ -244,6 +247,33 @@ export class MemberService {
             limit,
             totalPages: Math.ceil(total / limit),
             lists,
+        }
+    }
+
+    // create new code
+
+    formatNumber(num: number, digits: number): string {
+        return (num + 1).toString().padStart(digits, '0')
+    }
+
+    async createNewCode() {
+        const result = await this.memberModel.aggregate([
+            {
+              $addFields: { memberCodeInt: { $toInt: "$memberCode" } } // Convert to integer
+            },
+            {
+              $group: { 
+                _id: null, 
+                maxNumber: { $max: "$memberCodeInt" } // Find max
+              }
+            }
+        ]).exec()
+
+        const maxNumber = result.length > 0 ? result[0].maxNumber : 0
+        if (maxNumber == null) {
+            return this.formatNumber(0, 6)
+        } else {
+            return this.formatNumber(maxNumber, 6)
         }
     }
 
