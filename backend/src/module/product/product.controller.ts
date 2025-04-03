@@ -64,7 +64,7 @@ export class ProductController {
     @Post('stock-out')
     @UseGuards(AuthGuard)
     async stockOut(@Body() data: StockInOutProductLocationDto) {
-        return await this.productLocationService.stockIn(data)
+        return await this.productLocationService.stockOut(data)
     }
 
     @Post('stock-in')

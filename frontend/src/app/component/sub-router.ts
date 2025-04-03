@@ -29,6 +29,7 @@ import { ProductListComponent } from './page/product/product-list/product-list.c
 import { ProductFormComponent } from './page/product/product-form/product-form.component'
 import { StockInComponent } from './page/stock/stock-in/stock-in.component'
 import { ProductLocationListComponent } from './page/stock/product-location/product-location.component'
+import { StockOutComponent } from './page/stock/stock-out/stock-out.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -125,6 +126,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'stock-in',
         component: StockInComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'stock-out',
+        component: StockOutComponent,
         canActivate: [AuthGuard]
     }
 ]
