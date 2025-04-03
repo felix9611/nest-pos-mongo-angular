@@ -23,6 +23,7 @@ import { ProductTypeMoudule } from './module/product-type/product-type.module'
 import { ProductMoudule } from './module/product/product.module'
 import { InvRecordMoudule } from './module/InvRecord/InvRecord.module'
 import { MemberClassMoudule } from './module/member/member-class/member-class.module'
+import { MemberMoudule } from './module/member/member-list/member-list.module'
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { MemberClassMoudule } from './module/member/member-class/member-class.mo
     ExcelFieldMatchModule,
     ProductTypeMoudule,
     ProductMoudule,
+    MemberMoudule,
     MemberClassMoudule,
     MongooseModule.forRoot('mongodb://localhost/pos'),
     MongooseModule.forFeature([
