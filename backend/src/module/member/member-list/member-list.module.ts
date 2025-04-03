@@ -5,6 +5,7 @@ import { ActionRecordService } from 'src/module/action-record/actionRecord.servi
 import { Member, MemberSchema } from './member-list.schame'
 import { MemberSpecialDay, MemberSpecialDaySchema } from './member-special-day.schame'
 import { MemberService } from './member-list.service'
+import { MemberController } from './member-list.controller'
 
 @Module({
     imports: [
@@ -15,6 +16,6 @@ import { MemberService } from './member-list.service'
         ])
     ],
     providers: [ActionRecordService, MemberService],
-    controllers: []
+    controllers: [MemberController]
 })
 export class MemberMoudule {}
