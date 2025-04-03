@@ -9,5 +9,6 @@ export interface InsertInvRecordDto {
 
 export interface ListInvRecordDto {
     page: number
-    limit: number
+    limit: number,
+    dateRange?: string[]
 }

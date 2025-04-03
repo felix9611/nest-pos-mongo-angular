@@ -3,8 +3,8 @@ import { InvRecordService } from './InvRecord.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ListInvRecordDto } from './InvRecord.dto'
 
-@Controller('inv-record')
-export class InvRecordController {
+@Controller('inventory-record')
+export class InventoryRecordController {
     constructor(
         private invRecordService: InvRecordService
     ) {}

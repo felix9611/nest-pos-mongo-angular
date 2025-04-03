@@ -47,3 +47,9 @@ export interface ListProductLocationtRequestDto {
     locationIds?: string[]
     assetCode?: string
 }
+
+export interface ListInvRecordDto {
+    page: number
+    limit: number,
+    dateRange?: string[]
+}

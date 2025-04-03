@@ -17,31 +17,87 @@ export class InvRecordService {
     }
 
     async listPage(dto: ListInvRecordDto) {
-        const { page, limit } = dto
+        const { page, limit, dateRange } = dto
         const skip = (page - 1) * limit
 
-        const lists = await await this.invRecordModel.aggregate([
+        const filter = {
+            ...dateRange && dateRange.length > 0 ? { createdAt: { $gte: new Date(dateRange[0]), $lte: new Date(dateRange[1])} } : {}
+        }
+
+        const lists = await this.invRecordModel.aggregate([
+            { $match: filter },
+        
+            // Lookup Product
             {
                 $lookup: {
-                    from: 'products', // Ensure correct collection name
-                    let: { productIdStr: { $toObjectId: '$productId' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$productIdStr'] } } }],
+                    from: 'products',
+                    let: { productIdStr: '$productId' },
+                    pipeline: [
+                        {
+                            $addFields: {
+                                productIdObj: {
+                                    $convert: {
+                                        input: '$$productIdStr',
+                                        to: 'objectId',
+                                        onError: null,
+                                        onNull: null
+                                    }
+                                }
+                            }
+                        },
+                        { $match: { productIdObj: { $ne: null } } },
+                        { $match: { $expr: { $eq: ['$_id', '$productIdObj'] } } }
+                    ],
                     as: 'product'
                 }
             },
+        
+            // Lookup locFrom only if it's a valid ObjectId
             {
                 $lookup: {
-                    from: 'locations', // Ensure correct collection name
-                    let: { locFromStr: { $toObjectId: '$locFrom' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$locFromStr'] } } }],
+                    from: 'locations',
+                    let: { locFromStr: '$locFrom' },
+                    pipeline: [
+                        {
+                            $addFields: {
+                                locFromObj: {
+                                    $convert: {
+                                        input: '$$locFromStr',
+                                        to: 'objectId',
+                                        onError: null,
+                                        onNull: null
+                                    }
+                                }
+                            }
+                        },
+                        { $match: { locFromObj: { $ne: null } } },
+                        { $match: { $expr: { $eq: ['$_id', '$locFromObj'] } } }
+                    ],
                     as: 'locFromData'
                 }
             },
+        
+            // Lookup locTo only if it's a valid ObjectId
             {
                 $lookup: {
-                    from: 'locations', // Ensure correct collection name
-                    let: { locToStr: { $toObjectId: '$locTo' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$locToStr'] } } }],
+                    from: 'locations',
+                    let: { locToStr: '$locTo' },
+                    pipeline: [
+                        {
+                            $addFields: {
+                                locToObj: {
+                                    $convert: {
+                                        input: '$$locToStr',
+                                        to: 'objectId',
+                                        onError: null,
+                                        onNull: null
+                                    }
+                                }
+                            }
+                        },
+                        { $match: { locToObj: { $ne: null } } },
+                        { $match: { $expr: { $eq: ['$_id', '$locToObj'] } } }
+                    ],
                     as: 'locToData'
                 }
             },
@@ -51,7 +107,9 @@ export class InvRecordService {
             { $skip: skip },
             { $limit: limit }
         ]).exec()
-        const total = await this.invRecordModel.countDocuments().exec()
+        
+        
+        const total = await this.invRecordModel.find(filter).countDocuments().exec()
     
         return {
             total,

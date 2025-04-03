@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router'
-import { AssetTypeComponent } from './page/asset/asset-type/asset-type.component'
 import { AuthGuard } from '../../state/AuthGuard'
 import { UserInfoComponent } from './page/userInfo/user-info.component'
 import { DepartmentComponent } from './page/department/department.component'
@@ -11,13 +10,6 @@ import { LocationComponent } from './page/location/location.component'
 import { ActionRecordComponent } from './page/action-record/action-record.component'
 import { BudgetComponent } from './page/budget/budget.component'
 import { TaxInformationComponent } from './page/tax-information/tax-information.component'
-import { AssetFormComponent } from './page/asset/asset-form/asset-form.component'
-import { AssetListComponent } from './page/asset/asset-list/asset-list.component'
-import { WriteOffFormComponent } from './page/asset/write-off-form/write-off-form.component'
-import { WriteOffListComponent } from './page/asset/write-off-list/write-off-list.component'
-import { InventoryRecordListComponent } from './page/asset/inventory-record/inventory-record.component'
-import { AssetListAllComponent } from './page/asset/asset-list-all/asset-list-all.component'
-import { RepairRecordListComponent } from './page/asset/repair-record-list/repair-record-list.component'
 import { StockTakeListComponent } from './page/stock-take/stock-take-list/stock-take-list.component'
 import { StockTakeFormComponent } from './page/stock-take/stock-take-form/stock-take-form.component'
 import { DashboardComponent } from './page/dashboard/dashboard.component'
@@ -31,6 +23,7 @@ import { StockInComponent } from './page/stock/stock-in/stock-in.component'
 import { ProductLocationListComponent } from './page/stock/product-location/product-location.component'
 import { StockOutComponent } from './page/stock/stock-out/stock-out.component'
 import { StockMoveComponent } from './page/stock/stock-move/stock-move.component'
+import { InventoryRecordComponent } from './page/stock/inventory-record/inventory-record.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -137,6 +130,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'stock-out',
         component: StockOutComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'inventory-record',
+        component: InventoryRecordComponent,
         canActivate: [AuthGuard]
     }
 ]
