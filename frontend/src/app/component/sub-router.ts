@@ -27,6 +27,8 @@ import { AccessGuard } from '../../state/AccessGuard'
 import { ProductTypeComponent } from './page/product-type/product-type.component'
 import { ProductListComponent } from './page/product/product-list/product-list.component'
 import { ProductFormComponent } from './page/product/product-form/product-form.component'
+import { StockInComponent } from './page/stock/stock-in/stock-in.component'
+import { ProductLocationListComponent } from './page/stock/product-location/product-location.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -113,6 +115,16 @@ export const pagesRoutes: Routes = [
     {
         path: 'product-detail',
         component: ProductFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'product-location-lists',
+        component: ProductLocationListComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'stock-in',
+        component: StockInComponent,
         canActivate: [AuthGuard]
     }
 ]
