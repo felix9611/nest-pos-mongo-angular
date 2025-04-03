@@ -30,19 +30,19 @@
                       </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
-                    <div class="px-1 lg:px-5 w-[105px] flex items-center">Qty</div>
+                    <div class="px-1 w-[105px] flex items-center">Qty</div>
                     <nz-form-control class="w-full">
                         <nz-input-number [style.width.%]="100" name="qty" [(ngModel)]="stockInForm.qty" (ngModelChange)="qtyChanged($event)"></nz-input-number>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
-                    <div class="px-1 lg:px-5 w-[105px] flex items-center">Total Cost Price</div>
+                    <div class="px-1 w-[105px] flex items-center">Total Cost Price</div>
                     <nz-form-control class="w-full">
                         <nz-input-number [style.width.%]="100" name="totalCost" [(ngModel)]="stockInForm.totalCost" [nzDisabled]="true"></nz-input-number>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
-                    <div class="px-1 lg:px-5 w-[105px] flex items-center">Total Retail Price</div>
+                    <div class="w-[105px] flex items-center">Total Retail Price</div>
                     <nz-form-control class="w-full">
                         <nz-input-number [style.width.%]="100" name="totalPrice" [(ngModel)]="stockInForm.totalPrice" [nzDisabled]="true"></nz-input-number>
                     </nz-form-control>
