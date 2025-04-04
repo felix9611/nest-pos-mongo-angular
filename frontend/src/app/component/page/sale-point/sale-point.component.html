@@ -1,0 +1,103 @@
+<div class="bg-white px-[2rem]">
+    <div>
+        <div class="py-2 font-bold text-[2rem] pl-5">Point Of Sale</div>
+        <div class="grid lg:grid-cols-2 gap-3">
+            <!-- left -->
+            <div class="py-5">
+                <form nz-form class="grid grid-cols-2 p-2 gap-2">
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Product Code</div>
+                          <nz-form-control>
+                            <input nz-input type="text" name="productCode" [(ngModel)]="enterProductForm.productCode" (ngModelChange)="productCodeChanged($event)" />
+                          </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Location</div>
+                          <nz-form-control>
+                            <nz-select
+                                class="w-full h-full" 
+                                name="locationId" 
+                                [(ngModel)]="invoiceForm.locationId"  
+                                nzAllowClear  nzShowArrow
+                                nzPlaceHolder="Location">
+                                @for (option of locationList; track option) {
+                                    <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
+                                }
+                            </nz-select>
+                          </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Qty</div>
+                        <nz-form-control class="w-full">
+                            <nz-input-number [style.width.%]="100" name="qty" [(ngModel)]="enterProductForm.qty" (ngModelChange)="qtyChanged($event)"></nz-input-number>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Retail Price</div>
+                        <nz-form-control class="w-full">
+                            <nz-input-number [style.width.%]="100" name="retailPrice" [(ngModel)]="enterProductForm.retailPrice"></nz-input-number>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item class="col-span-2">
+                        <div class="px-1 w-[105px] flex items-center">Disscount</div>
+                        <nz-form-control class="w-full">
+                            <nz-input-number [style.width.%]="100" name="disscount" [(ngModel)]="enterProductForm.discount"></nz-input-number>
+                        </nz-form-control>
+                        <nz-form-control>
+                            <nz-select
+                                class="w-full h-full" 
+                                name="discountList" 
+                                (ngModelChange)="typeChanged($event)"
+                                [(ngModel)]="enterProductForm.discountType"  
+                                nzAllowClear  nzShowArrow
+                                nzPlaceHolder="$ / %">
+                                @for (option of discountList; track option) {
+                                    <nz-option [nzLabel]="option.type" [nzValue]="option.type"></nz-option>
+                                }
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Total Price</div>
+                        <nz-form-control class="w-full">
+                            <nz-input-number [style.width.%]="100" name="allTotalPrice" [(ngModel)]="enterProductForm.allTotalPrice"></nz-input-number>
+                        </nz-form-control>
+                    </nz-form-item>
+                </form>
+                <div (click)="addToList()" class="rounded-lg border-2 text-[#32c244] border-[#32c244] bg-[#a2ff80] hover:bg-[#91e274] p-1 w-[100px] text-center ">
+                    Add
+                </div>
+            </div>
+
+            <!-- right-->
+            <div>
+                <nz-table
+                    [nzData]="inputedProductList"
+                    #dataTable
+                    nzFrontPagination="false"
+                >
+                    <thead>
+                        <tr>
+                            <th>Product Code</th>
+                            <th>Qty</th>
+                            <th>Total Price</th>
+                            <th>Discount</th>
+                            <th>Discount Type</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of inputedProductList; index as i;">
+                            <td>{{data.productCode}}</td>
+                            <td>{{data.qty}}</td>
+                            <td>{{data.price}}</td>
+                            <td>{{data.discount}}</td>
+                            <td>{{data.discountTyp}}</td>
+                            <td class="text-center"><a (click)="removeItem(i)">X</a></td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+</div>

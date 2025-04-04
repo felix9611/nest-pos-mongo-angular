@@ -23,6 +23,7 @@ import { InventoryRecordComponent } from './page/stock/inventory-record/inventor
 import { MemberClassesComponent } from './page/member/member-class/member-class.component'
 import { MemberFormComponent } from './page/member/member-form/member-form.component'
 import { MemberListComponent } from './page/member/member-list/member-list.component'
+import { SalePointComponent } from './page/sale-point/sale-point.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -154,6 +155,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'member-detail',
         component: MemberFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'sale-point',
+        component: SalePointComponent,
         canActivate: [AuthGuard]
     }
 ]
