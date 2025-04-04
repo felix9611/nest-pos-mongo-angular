@@ -43,6 +43,7 @@ import { MemberMoudule } from './module/member/member-list/member-list.module'
     ProductMoudule,
     MemberMoudule,
     MemberClassMoudule,
+    InvRecordMoudule,
     MongooseModule.forRoot('mongodb://localhost/pos'),
     MongooseModule.forFeature([
       { name: 'SysRoles', schema: SysRoleSchema },
