@@ -35,7 +35,9 @@
                     <nz-form-item>
                         <div class="px-1 w-[105px] flex items-center">Retail Price</div>
                         <nz-form-control class="w-full">
-                            <nz-input-number [style.width.%]="100" name="retailPrice" [(ngModel)]="enterProductForm.retailPrice"></nz-input-number>
+                            <nz-input-number [style.width.%]="100" name="retailPrice" [(ngModel)]="enterProductForm.retailPrice">
+                                <span nzInputPrefix>$</span>
+                            </nz-input-number>
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item class="col-span-2">
@@ -60,11 +62,13 @@
                     <nz-form-item>
                         <div class="px-1 w-[105px] flex items-center">Total Price</div>
                         <nz-form-control class="w-full">
-                            <nz-input-number [style.width.%]="100" name="allTotalPrice" [(ngModel)]="enterProductForm.allTotalPrice"></nz-input-number>
+                            <nz-input-number [style.width.%]="100" name="retailPrice" [(ngModel)]="enterProductForm.allTotalPrice">
+                                <span nzInputPrefix>$</span>
+                            </nz-input-number>
                         </nz-form-control>
                     </nz-form-item>
                 </form>
-                <div (click)="addToList()" class="rounded-lg border-2 text-[#32c244] border-[#32c244] bg-[#a2ff80] hover:bg-[#91e274] p-1 w-[100px] text-center ">
+                <div (click)="addToList()" class="rounded-lg border-2 text-[#008dff] border-[#008dff] bg-[#90cdff] hover:bg-[#6bafe7] p-1 w-[100px] text-center ">
                     Add
                 </div>
             </div>
@@ -97,6 +101,106 @@
                         </tr>
                     </tbody>
                 </nz-table>
+                <div class="py-3 grid grid-cols-2 gap-2">
+                    <div>
+                        <input class="h-full" nz-input type="text" name="memberSearch" placeholder="member search" [(ngModel)]="memberSearch" />
+                    </div>
+                    <div (click)="findMmebers()" class="rounded-lg border-2 text-[#008dff] border-[#008dff] bg-[#90cdff] hover:bg-[#6bafe7] p-1 w-[100px] text-center ">
+                        Search
+                    </div>
+                </div>
+                <div class="py-3">
+                    <nz-table
+                        [nzData]="memberLists"
+                        #dataTable
+                        nzFrontPagination="false"
+                    >
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of memberLists; index as i;">
+                                <td (click)="fillMemberInfo(data)">{{data.memberCode}}</td>
+                                <td (click)="fillMemberInfo(data)">{{data.name}}</td>
+                                <td (click)="fillMemberInfo(data)">{{data.phone}}</td>
+                                <td (click)="fillMemberInfo(data)">{{data.email}}</td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </div>
+                <div class="py-3">
+                    <form nz-form class="grid grid-cols-2 p-2 gap-2">
+                        <nz-form-item>
+                            <div class="px-1 w-[105px] flex items-center">No.</div>
+                              <nz-form-control>
+                                <input nz-input type="text" name="memberCode" [(ngModel)]="memberForm.memberCode" [disabled]="true"/>
+                              </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <div class="px-1 w-[105px] flex items-center">Name</div>
+                              <nz-form-control>
+                                <input nz-input type="text" name="name" [(ngModel)]="memberForm.name" [disabled]="true"/>
+                              </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <div class="px-1 w-[105px] flex items-center">Phone</div>
+                              <nz-form-control>
+                                <input nz-input type="text" name="phone" [(ngModel)]="memberForm.phone" [disabled]="true"/>
+                              </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <div class="px-1 w-[105px] flex items-center">Email</div>
+                              <nz-form-control>
+                                <input nz-input type="text" name="email" [(ngModel)]="memberForm.email" [disabled]="true"/>
+                              </nz-form-control>
+                        </nz-form-item>
+                    </form>
+                </div>
+                <form nz-form class="">
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Total</div>
+                        <nz-form-control class="w-full">
+                            <nz-input-number [style.width.%]="100" name="orgTotal" [(ngModel)]="orgTotal">
+                                <span nzInputPrefix>$</span>
+                            </nz-input-number>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Disscount</div>
+                        <nz-form-control class="w-full">
+                            <nz-input-number [style.width.%]="100" name="disscount" [(ngModel)]="invoiceForm.discount"></nz-input-number>
+                        </nz-form-control>
+                        <nz-form-control>
+                            <nz-select
+                                class="w-full h-full" 
+                                name="discountFull" 
+                                (ngModelChange)="totalTypeChnage($event)"
+                                [(ngModel)]="invoiceForm.discountType"  
+                                nzAllowClear  nzShowArrow
+                                nzPlaceHolder="$ / %">
+                                @for (option of discountList; track option) {
+                                    <nz-option [nzLabel]="option.type" [nzValue]="option.type"></nz-option>
+                                }
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                            <div class="px-1 w-[105px] flex items-center">Total Amount</div>
+                            <nz-form-control class="w-full">
+                                <nz-input-number [style.width.%]="100" name="totalAmount" [(ngModel)]="invoiceForm.totalAmount">
+                                    <span nzInputPrefix>$</span>
+                                </nz-input-number>
+                            </nz-form-control>
+                    </nz-form-item>
+                </form>
+                <div class="py-5">
+
+                </div>
             </div>
         </div>
     </div>

@@ -31,7 +31,7 @@ export interface InvoiceItemDto {
 export interface InvoicePaymentDto {
     method: string
     amount: number
-    paymentTime: string
+    paymentTime?: string
 }
 
 export interface CreateInvoiceForm {
@@ -45,4 +45,12 @@ export interface CreateInvoiceForm {
     remark: string
     invoiceItems: InvoiceItemDto[]
     invoicePayments: InvoicePaymentDto[]
+}
+
+export interface MmeberForm {
+    _id: string
+    memberCode: string
+    name: string
+    phone: string
+    email: string
 }

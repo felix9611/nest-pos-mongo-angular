@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'
-import { getApiWithAuth } from '../../../../tool/httpRequest-auth'
+import { getApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import { FormsModule } from '@angular/forms'
 import { CommonModule } from '@angular/common'
@@ -7,7 +7,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { NzTableModule } from 'ng-zorro-antd/table'
-import { CreateInvoiceForm, ProductFormDto } from './interface'
+import { CreateInvoiceForm, InvoicePaymentDto, MmeberForm, ProductFormDto } from './interface'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { MatButtonModule } from '@angular/material/button'
 
@@ -78,6 +78,8 @@ export class SalePointComponent implements OnInit {
         remark: ''
     }
 
+    memberSearch: string = ''
+
     discountList = [
         { type: '%' },
         { type: '$' },
@@ -91,7 +93,7 @@ export class SalePointComponent implements OnInit {
     ]
 
     inputedProductList: any[] = []
-
+    inputedPaymentList: any[] = []
 
     async productCodeChanged(event: any) {
         if (event) {
@@ -110,9 +112,9 @@ export class SalePointComponent implements OnInit {
 
     typeChanged(event: any) {
         if (event === '%') {
-            this.enterProductForm.allTotalPrice = this.enterProductForm.allTotalPrice * (1 - this.enterProductForm.disscount /100)
+            this.enterProductForm.allTotalPrice = this.enterProductForm.allTotalPrice * (1 - this.enterProductForm.discount /100)
         } else if (event === '$') {
-            this.enterProductForm.allTotalPrice = this.enterProductForm.allTotalPrice - this.enterProductForm.disscount
+            this.enterProductForm.allTotalPrice = this.enterProductForm.allTotalPrice - this.enterProductForm.discount
         }
     }
 
@@ -128,6 +130,7 @@ export class SalePointComponent implements OnInit {
         }
 
         this.inputedProductList.push(addToList)
+        this.calTotalNumber()
 
         this.enterProductForm = {
             productCode: '',
@@ -142,9 +145,60 @@ export class SalePointComponent implements OnInit {
         }
     }
 
+    orgTotal: number = 0
+    calTotalNumber() {
+        this.inputedProductList.forEach(a => {
+            this.orgTotal += a.price
+        })
+    }
+      
+
     // RIGHT
 
     removeItem(index: number) {
         this.inputedProductList.splice(index, 1)
+    }
+
+    memberLists: any[] = []
+    async findMmebers() {
+        this.memberLists = await postApiWithAuth('/member/member-list/list-member', { name: this.memberSearch })
+    }
+
+    memberForm: MmeberForm  = {
+        _id: '',
+        memberCode: '',
+        name: '',
+        phone: '',
+        email: ''
+    }
+
+
+    fillMemberInfo(data: any) {
+        this.memberForm = data
+    }
+
+    totalTypeChnage(event: any) {
+        if (event === '%') {
+            this.invoiceForm.totalAmount = this.orgTotal * (1 - this.invoiceForm.discount /100)
+        } else if (event === '$') {
+            this.invoiceForm.totalAmount = this.orgTotal - this.enterProductForm.disscount
+        }
+    }
+
+
+    paymentForm: InvoicePaymentDto = {
+        method: '',
+        amount: 0
+    }
+
+    addPaymentList() {
+        const { method, amount } = this.paymentForm
+        const addToList = {
+            method,
+            amount,
+            paymentTime: new Date().toISOString()
+        }
+
+        this.inputedPaymentList.push(addToList)
     }
 }
