@@ -11,6 +11,9 @@ export class Invoice extends BaseSchema {
     @Prop({ type: Types.ObjectId, required: true })
     memberId: Types.ObjectId
 
+    @Prop({ type: Types.ObjectId, required: true })
+    locationId: Types.ObjectId
+
     @Prop({ type: SchemaTypes.Double, required: true })
     totalAmount: number
 
@@ -20,17 +23,14 @@ export class Invoice extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
     discountType: string
 
-    @Prop({ type: Types.ObjectId, required: true })
-    locationId: Types.ObjectId
-
     @Prop({ type: SchemaTypes.Double, required: true })
     taxTotal: number
 
     @Prop({ type: SchemaTypes.String, required: true })
     taxRefNo: string
 
-    @Prop({ type: SchemaTypes.Number, required: true })
-    voidNum: number
+    @Prop({ type: SchemaTypes.String, required: true })
+    remark: string
 }
 
 export const InvoiceSchema = SchemaFactory.createForClass(Invoice)

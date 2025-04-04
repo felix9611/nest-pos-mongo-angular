@@ -86,16 +86,12 @@ export class MemberService {
 
                 if (memberSpecialDays.length > 0) {
 
-                    for (const data of memberSpecialDays) {
-                        const finalData = {
-                            ...data,
-                            memberId: res._id,
-                            status: 1,
-                            createdAt: new Date()
-                        }
-                        const create = new this.memberSpecialDayModel(finalData)
-                        await create.save()
-                    }
+                    const invoiceItemsData = memberSpecialDays.map((item) => ({
+                        memberId: res._id,
+                        ...item
+                    }))
+    
+                    await this.memberSpecialDayModel.insertMany(invoiceItemsData)
                 }
 
                 return {

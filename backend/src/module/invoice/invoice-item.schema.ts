@@ -4,7 +4,9 @@ import { BaseSchema } from '../base/baseSchema'
 
 export type InvoiceItemDocument = HydratedDocument<InvoiceItem>
 @Schema()
-export class InvoiceItem extends BaseSchema {
+export class InvoiceItem {
+    _id: Types.ObjectId
+
     @Prop({ type: Types.ObjectId, required: true })
     invoiceId: Types.ObjectId
 

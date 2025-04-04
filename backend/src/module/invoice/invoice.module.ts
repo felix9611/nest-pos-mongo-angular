@@ -6,6 +6,7 @@ import { InvoiceItem, InvoiceItemSchema } from './invoice-item.schema'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { InvoiceService } from './invoice.servicea'
 import { InvoicePayment, InvoicePaymentSchema } from './invoice-payment.schema'
+import { InvoiceController } from './invoice.controller'
 
 @Module({
     imports: [
@@ -16,7 +17,7 @@ import { InvoicePayment, InvoicePaymentSchema } from './invoice-payment.schema'
             { name: InvoicePayment.name, schema: InvoicePaymentSchema }
         ])
     ],
-    controllers: [],
+    controllers: [InvoiceController],
     providers: [ActionRecordService, InvoiceService],
     exports: []
 })
