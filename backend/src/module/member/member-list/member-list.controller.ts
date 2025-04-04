@@ -37,4 +37,10 @@ export class MemberController {
     async listAndPage(@Body() req: ListMemberRequestDto) {
         return this.memberService.listPage(req)
     }
+
+    @Get('special-day/remove/:id')
+    @UseGuards(AuthGuard)
+    async specialDayRemoveById(@Param('id') id: string) {
+        return await this.memberService.removeSpecialDay(id)
+    }
 }

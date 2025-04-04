@@ -277,4 +277,27 @@ export class MemberService {
         }
     }
 
+    async removeSpecialDay(_id: string) {
+        const checkData = await this.memberSpecialDayModel.findOne({ _id}).exec()
+
+        if (checkData?.status === 0) {
+            return {
+                msg: 'This member special day has been invalidated! Please contact admin!'
+            }
+        } else {
+            const res = await this.memberSpecialDayModel.updateOne({ _id }, { status: 0 }).exec()
+
+            if (res.modifiedCount === 1) {
+                return {
+                    msg: 'Invalidate successfully!'
+                }
+            } else {
+                return {
+                    msg: 'Ooops! Something went wrong! Please try again!'
+                }
+            }
+        }
+        
+    }
+
 }
