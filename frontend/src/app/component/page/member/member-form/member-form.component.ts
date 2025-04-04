@@ -13,6 +13,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import moment from 'moment'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { ActivatedRoute, Router } from '@angular/router'
+import { MatIconModule } from '@angular/material/icon'
 
 @Component({
     templateUrl: './member-form.component.html',
@@ -25,11 +26,13 @@ import { ActivatedRoute, Router } from '@angular/router'
         NzInputNumberModule,
         NzTableModule, 
         NzButtonModule,
-        NzDatePickerModule
+        NzDatePickerModule,
+        MatIconModule
     ]
 })
 export class MemberFormComponent implements OnInit {
     constructor(
+        private routeTo: Router,
         private route: ActivatedRoute,
         private message: NzMessageService
     ) {}
@@ -128,5 +131,9 @@ export class MemberFormComponent implements OnInit {
         if (res) {
             this.message.info(res.msg)
         }
+    }
+
+    backToList() {
+        this.routeTo.navigate([`/member-list`])
     }
 }

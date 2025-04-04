@@ -1,8 +1,11 @@
 <div class="bg-white p-[1rem]">
     <div>
-        <div class="py-2 font-bold text-[2rem] pl-5">
-            Member Form
-        </div>
+      <div class="flex py-3 gap-5">
+          <div class="text-[2rem] hover:text-[#ff9200] px-3" (click)="backToList()">
+              <mat-icon cl aria-hidden="false" fontIcon="chevron_left"></mat-icon>
+          </div>
+          <div class="text-center text-[2rem] font-bold">Member Form</div>
+      </div>
         <form nz-form class="grid lg:grid-cols-4 p-2 gap-2">
             <nz-form-item>
               <div class="px-1 w-[105px] flex items-center">Member Code</div>

@@ -22,6 +22,7 @@ import { StockMoveComponent } from './page/stock/stock-move/stock-move.component
 import { InventoryRecordComponent } from './page/stock/inventory-record/inventory-record.component'
 import { MemberClassesComponent } from './page/member/member-class/member-class.component'
 import { MemberFormComponent } from './page/member/member-form/member-form.component'
+import { MemberListComponent } from './page/member/member-list/member-list.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -138,6 +139,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'member-class',
         component: MemberClassesComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'member-list',
+        component: MemberListComponent,
         canActivate: [AuthGuard]
     },
     {
