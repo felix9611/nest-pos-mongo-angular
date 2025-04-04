@@ -125,23 +125,8 @@ export class MemberListComponent {
         if (res) {
             this.message.info(res.msg)
             this.loadMemberLists()
+            this.removeDialog = true
         }
-    }
-
-    qrCodeDialog: boolean = false
-    qrCodeString: string = ''
-    qrCodeRandomHtml: string = ''
-
-    openQrCodeDialogClose(event: any) {
-        this.qrCodeDialog = false
-    }
-
-    repairRecordDialog: boolean = false
-    handleData: any = {}
-
-    openRepairRecordDialog(data: any) {
-        this.repairRecordDialog = true
-        this.handleId = data._id
     }
 
     excelFileSetting: any = {
