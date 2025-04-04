@@ -29,3 +29,7 @@ export interface ListMemberRequestDto {
     contact?: string
     classIds?: string[]
 }
+
+export interface ListMemberDto {
+    name?: string
+}

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { MemberService } from './member-list.service'
 import { AuthGuard } from 'src/module/auth/AuthGuard'
-import { CreateMemberDto, ListMemberRequestDto, UpdateMemberDto } from './member-list.dto'
+import { CreateMemberDto, ListMemberDto, ListMemberRequestDto, UpdateMemberDto } from './member-list.dto'
 
 
 @Controller('member/member-list')
@@ -36,6 +36,12 @@ export class MemberController {
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListMemberRequestDto) {
         return this.memberService.listPage(req)
+    }
+
+    @Post('list-member')
+    @UseGuards(AuthGuard)
+    async listMember(@Body() req: ListMemberDto) {
+        return this.memberService.listMember(req)
     }
 
     @Get('special-day/remove/:id')

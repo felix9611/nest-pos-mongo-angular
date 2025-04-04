@@ -4,7 +4,7 @@ import { Member } from './member-list.schame'
 import { Model, Types } from 'mongoose'
 import { ActionRecordService } from 'src/module/action-record/actionRecord.service'
 import { MemberSpecialDay } from './member-special-day.schame'
-import { ListMemberRequestDto, UpdateMemberDto } from './member-list.dto'
+import { ListMemberDto, ListMemberRequestDto, UpdateMemberDto } from './member-list.dto'
 
 @Injectable()
 export class MemberService {
@@ -225,6 +225,20 @@ export class MemberService {
                 }
             }
         }
+    }
+
+    async listMember(req: ListMemberDto) {
+        const { name } = req
+
+        const filter = {
+            $or: [
+                { name: { $regex: name, $options: 'i' } },
+                { phone: { $regex: name, $options: 'i' } },
+                { email: { $regex: name, $options: 'i' } },
+                { fax: { $regex: name, $options: 'i' } },
+            ]
+        }
+        return await this.memberModel.find(filter).exec()
     }
 
     async listPage(req: ListMemberRequestDto) {
