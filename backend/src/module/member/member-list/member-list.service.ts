@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Member } from './member-list.schame'
-import { Model } from 'mongoose'
+import { Model, Types } from 'mongoose'
 import { ActionRecordService } from 'src/module/action-record/actionRecord.service'
 import { MemberSpecialDay } from './member-special-day.schame'
 import { ListMemberRequestDto, UpdateMemberDto } from './member-list.dto'
@@ -15,16 +15,29 @@ export class MemberService {
     ) {}
 
     async getOneById(_id: string) {
-        const data: any = await this.memberModel.findOne({ _id, status: 1 }).exec()
-        
-        if (data) {
-            const specialDays = await this.memberSpecialDayModel.find({ memberId: _id, status: 1 }).exec()
-            data.memberSpecialDays = specialDays
-            return data
-        } else {
-            return {
-                msg: 'This member has been invalidated! Please contact admin!'
+        try {
+            const data = await this.memberModel.findOne({ 
+                _id, 
+                status: 1 
+            }).exec()
+            
+            if (!data) {
+                return {
+                    msg: 'This member has been invalidated! Please contact admin!'
+                }
             }
+    
+            const specialDays = await this.memberSpecialDayModel.find({ 
+                memberId: new Types.ObjectId(_id)
+            }).exec()
+    
+            return {
+                ...data.toObject(),
+                memberSpecialDays: specialDays || [] // Fallback to empty array if null
+            }
+        } catch (error) {
+            console.error('Error in getOneById:', error)
+            throw error // Or handle the error as needed
         }
     }
 

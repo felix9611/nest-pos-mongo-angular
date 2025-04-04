@@ -148,5 +148,10 @@ export const pagesRoutes: Routes = [
         path: 'create-member',
         component: MemberFormComponent,
         canActivate: [AuthGuard]
+    },
+    {
+        path: 'member-detail',
+        component: MemberFormComponent,
+        canActivate: [AuthGuard]
     }
 ]

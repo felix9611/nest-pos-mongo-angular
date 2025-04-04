@@ -12,6 +12,7 @@ import { NzFormModule } from 'ng-zorro-antd/form'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import moment from 'moment'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { ActivatedRoute, Router } from '@angular/router'
 
 @Component({
     templateUrl: './member-form.component.html',
@@ -29,9 +30,16 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 })
 export class MemberFormComponent implements OnInit {
     constructor(
+        private route: ActivatedRoute,
         private message: NzMessageService
     ) {}
     ngOnInit(): void {
+        this.route.queryParams.subscribe((x: any) => {
+            if (x.id) {
+                this.theId = x.id
+                this.getOne()
+            }
+        })
         this.loadMemberClassList()
     }
 
@@ -53,6 +61,8 @@ export class MemberFormComponent implements OnInit {
         date: '',
         remark: ''
     }
+
+    theId: string = ''
 
     memberClassList: any[] = []
     async loadMemberClassList() {
@@ -78,6 +88,10 @@ export class MemberFormComponent implements OnInit {
             date: '',
             remark: ''
         }
+    }
+
+    async getOne() {
+        this.editForm = await getApiWithAuth(`/member/member-list/one/${this.theId}`)
     }
 
     dateFormat(data: string) {
