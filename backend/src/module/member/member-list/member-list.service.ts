@@ -28,12 +28,12 @@ export class MemberService {
             }
     
             const specialDays = await this.memberSpecialDayModel.find({ 
-                memberId: new Types.ObjectId(_id)
+                memberId: _id
             }).exec()
     
             return {
                 ...data.toObject(),
-                memberSpecialDays: specialDays || [] // Fallback to empty array if null
+                memberSpecialDays: specialDays // Fallback to empty array if null
             }
         } catch (error) {
             console.error('Error in getOneById:', error)
