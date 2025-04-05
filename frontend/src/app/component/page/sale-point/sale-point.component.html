@@ -71,11 +71,8 @@
                 <div (click)="addToList()" class="rounded-lg border-2 text-[#008dff] border-[#008dff] bg-[#90cdff] hover:bg-[#6bafe7] p-1 w-[100px] text-center ">
                     Add
                 </div>
-            </div>
-
-            <!-- right-->
-            <div>
                 <nz-table
+                    class="py-5"
                     [nzData]="inputedProductList"
                     #dataTable
                     nzFrontPagination="false"
@@ -101,6 +98,11 @@
                         </tr>
                     </tbody>
                 </nz-table>
+            </div>
+
+            <!-- right-->
+            <div>
+                
                 <div class="py-3 grid grid-cols-2 gap-2">
                     <div>
                         <input class="h-full" nz-input type="text" name="memberSearch" placeholder="member search" [(ngModel)]="memberSearch" />
@@ -199,9 +201,104 @@
                     </nz-form-item>
                 </form>
                 <div class="py-5">
-
+                    <div 
+                        (click)="openPaymentDialg()" 
+                        class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
+                            Payment
+                    </div>
                 </div>
             </div>
         </div>
+        <nz-modal
+            [(nzVisible)]="lastPaymentDialogOpen" 
+            nzTitle="Payment"
+            nzWidth="800px"
+            (nzOnCancel)="closePaymentDialg()"
+            (nzOnOk)="submitPOSale()"
+        >
+            <ng-container *nzModalContent>
+                <form nz-form>
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Total Amount</div>
+                        <nz-form-control class="w-full">
+                            <nz-input-number [style.width.%]="100" name="totalAmount" [(ngModel)]="invoiceForm.totalAmount">
+                                <span nzInputPrefix>$</span>
+                            </nz-input-number>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div class="font-bold text-[1.4rem]">
+                        Payment Method
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 py-3">
+                        <nz-form-item>
+                            <div class="px-1 w-[105px] flex items-center">Amount</div>
+                            <nz-form-control class="w-full">
+                                <nz-input-number [style.width.%]="100" name="amountPay" [(ngModel)]="paymentForm.amount">
+                                    <span nzInputPrefix>$</span>
+                                </nz-input-number>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <div class="px-1 w-[105px] flex items-center">Method</div>
+                              <nz-form-control>
+                                <nz-select
+                                    class="w-full h-full" 
+                                    name="locationId" 
+                                    [(ngModel)]="paymentForm.method"  
+                                    nzAllowClear  nzShowArrow>
+                                    @for (option of payMethodCategory; track option) {
+                                        <nz-option [nzLabel]="option.key" [nzValue]="option.key"></nz-option>
+                                    }
+                                </nz-select>
+                              </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <div (click)="addPaymentList()" class="rounded-lg border-2 text-[#008dff] border-[#008dff] bg-[#90cdff] hover:bg-[#6bafe7] p-1 w-[100px] text-center ">
+                                Add
+                            </div>
+                        </nz-form-item>
+                    </div>
+                    <nz-table
+                        [nzData]="inputedPaymentList"
+                        #dataTable
+                        nzFrontPagination="false"
+                    >
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of inputedPaymentList; index as i;">
+                                <td>{{data.amount}}</td>
+                                <td>{{data.method}}</td>
+                                <td class="text-center"><a (click)="removePayItem(i, data)">X</a></td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                    <div class="grid grid-cols-2 gap-3 py-3">
+                        <nz-form-item>
+                            <div class="px-1 w-[105px] flex items-center">Balance</div>
+                            <nz-form-control class="w-full">
+                                <nz-input-number [style.width.%]="100" name="balance" [(ngModel)]="paymentForm.balance">
+                                    <span nzInputPrefix>$</span>
+                                </nz-input-number>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <div class="px-1 w-[105px] flex items-center">Find Redemption</div>
+                            <nz-form-control class="w-full">
+                                <nz-input-number [style.width.%]="100" name="findRedemption" [(ngModel)]="paymentForm.findRedemption">
+                                    <span nzInputPrefix>$</span>
+                                </nz-input-number>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </form>
+            </ng-container>
+
+        </nz-modal>
     </div>
 </div>

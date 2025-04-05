@@ -10,6 +10,7 @@ import { NzTableModule } from 'ng-zorro-antd/table'
 import { CreateInvoiceForm, InvoicePaymentDto, MmeberForm, ProductFormDto } from './interface'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { MatButtonModule } from '@angular/material/button'
+import { NzModalModule } from 'ng-zorro-antd/modal'
 
 @Component({
     templateUrl: './sale-point.component.html',
@@ -23,6 +24,7 @@ import { MatButtonModule } from '@angular/material/button'
         NzTableModule,
         NzButtonModule,
         MatButtonModule, 
+        NzModalModule
     ]
 })
 export class SalePointComponent implements OnInit {
@@ -175,6 +177,7 @@ export class SalePointComponent implements OnInit {
 
     fillMemberInfo(data: any) {
         this.memberForm = data
+        this.invoiceForm.memberId = data._id
     }
 
     totalTypeChnage(event: any) {
@@ -188,7 +191,9 @@ export class SalePointComponent implements OnInit {
 
     paymentForm: InvoicePaymentDto = {
         method: '',
-        amount: 0
+        amount: 0,
+        balance: 0,
+        findRedemption: 0
     }
 
     addPaymentList() {
@@ -200,5 +205,40 @@ export class SalePointComponent implements OnInit {
         }
 
         this.inputedPaymentList.push(addToList)
+        
+        this.paymentForm.findRedemption = amount > this.paymentForm.balance ? amount - this.paymentForm.balance : 0
+        this.paymentForm.balance = this.invoiceForm.totalAmount - amount
+        
+
     }
+
+    lastPaymentDialogOpen: boolean = false
+
+    openPaymentDialg() {
+        this.invoiceForm.totalAmount = this.invoiceForm.totalAmount ? this.invoiceForm.totalAmount : this.orgTotal
+        this.paymentForm.balance = this.invoiceForm.totalAmount ? this.invoiceForm.totalAmount : this.orgTotal
+        this.lastPaymentDialogOpen = true
+    }
+
+    closePaymentDialg() {
+        this.lastPaymentDialogOpen = false
+    }
+
+    removePayItem(index: number, amount: any) {
+        this.paymentForm.balance = this.paymentForm.balance + amount.amount
+        this.paymentForm.findRedemption = this.paymentForm.findRedemption - amount.amount
+        this.inputedPaymentList.splice(index, 1)
+    }
+
+    async submitPOSale() {
+        const finalDataSubmit = {
+            ...this.invoiceForm,
+            invoiceItems: this.inputedProductList,
+            invoicePayments: this.inputedPaymentList
+        }
+
+        const res = await postApiWithAuth('/invoice/create', finalDataSubmit)
+        console.log(res)
+    }
+    
 }
