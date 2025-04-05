@@ -19,22 +19,22 @@ export class InvoiceItem {
     @Prop({ type: SchemaTypes.Double, required: true })
     price: number
 
-    @Prop({ type: SchemaTypes.Double, required: true })
+    @Prop({ type: SchemaTypes.Double })
     discount: number
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     discountType: string
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     taxType: string
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     taxCode: string
 
-    @Prop({ type: SchemaTypes.Double, required: true })
+    @Prop({ type: SchemaTypes.Double })
     taxRate: number
 
-    @Prop({ type: SchemaTypes.Double, required: true })
+    @Prop({ type: SchemaTypes.Double })
     taxAmount: number 
 }
 

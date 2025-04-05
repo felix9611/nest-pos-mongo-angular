@@ -17,19 +17,19 @@ export class Invoice extends BaseSchema {
     @Prop({ type: SchemaTypes.Double, required: true })
     totalAmount: number
 
-    @Prop({ type: SchemaTypes.Double, required: true })
+    @Prop({ type: SchemaTypes.Double })
     discount: number
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     discountType: string
 
-    @Prop({ type: SchemaTypes.Double, required: true })
+    @Prop({ type: SchemaTypes.Double })
     taxTotal: number
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     taxRefNo: string
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     remark: string
 }
 

@@ -63,13 +63,13 @@ export class InvoiceService {
         const number = `INV-${newCode}`
         const taxRefNo = this.randomNumber()
 
-        const checkLocation = await this.invoiceModel.findOne({ 
-            _id: locationId, 
-            placeCode: locationCode
-            , status: 1 
+  /*      const checkLocation = await this.invoiceModel.findOne({ 
+            _id: locationId, status: 1 
         }).exec()
 
-        if (!checkLocation) throw new Error('Location not found!')
+        if (!checkLocation) {
+            throw new Error('Location not found!')
+        } */
 
         const finalData = {
             number,
