@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Invoice } from './invoice.schema'
-import { Model } from 'mongoose'
+import { Model, Types } from 'mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { InvoiceItem } from './invoice-item.schema'
 import { InvoicePayment } from './invoice-payment.schema'
@@ -20,7 +20,7 @@ export class InvoiceService {
 
     async getOneById(_id: string) {
         const baseData = await this.invoiceModel.aggregate([
-            { $match: { _id } },
+            { $match: { _id: new Types.ObjectId(_id) } },
             {
                 $lookup: {
                   from: 'members', // Ensure correct collection name
@@ -30,10 +30,10 @@ export class InvoiceService {
                 }
             },
             { $unwind: { path: '$member', preserveNullAndEmptyArrays: true } },
-        ])
+        ]).exec()
 
-        const itemData = await this.invoiceModel.aggregate([
-            { $match: { invoiceId: _id } },
+        const itemData = await this.invoiceItemModel.aggregate([
+            { $match: { invoiceId: new Types.ObjectId(_id) } },
             {
                 $lookup: {
                   from: 'products', // Ensure correct collection name
@@ -42,12 +42,12 @@ export class InvoiceService {
                   as: 'product'
                 }
             },
-            { $unwind: { path: '$product', preserveNullAndEmptyArrays: true } },
-        ])
+            { $unwind: { path: '$product', preserveNullAndEmptyArrays: true } }
+        ]).exec()
 
         const invoiceData = baseData[0]
 
-        const paymentData = await this.invoicePaymentModel.find({ invoiceId: _id})
+        const paymentData = await this.invoicePaymentModel.find({ invoiceId: new Types.ObjectId(_id) }).exec()
 
         return {
             ...invoiceData,

@@ -11,6 +11,9 @@ import { CreateInvoiceForm, InvoicePaymentDto, MmeberForm, ProductFormDto } from
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { MatButtonModule } from '@angular/material/button'
 import { NzModalModule } from 'ng-zorro-antd/modal'
+import { NzMessageService } from 'ng-zorro-antd/message'
+import { timer } from 'rxjs'
+import { Router } from '@angular/router'
 
 @Component({
     templateUrl: './sale-point.component.html',
@@ -28,6 +31,11 @@ import { NzModalModule } from 'ng-zorro-antd/modal'
     ]
 })
 export class SalePointComponent implements OnInit {
+    constructor(
+        private routeTo: Router,
+        private message: NzMessageService,
+    ) {}
+
     ngOnInit(): void {
         this.loadLocationList()
     }
@@ -231,14 +239,30 @@ export class SalePointComponent implements OnInit {
     }
 
     async submitPOSale() {
+        const finalItems = this.inputedProductList.map((item: any) => {
+            const discount = item.disscount ? item.disscount / 100 : 0
+            return {
+                ...item,
+                discount
+            }
+        })
+
         const finalDataSubmit = {
             ...this.invoiceForm,
-            invoiceItems: this.inputedProductList,
+            discount: this.invoiceForm.discount ? this.invoiceForm.discount / 100 : 0,
+            invoiceItems: finalItems,
             invoicePayments: this.inputedPaymentList
         }
 
         const res = await postApiWithAuth('/invoice/create', finalDataSubmit)
-        console.log(res)
+        if (res) {
+            this.message.success('Invoice created successfully!')
+            timer(2500).subscribe(() => {
+                this.routeTo.navigate(['/invoice-detail'], { queryParams: { id: res._id}})
+            })
+        } else {
+            this.message.error(res.msg)
+        }
     }
     
 }
