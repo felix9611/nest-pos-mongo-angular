@@ -24,6 +24,7 @@ import { MemberClassesComponent } from './page/member/member-class/member-class.
 import { MemberFormComponent } from './page/member/member-form/member-form.component'
 import { MemberListComponent } from './page/member/member-list/member-list.component'
 import { SalePointComponent } from './page/sale-point/sale-point.component'
+import { InvoiceDetailComponent } from './page/invoice/invoice-detail/invoice-detail.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -160,6 +161,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'sale-point',
         component: SalePointComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'invoice-detail',
+        component: InvoiceDetailComponent,
         canActivate: [AuthGuard]
     }
 ]

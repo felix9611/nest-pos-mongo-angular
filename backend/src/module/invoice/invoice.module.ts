@@ -4,7 +4,7 @@ import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.
 import { Invoice, InvoiceSchema } from './invoice.schema'
 import { InvoiceItem, InvoiceItemSchema } from './invoice-item.schema'
 import { ActionRecordService } from '../action-record/actionRecord.service'
-import { InvoiceService } from './invoice.servicea'
+import { InvoiceService } from './invoice.service'
 import { InvoicePayment, InvoicePaymentSchema } from './invoice-payment.schema'
 import { InvoiceController } from './invoice.controller'
 

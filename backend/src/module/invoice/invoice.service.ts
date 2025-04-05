@@ -52,7 +52,7 @@ export class InvoiceService {
         return {
             ...invoiceData,
             invoiceItems: itemData,
-            invoicePayment: paymentData
+            invoicePayments: paymentData
         }
     }
 
