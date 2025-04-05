@@ -58,6 +58,7 @@ export interface ListProductLocationtRequestDto {
     page: number
     limit: number
     locationIds?: string[]
+    assetCode?: string
 }
 
 export interface ProductFileDto {

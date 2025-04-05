@@ -285,12 +285,12 @@ export class ProductService {
     async createNewCode() {
         const result = await this.productModel.aggregate([
             {
-              $addFields: { assetCodeInt: { $toInt: "$assetCode" } } // Convert to integer
+              $addFields: { productCodeInt: { $toInt: "$productCode" } } // Convert to integer
             },
             {
               $group: { 
                 _id: null, 
-                maxNumber: { $max: "$assetCodeInt" } // Find max
+                maxNumber: { $max: "$productCodeInt" } // Find max
               }
             }
         ]).exec()

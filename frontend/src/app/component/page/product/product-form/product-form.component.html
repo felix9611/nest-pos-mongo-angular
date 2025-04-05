@@ -4,7 +4,7 @@
             <div class="text-[2rem] hover:text-[#ff9200] px-3" (click)="backToList()">
                 <mat-icon cl aria-hidden="false" fontIcon="chevron_left"></mat-icon>
             </div>
-            <div class="text-center text-[2rem] font-bold">Asset Form</div>
+            <div class="text-center text-[2rem] font-bold">Product Form</div>
             <div *ngIf="editForm.productListFiles && editForm.productListFiles.length > 0" class="py-3">
               <div 
                 (click)="openFileDialog()"
@@ -55,7 +55,7 @@
             <nz-form-item class="lg:col-span-2">
               <div class="px-1 w-[105px] flex items-center">Vendor</div>
               <nz-form-control>
-                  <nz-select name="vendorId" [(ngModel)]="editForm.vendorId"  nzPlaceHolder="Please select">
+                  <nz-select name="vendorId" [(ngModel)]="editForm.vendorId" nzAllowClear  nzShowArrow nzPlaceHolder="Please select">
                       @for (option of vendorLists; track option) {
                         <nz-option [nzLabel]="option.vendorName" [nzValue]="option._id"></nz-option>
                       }
@@ -77,7 +77,7 @@
             <nz-form-item>
               <div class="px-1 w-[105px] flex items-center">Type</div>
                 <nz-form-control>
-                    <nz-select name="typeId" [(ngModel)]="editForm.typeId"  nzPlaceHolder="Please select">
+                    <nz-select name="typeId" [(ngModel)]="editForm.typeId" nzAllowClear  nzShowArrow nzPlaceHolder="Please select">
                         @for (option of typeLists; track option) {
                           <nz-option [nzLabel]="option.typeName" [nzValue]="option._id"></nz-option>
                         }
@@ -87,7 +87,7 @@
             <nz-form-item>
                 <div class="px-1 w-[105px] flex items-center">Department</div>
                 <nz-form-control>
-                    <nz-select name="deptId" [(ngModel)]="editForm.deptId"  nzPlaceHolder="Please select">
+                    <nz-select name="deptId" [(ngModel)]="editForm.deptId" nzAllowClear  nzShowArrow nzPlaceHolder="Please select">
                         @for (option of deptLists; track option) {
                           <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
                         }

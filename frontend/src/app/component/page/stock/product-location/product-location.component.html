@@ -1,16 +1,22 @@
 <div class="bg-white px-[2rem]">
     <div class="p-1  lg:p-6">
         <div class="flex gap-2 py-5">
+            <div class="w-[150px]">
+                <input class="h-full" nz-input type="text" name="assetCode" placeholder="Asset Code" [(ngModel)]="searchForm.assetCode" />
+            </div>
             <div class="w-[300px] h-full">
                 <nz-select
                     nzSize="large"
                     class="w-full h-full" 
                     name="typeId" 
                     [(ngModel)]="searchForm.locationIds"  
-                    nzMode="multiple" nzAllowClear  nzShowArrow
-                     nzPlaceHolder="Location">
+                    nzMode="multiple" 
+                    nzAllowClear  
+                    nzShowArrow
+                    nzPlaceHolder="Location"
+                >
                     @for (option of locationList; track option) {
-                      <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
+                        <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
                     }
                 </nz-select>
             </div>
