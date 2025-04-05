@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { InvoiceService } from './invoice.servicea'
+import { InvoiceService } from './invoice.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { CreateInvoiceDto, InvoiceListRequestDto } from './invoice.dto'
 

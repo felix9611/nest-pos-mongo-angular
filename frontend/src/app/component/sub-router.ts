@@ -25,6 +25,7 @@ import { MemberFormComponent } from './page/member/member-form/member-form.compo
 import { MemberListComponent } from './page/member/member-list/member-list.component'
 import { SalePointComponent } from './page/sale-point/sale-point.component'
 import { InvoiceDetailComponent } from './page/invoice/invoice-detail/invoice-detail.component'
+import { InvoiceListComponent } from './page/invoice/invoice-list/invoice-list.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -161,6 +162,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'sale-point',
         component: SalePointComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'invoice-list',
+        component: InvoiceListComponent,
         canActivate: [AuthGuard]
     },
     {
