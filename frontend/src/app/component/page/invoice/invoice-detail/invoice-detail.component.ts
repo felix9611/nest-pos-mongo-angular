@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { getApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
@@ -29,7 +29,8 @@ import moment from 'moment'
 })
 export class InvoiceDetailComponent implements OnInit {
     constructor(
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private routeTo: Router
     ) {}
     ngOnInit(): void {
         this.loadLocationList()
@@ -55,5 +56,9 @@ export class InvoiceDetailComponent implements OnInit {
     
     dateFormat(data: string) {
         return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+    }
+
+    goBackList() {
+        this.routeTo.navigate(['invoice-list'])
     }
 }
