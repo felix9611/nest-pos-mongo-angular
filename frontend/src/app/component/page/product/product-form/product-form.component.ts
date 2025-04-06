@@ -107,6 +107,7 @@ export class ProductFormComponent implements OnInit {
         retailPrice: 0,
         description:  '',
         remark:  '',
+        taxType: '',
         uploaProductFiles: [],
         productListFiles: []
     }
@@ -117,7 +118,6 @@ export class ProductFormComponent implements OnInit {
 
     fileUpdloadList: any = []
 
-
     ngOnInit() {
         this.route.queryParams.subscribe((x: any) => {
             if (x.id) {
@@ -126,12 +126,7 @@ export class ProductFormComponent implements OnInit {
             }
         })
 
-
-      /*  if (this.route.snapshot.paramMap.get('id')) {
-            this.theId = this.route.snapshot.paramMap.get('id')
-            this.getOne()
-        } */
-
+        this.loadCodeTypeList()
         this.loadTypeList()
         this.loadDeptList()
         this.loadVendorList()
@@ -231,6 +226,7 @@ export class ProductFormComponent implements OnInit {
             retailPrice: 0,
             description:  '',
             remark:  '',
+            taxType: '',
             uploaProductFiles: [],
             productListFiles: []
         }
@@ -247,6 +243,11 @@ export class ProductFormComponent implements OnInit {
 
     closeFileDialog() {
         this.fileDialogVisible = false
+    }
+
+    codeTypeLists: any[] = []
+    async loadCodeTypeList() {
+        this.codeTypeLists = await getApiWithAuth('/base/code-type/get-type/Product-TaxType')
     }
 
 }

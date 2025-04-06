@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { TaxInformationService } from './tax-information.service'
-import { UpdateDtoTaxInformation, TaxInformationListSearchDto, TaxInformationImportDto } from './tax-information.dto'
+import { UpdateDtoTaxInformation, TaxInformationListSearchDto, TaxInformationImportDto, TaxInfoForSalePoint } from './tax-information.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ReturnMsg } from 'src/tool/open-api-body'
 
@@ -47,5 +47,11 @@ export class TaxInformationController {
   @UseGuards(AuthGuard)
   async importData(@Body() importData: TaxInformationImportDto[]) {
     return await this.taxInformationService.importData(importData)
+  }
+
+  @Post('sales-point')
+  @UseGuards(AuthGuard)
+  async findTaxInfoForSalePoint(@Body() req: TaxInfoForSalePoint) {
+    return await this.taxInformationService.findTaxInfoForSalePoint(req)
   }
 }

@@ -15,6 +15,7 @@ export interface CreateProductDto {
     retailPrice: number
     description: string
     remark: string
+    taxType: string
     uploaProductFiles?: ProductFileDto[]
 }
 
@@ -58,6 +59,7 @@ export interface ListProductLocationtRequestDto {
     page: number
     limit: number
     locationIds?: string[]
+    assetCode?: string
 }
 
 export interface ProductFileDto {

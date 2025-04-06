@@ -6,3 +6,9 @@ export interface InsertInvRecordDto {
     cost: number
     staffId?: string
 }
+
+export interface ListInvRecordDto {
+    page: number
+    limit: number,
+    dateRange?: string[]
+}

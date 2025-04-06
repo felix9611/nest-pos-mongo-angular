@@ -1,4 +1,7 @@
 <div class="bg-white p-[1rem]">
+    <div class="py-2 font-bold text-[2rem] pl-5">
+      Stock In
+    </div>
     <div class="grid lg:grid-cols-3 gap-2">
         <div class="lg:col-span-1">
             <form nz-form>
@@ -21,8 +24,7 @@
                             class="w-full h-full" 
                             name="locationId" 
                             [(ngModel)]="stockInForm.locationId"  
-                            nzAllowClear  nzShowArrow
-                            nzPlaceHolder="Product Type">
+                            nzAllowClear  nzShowArrow>
                             @for (option of locationList; track option) {
                                 <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
                             }

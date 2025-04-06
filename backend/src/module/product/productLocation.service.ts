@@ -283,7 +283,7 @@ export class ProductLocationService {
     }
 
     async listPage(req: ListProductLocationtRequestDto) {
-        const { page, limit, locationIds } = req
+        const { page, limit, locationIds, assetCode } = req
 
         const skip = (page - 1) * limit
 
@@ -299,7 +299,10 @@ export class ProductLocationService {
                 $lookup: {
                     from: 'products', // Ensure correct collection name
                     let: { productIdStr: { $toObjectId: '$productId' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$productIdStr'] } } }],
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$productIdStr'] } } },
+                        ...assetCode ? [{ $match: { assetCode }}] : []
+                    ],
                     as: 'product'
                 }
             },

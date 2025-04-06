@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { TaxInformation } from './tax-information.schame'
-import { UpdateDtoTaxInformation, TaxInformationListSearchDto, TaxInformationImportDto } from './tax-information.dto'
+import { UpdateDtoTaxInformation, TaxInformationListSearchDto, TaxInformationImportDto, TaxInfoForSalePoint } from './tax-information.dto'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 
 @Injectable()
@@ -250,6 +250,10 @@ export class TaxInformationService {
             lists
         }
 
+    }
+
+    async findTaxInfoForSalePoint(req: TaxInfoForSalePoint) {
+        return this.taxInformationModel.findOne(req).exec()
     }
 
     async importData(importData: TaxInformationImportDto[]) {

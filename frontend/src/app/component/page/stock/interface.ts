@@ -40,3 +40,16 @@ export interface StockInOutProductLocationDto {
     totalPrice: number
     totalCost: number
 }
+
+export interface ListProductLocationtRequestDto {
+    page: number
+    limit: number
+    locationIds?: string[]
+    assetCode?: string
+}
+
+export interface ListInvRecordDto {
+    page: number
+    limit: number,
+    dateRange?: string[]
+}

@@ -42,6 +42,9 @@ export class Product extends BaseSchema {
     description: string
 
     @Prop({ type: SchemaTypes.String })
+    taxType: string
+
+    @Prop({ type: SchemaTypes.String })
     remark: string
 }
 

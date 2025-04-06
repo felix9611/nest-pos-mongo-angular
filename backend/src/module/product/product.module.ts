@@ -22,7 +22,7 @@ import { ProductFile, ProductFileSchema } from './product-file.schame'
         { name: ProductFile.name, schema: ProductFileSchema }
     ]), Product],
     providers: [ActionRecordService, ProductService, ProductLocationService, InvRecordService],
-    exports: [Product],
+    exports: [Product, ProductLocationService],
     controllers: [ProductController]
 })
 export class ProductMoudule {}
