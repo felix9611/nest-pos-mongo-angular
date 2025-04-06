@@ -36,3 +36,27 @@ export interface InvoiceListRequestDto {
     number?: string
     dateRange?: string[]
 }
+
+
+export interface DashboardReqFilterDto {
+    productCode?: string
+    productName?: string
+    typeIds?: string[]
+    placeIds?: string[]
+    deptIds?: string[]
+    salesDateRange?: string[]
+}
+
+export interface DashboardReqDto {
+    dateType?: boolean
+    dateTypeValue?: 'YearMonth' | 'YearQuarter' | 'none'
+    dataType?: boolean
+    dataTypeValue?: 'dept' | 'type' | 'location' | 'none'
+    valueField: 'counts' | 'costs'
+    filter?: DashboardReqFilterDto
+}
+
+export interface FinalQuery {
+    query: any
+    productQuery: any
+}
