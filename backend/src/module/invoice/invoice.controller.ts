@@ -1,11 +1,15 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { InvoiceService } from './invoice.service'
 import { AuthGuard } from '../auth/AuthGuard'
-import { CreateInvoiceDto, InvoiceListRequestDto } from './invoice.dto'
+import { CreateInvoiceDto, DashboardReqDto, InvoiceListRequestDto } from './invoice.dto'
+import { InvoiceQueryService } from './invoice-query.service'
 
 @Controller('invoice')
 export class InvoiceController {
-    constructor(private invoiceService: InvoiceService) {}
+    constructor(
+        private invoiceService: InvoiceService,
+        private invoiceQueryService: InvoiceQueryService
+    ) {}
 
     @Post('create')
     @UseGuards(AuthGuard)
@@ -29,5 +33,11 @@ export class InvoiceController {
     @UseGuards(AuthGuard)
     async voidById(@Param('id') id: string) {
         return await this.invoiceService.invalidate(id)
+    }
+
+    @Post('query/data-group-by')
+    @UseGuards(AuthGuard)
+    async getByDeptAndQty(@Body() query: DashboardReqDto) {
+        return await this.invoiceQueryService.getByDataType(query)
     }
 }

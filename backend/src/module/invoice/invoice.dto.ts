@@ -52,11 +52,11 @@ export interface DashboardReqDto {
     dateTypeValue?: 'YearMonth' | 'YearQuarter' | 'none'
     dataType?: boolean
     dataTypeValue?: 'dept' | 'type' | 'location' | 'none'
-    valueField: 'counts' | 'costs'
+    valueField?: 'qtys' | 'price'
     filter?: DashboardReqFilterDto
 }
 
 export interface FinalQuery {
     query: any
-    productQuery: any
+    productQuery?: any
 }
