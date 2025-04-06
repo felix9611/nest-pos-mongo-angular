@@ -41,7 +41,7 @@
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item class="col-span-2">
-                        <div class="px-1 w-[105px] flex items-center">Disscount</div>
+                        <div class="px-1 w-[105px] flex items-center">Discount</div>
                         <nz-form-control class="w-full">
                             <nz-input-number [style.width.%]="100" name="disscount" [(ngModel)]="enterProductForm.discount"></nz-input-number>
                         </nz-form-control>
@@ -62,7 +62,7 @@
                     <nz-form-item>
                         <div class="px-1 w-[105px] flex items-center">Total Price</div>
                         <nz-form-control class="w-full">
-                            <nz-input-number [style.width.%]="100" name="retailPrice" [(ngModel)]="enterProductForm.allTotalPrice">
+                            <nz-input-number [style.width.%]="100" name="allTotalPrice" [(ngModel)]="enterProductForm.allTotalPrice">
                                 <span nzInputPrefix>$</span>
                             </nz-input-number>
                         </nz-form-control>
@@ -93,7 +93,7 @@
                             <td>{{data.qty}}</td>
                             <td>{{data.price}}</td>
                             <td>{{data.discount}}</td>
-                            <td>{{data.discountTyp}}</td>
+                            <td>{{data.discountType}}</td>
                             <td class="text-center"><a (click)="removeItem(i)">X</a></td>
                         </tr>
                     </tbody>
@@ -194,7 +194,7 @@
                     <nz-form-item>
                             <div class="px-1 w-[105px] flex items-center">Total Amount</div>
                             <nz-form-control class="w-full">
-                                <nz-input-number [style.width.%]="100" name="totalAmount" [(ngModel)]="invoiceForm.totalAmount">
+                                <nz-input-number [style.width.%]="100" name="finalTotalAmount" [(ngModel)]="invoiceForm.totalAmount">
                                     <span nzInputPrefix>$</span>
                                 </nz-input-number>
                             </nz-form-control>

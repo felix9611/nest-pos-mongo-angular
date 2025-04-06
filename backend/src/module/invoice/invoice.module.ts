@@ -7,6 +7,12 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
 import { InvoiceService } from './invoice.service'
 import { InvoicePayment, InvoicePaymentSchema } from './invoice-payment.schema'
 import { InvoiceController } from './invoice.controller'
+import { Product, ProductSchema } from '../product/product.schame'
+import { Location, LocationSchema } from '../location/location.schame'
+import { ProductLocation, ProductLocationSchema } from '../product/productLocation.schame'
+import { ProductLocationService } from '../product/productLocation.service'
+import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schame'
+import { InvRecordService } from '../InvRecord/InvRecord.service'
 
 @Module({
     imports: [
@@ -14,11 +20,15 @@ import { InvoiceController } from './invoice.controller'
             { name: ActionRecord.name, schema: ActionRecordSchema },
             { name: Invoice.name, schema: InvoiceSchema },
             { name: InvoiceItem.name, schema: InvoiceItemSchema },
-            { name: InvoicePayment.name, schema: InvoicePaymentSchema }
+            { name: InvoicePayment.name, schema: InvoicePaymentSchema },
+            { name: Product.name, schema: ProductSchema },
+            { name: Location.name, schema: LocationSchema },
+            { name: ProductLocation.name, schema: ProductLocationSchema },
+            { name: InvRecord.name, schema: InvRecordSchema }
         ])
     ],
     controllers: [InvoiceController],
-    providers: [ActionRecordService, InvoiceService],
+    providers: [ActionRecordService, InvoiceService, ProductLocationService, InvRecordService],
     exports: []
 })
 export class InvoiceMoudule {}

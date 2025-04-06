@@ -239,18 +239,11 @@ export class SalePointComponent implements OnInit {
     }
 
     async submitPOSale() {
-        const finalItems = this.inputedProductList.map((item: any) => {
-            const discount = item.disscount ? item.disscount / 100 : 0
-            return {
-                ...item,
-                discount
-            }
-        })
 
         const finalDataSubmit = {
             ...this.invoiceForm,
             discount: this.invoiceForm.discount ? this.invoiceForm.discount / 100 : 0,
-            invoiceItems: finalItems,
+            invoiceItems: this.inputedProductList,
             invoicePayments: this.inputedPaymentList
         }
 

@@ -75,6 +75,18 @@
                     <input nz-input type="text" name="fax" [(ngModel)]="invoiceDetail.member.fax" [disabled]="true" />
                 </nz-form-control>
             </nz-form-item>
+            <nz-form-item *ngIf="invoiceDetail.member.phone">
+                <div class="px-1 w-[105px] flex items-center">Discount</div>
+                <nz-form-control class="w-full">
+                    <input nz-input type="text" name="discount" [(ngModel)]="invoiceDetail.discount" [disabled]="true" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item *ngIf="invoiceDetail.member.fax">
+                <div class="px-1 w-[105px] flex items-center">Discount Type</div>
+                <nz-form-control class="w-full">
+                    <input nz-input type="text" name="discountType" [(ngModel)]="invoiceDetail.discountType" [disabled]="true" />
+                </nz-form-control>
+            </nz-form-item>
 
             <nz-form-item class="lg:col-span-4">
                 <div class="px-1 w-[105px] flex items-center">Remark</div>
@@ -106,7 +118,7 @@
                             <td>{{data.product.productName}}</td>
                             <td>{{data.qty}}</td>
                             <td>{{data.price}}</td>
-                            <td>{{data.discount * 100}}%</td>
+                            <td>{{data.discountType === '%' ? data.discount * 100 : data.discount}}</td>
                             <td>{{data.discountType}}</td>
                         </tr>
                     </tbody>
