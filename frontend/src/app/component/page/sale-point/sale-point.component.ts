@@ -38,12 +38,15 @@ export class SalePointComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadLocationList()
+        this.orgTotal = 0
     }
 
     locationList: any[] = []
     async loadLocationList() {
         const data = await getApiWithAuth('/base/location/getAll')
         this.locationList = data
+        this.inputedProductList = []
+        this.inputedPaymentList = []
     }
 
     invoiceForm: CreateInvoiceForm = {
@@ -168,7 +171,7 @@ export class SalePointComponent implements OnInit {
         }
 
         this.inputedProductList.push(addToList)
-        this.calTotalNumber()
+        this.orgTotal += Number(taxAmount)
 
         this.enterProductForm = {
             productCode: '',
@@ -180,7 +183,7 @@ export class SalePointComponent implements OnInit {
             disscount: 0,
             disscountType: '',
             allTotalPrice: 0,
-            afterTaxPrice: 0, 
+            taxAmount: 0, 
             taxType: '',
             taxCode: '',
             taxRate: 0, 
@@ -189,16 +192,12 @@ export class SalePointComponent implements OnInit {
     }
 
     orgTotal: number = 0
-    calTotalNumber() {
-        this.inputedProductList.forEach(a => {
-            this.orgTotal += a.taxAmount
-        })
-    }
       
 
     // RIGHT
 
     removeItem(index: number) {
+        this.orgTotal -= Number(this.inputedProductList[index].taxAmount)
         this.inputedProductList.splice(index, 1)
     }
 
@@ -223,9 +222,9 @@ export class SalePointComponent implements OnInit {
 
     totalTypeChnage(event: any) {
         if (event === '%') {
-            this.invoiceForm.totalAmount = this.orgTotal * (1 - this.invoiceForm.discount /100)
+            this.invoiceForm.totalAmount = parseFloat((this.orgTotal * (1 - this.invoiceForm.discount /100)).toFixed(2))
         } else if (event === '$') {
-            this.invoiceForm.totalAmount = this.orgTotal - this.enterProductForm.disscount
+            this.invoiceForm.totalAmount = parseFloat((this.orgTotal - this.enterProductForm.disscount).toFixed(2))
         }
     }
 
