@@ -15,14 +15,6 @@ export class InvoiceQueryService {
         @InjectModel(InvoicePayment.name) private invoicePaymentModel: Model<InvoicePayment>,
     ) {}
 
-
-    async queryMakerForDateAndData(query: DashboardReqDto) { 
-        const { dataType, dataTypeValue, dateType, dateTypeValue, valueField, filter } = query
-
-        const filters: any = filter ? this.getFilter(filter) : {}
-        
-    }
-
     getFilter(query: DashboardReqFilterDto) {
         const { typeIds, placeIds, deptIds, salesDateRange, productCode, productName } = query
 
@@ -35,23 +27,6 @@ export class InvoiceQueryService {
             ...deptIds && deptIds.length > 0 ? { 'product.deptId': { $in: deptIds } } : {},
             ...productCode ? { 'product.productCode': { $regex: productCode, $options: 'i' } } : {},
             ...productName ? { 'product.productName': { $regex: productName, $options: 'i' } } : {}
-        }
-    }
-
-    getGlobalFilter(query: DashboardReqFilterDto) {
-        const { typeIds, placeIds, deptIds, salesDateRange, productCode, productName } = query
-
-        return {
-            query: {
-                ...salesDateRange && salesDateRange.length > 0 ? { 
-                    'invoice.created_at': { $gte: new Date(salesDateRange[0]), $lte: new Date(salesDateRange[1]) } 
-                } : {},
-                'invoice.void_num': 0,
-                'invoice.number': { $ne: null },
-                'invoice.location_id': { $nin: [0] },
-                price: { $ne: null },
-                'product.deptId': { $ne: null }
-            }
         }
     }
 
@@ -126,6 +101,9 @@ export class InvoiceQueryService {
     async getByDataType(query: DashboardReqDto) {
         const { valueField, dataTypeValue, filter } = query
 
+        if (!valueField) return { msg: 'Value Field is required' }
+        if (!dataTypeValue) return { msg: 'Data Type is required' }
+
         let valueFieldObj: any = {}
         let dataTypeObj: any = {}
 
@@ -161,7 +139,7 @@ export class InvoiceQueryService {
             break
         }
 
-        const filters: FinalQuery = filter ? this.getFilter(filter) : { query: {} }
+        const filters: any = filter ? this.getFilter(filter) : {}
 
         return await this.invoiceItemModel.aggregate([
             {
