@@ -24,11 +24,33 @@ export class InvoiceService {
         const baseData = await this.invoiceModel.aggregate([
             { $match: { _id: new Types.ObjectId(_id) } },
             {
+                $addFields: {
+                    hasMemberId: {
+                        $and: [
+                            { $ne: ['$memberId', null] }, // Not null
+                            { $ne: ['$memberId', ''] },   // Not empty string
+                            { $ifNull: ['$memberId', false] } // Ensure it exists
+                        ]
+                    }
+                }
+            },
+            {
                 $lookup: {
-                  from: 'members', // Ensure correct collection name
-                  let: { memberIdStr: { $toObjectId: '$memberId' } }, // Convert placeId to ObjectId
-                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$memberIdStr'] } } }],
-                  as: 'member'
+                    from: 'members',
+                    let: { memberIdStr: { $toObjectId: { $cond: { if: '$hasMemberId', then: '$memberId', else: null } } } },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$_id', '$$memberIdStr'] },
+                                        { $ne: ['$$memberIdStr', null] } // Skip if memberIdStr is null
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'member'
                 }
             },
             { $unwind: { path: '$member', preserveNullAndEmptyArrays: true } },

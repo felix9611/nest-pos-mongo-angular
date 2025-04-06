@@ -110,6 +110,8 @@
                             <th>Total Amount</th>
                             <th>Discount</th>
                             <th>Discount Type</th>
+                            <th>Tax Rate</th>
+                            <th>After Tax</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,9 +119,11 @@
                             <td>{{data.product.productCode}}</td>
                             <td>{{data.product.productName}}</td>
                             <td>{{data.qty}}</td>
-                            <td>{{data.price}}</td>
+                            <td>${{data.price}}</td>
                             <td>{{data.discountType === '%' ? data.discount * 100 : data.discount}}</td>
                             <td>{{data.discountType}}</td>
+                            <td>{{data.taxRate * 100}}%</td>
+                            <td>${{data.taxAmount}}</td>
                         </tr>
                     </tbody>
                 </nz-table>
@@ -142,7 +146,7 @@
                     <tbody>
                         <tr *ngFor="let data of invoiceDetail.invoicePayments">
                             <td>{{data.method}}</td>
-                            <td>{{data.amount}}</td>
+                            <td>${{data.amount}}</td>
                             <td>{{dateFormat(data.paymentTime)}}</td>
                         </tr>
                     </tbody>
