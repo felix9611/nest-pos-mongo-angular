@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/fixedasset-in-mongodb-app",
+            "outputPath": "dist/pos-in-mongodb-app",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
