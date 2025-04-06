@@ -122,8 +122,8 @@
                             <td>${{data.price}}</td>
                             <td>{{data.discountType === '%' ? data.discount * 100 : data.discount}}</td>
                             <td>{{data.discountType}}</td>
-                            <td>{{data.taxRate * 100}}%</td>
-                            <td>${{data.taxAmount}}</td>
+                            <td>{{data.taxRate * 100 || 0}}%</td>
+                            <td>${{data.taxAmount || 0}}</td>
                         </tr>
                     </tbody>
                 </nz-table>

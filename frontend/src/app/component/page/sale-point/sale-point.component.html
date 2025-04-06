@@ -116,8 +116,8 @@
                             <td>${{data.price}}</td>
                             <td>{{data.discount}}</td>
                             <td>{{data.discountType}}</td>
-                            <td>{{data.taxRate * 100}}%</td>
-                            <td>${{data.taxAmount}}</td>
+                            <td>{{data.taxRate * 100 || 0}}%</td>
+                            <td>${{data.taxAmount || 0}}</td>
                             <td class="text-center"><a (click)="removeItem(i)">X</a></td>
                         </tr>
                     </tbody>
