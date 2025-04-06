@@ -34,3 +34,8 @@ export interface TaxInformationImportDto {
     importRate: number | string
     remark: string
 }
+
+export interface TaxInfoForSalePoint {
+    taxType: string
+    countryCode: string
+}
