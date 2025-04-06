@@ -24,8 +24,7 @@
                             class="w-full h-full" 
                             name="locationId" 
                             [(ngModel)]="stockInForm.fromLocationId"  
-                            nzAllowClear  nzShowArrow
-                            nzPlaceHolder="Product Type">
+                            nzAllowClear  nzShowArrow>
                             @for (option of locationList; track option) {
                                 <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
                             }
@@ -39,8 +38,7 @@
                           class="w-full h-full" 
                           name="locationId" 
                           [(ngModel)]="stockInForm.toLocationId"  
-                          nzAllowClear  nzShowArrow
-                          nzPlaceHolder="Product Type">
+                          nzAllowClear  nzShowArrow>
                           @for (option of locationList; track option) {
                               <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
                           }

@@ -17,6 +17,7 @@ export interface CreateProduct {
     retailPrice: number
     description: string
     remark: string
+    taxType: string
     uploaProductFiles?: ProductFileDto[]
     productListFiles?: any[]
 }
