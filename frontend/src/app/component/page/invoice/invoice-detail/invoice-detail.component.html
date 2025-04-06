@@ -75,16 +75,22 @@
                     <input nz-input type="text" name="fax" [(ngModel)]="invoiceDetail.member.fax" [disabled]="true" />
                 </nz-form-control>
             </nz-form-item>
-            <nz-form-item *ngIf="invoiceDetail.member.phone">
+            <nz-form-item>
                 <div class="px-1 w-[105px] flex items-center">Discount</div>
                 <nz-form-control class="w-full">
                     <input nz-input type="text" name="discount" [(ngModel)]="invoiceDetail.discount" [disabled]="true" />
                 </nz-form-control>
             </nz-form-item>
-            <nz-form-item *ngIf="invoiceDetail.member.fax">
+            <nz-form-item>
                 <div class="px-1 w-[105px] flex items-center">Discount Type</div>
                 <nz-form-control class="w-full">
                     <input nz-input type="text" name="discountType" [(ngModel)]="invoiceDetail.discountType" [disabled]="true" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item >
+                <div class="px-1 w-[105px] flex items-center">Tax Ref No.</div>
+                <nz-form-control class="w-full">
+                    <input nz-input type="text" name="discount" [(ngModel)]="invoiceDetail.taxRefNo" [disabled]="true" />
                 </nz-form-control>
             </nz-form-item>
 
