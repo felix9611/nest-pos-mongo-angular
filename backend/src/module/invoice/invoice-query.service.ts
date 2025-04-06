@@ -26,7 +26,8 @@ export class InvoiceQueryService {
             ...placeIds && placeIds.length > 0 ? { 'invoice.location_id': { $in: placeIds } } : {},
             ...deptIds && deptIds.length > 0 ? { 'product.deptId': { $in: deptIds } } : {},
             ...productCode ? { 'product.productCode': { $regex: productCode, $options: 'i' } } : {},
-            ...productName ? { 'product.productName': { $regex: productName, $options: 'i' } } : {}
+            ...productName ? { 'product.productName': { $regex: productName, $options: 'i' } } : {},
+            'invoice.createdAt': { $ne: null }
         }
     }
 
@@ -172,7 +173,7 @@ export class InvoiceQueryService {
             break
         }
 
-        const filters: any = filter ? this.getFilter(filter) : {}
+        const filters: any = this.getFilter(filter)
 
         return await this.invoiceItemModel.aggregate([
             {

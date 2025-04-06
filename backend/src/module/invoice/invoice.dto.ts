@@ -53,7 +53,7 @@ export interface DashboardReqDto {
     dataType?: boolean
     dataTypeValue?: 'dept' | 'type' | 'location' | 'year-month' |'none'
     valueField?: 'qtys' | 'price'
-    filter?: DashboardReqFilterDto
+    filter: DashboardReqFilterDto
 }
 
 export interface FinalQuery {
