@@ -51,7 +51,7 @@ export interface DashboardReqDto {
     dateType?: boolean
     dateTypeValue?: 'YearMonth' | 'YearQuarter' | 'none'
     dataType?: boolean
-    dataTypeValue?: 'dept' | 'type' | 'location' | 'none'
+    dataTypeValue?: 'dept' | 'type' | 'location' | 'year-month' |'none'
     valueField?: 'qtys' | 'price'
     filter?: DashboardReqFilterDto
 }

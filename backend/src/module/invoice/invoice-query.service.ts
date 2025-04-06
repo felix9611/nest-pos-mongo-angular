@@ -49,7 +49,8 @@ export class InvoiceQueryService {
             },
             project: {
                 deptName: "$_id"
-            }
+            },
+            sort: {},
         }
     }
 
@@ -71,7 +72,34 @@ export class InvoiceQueryService {
             },
             project: {
                 typeName: "$_id"
-            }
+            },
+            sort: {},
+        }
+    }
+
+    getYearMonth() {
+        return {
+            lookup: [],
+            group: {
+                _id: {
+                    year: { $year: "$invoice.createdAt" },
+                    month: {
+                      $dateToString: {
+                        format: "%B", // month name like "April"
+                        date: "$invoice.createdAt"
+                      }
+                    },
+                    monthNum: { $month: "$invoice.createdAt" } // sort month number
+                }
+            },
+            project: {
+                year: "$_id.year",
+                month: "$_id.month",
+            },
+            sort: {
+                year: 1,
+                sortMonth: 1
+            },
         }
     }
 
@@ -93,7 +121,8 @@ export class InvoiceQueryService {
             },
             project: {
                 placeName: "$_id"
-            }
+            },
+            sort: {},
         }
     }
 
@@ -119,6 +148,10 @@ export class InvoiceQueryService {
             case 'location':
                 dataTypeObj = this.getLocationSet()
             break 
+
+            case 'year-month':
+                dataTypeObj = this.getYearMonth()
+            break
         }
 
 
@@ -167,17 +200,17 @@ export class InvoiceQueryService {
             {
                 $group: {
                     ...dataTypeObj.group,
-                  ...valueFieldObj.group
+                    ...valueFieldObj.group
                 }
             },
             {
                 $project: {
-                  _id: 0,
-                  ...dataTypeObj.project,
-                  ...valueFieldObj.project
+                    _id: 0,
+                    ...dataTypeObj.project,
+                    ...valueFieldObj.project
                 }
             },
-            { $sort: valueFieldObj.sort },
+            { $sort: dataTypeObj.sort },
             { $limit: 10 }
         ]).exec()
     }
