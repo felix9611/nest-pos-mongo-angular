@@ -44,6 +44,7 @@ export class InvoiceDetailComponent implements OnInit {
     async getDetail(id: string) {
         const data = await getApiWithAuth(`/invoice/one/${id}`)
         this.invoiceDetail = data
+        this.invoiceDetail.discount = this.invoiceDetail.discountType === '%' ? this.invoiceDetail.discount * 100 : this.invoiceDetail.discount
     }
 
     locationList: any[] = []

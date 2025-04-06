@@ -7,6 +7,7 @@ import { InvoiceItem } from './invoice-item.schema'
 import { InvoicePayment } from './invoice-payment.schema'
 import { CreateInvoiceDto, InvoiceListRequestDto } from './invoice.dto'
 import { NEVER } from 'rxjs'
+import { ProductLocationService } from '../product/productLocation.service'
 
 
 @Injectable()
@@ -15,6 +16,7 @@ export class InvoiceService {
         @InjectModel(Invoice.name) private invoiceModel: Model<Invoice>,
         @InjectModel(InvoiceItem.name) private invoiceItemModel: Model<InvoiceItem>,
         @InjectModel(InvoicePayment.name) private invoicePaymentModel: Model<InvoicePayment>,
+        private productLocationService: ProductLocationService,
         private actionRecordService: ActionRecordService
     ) {}
 
@@ -22,11 +24,33 @@ export class InvoiceService {
         const baseData = await this.invoiceModel.aggregate([
             { $match: { _id: new Types.ObjectId(_id) } },
             {
+                $addFields: {
+                    hasMemberId: {
+                        $and: [
+                            { $ne: ['$memberId', null] }, // Not null
+                            { $ne: ['$memberId', ''] },   // Not empty string
+                            { $ifNull: ['$memberId', false] } // Ensure it exists
+                        ]
+                    }
+                }
+            },
+            {
                 $lookup: {
-                  from: 'members', // Ensure correct collection name
-                  let: { memberIdStr: { $toObjectId: '$memberId' } }, // Convert placeId to ObjectId
-                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$memberIdStr'] } } }],
-                  as: 'member'
+                    from: 'members',
+                    let: { memberIdStr: { $toObjectId: { $cond: { if: '$hasMemberId', then: '$memberId', else: null } } } },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$_id', '$$memberIdStr'] },
+                                        { $ne: ['$$memberIdStr', null] } // Skip if memberIdStr is null
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'member'
                 }
             },
             { $unwind: { path: '$member', preserveNullAndEmptyArrays: true } },
@@ -94,10 +118,23 @@ export class InvoiceService {
             if (invoiceItems && invoiceItems.length > 0) {
                 const invoiceItemsData = invoiceItems.map((item) => ({
                     ...item,
+                    discount: item.discountType === '%' ? item.discount / 100 : item.discount,
                     invoiceId: res._id
                 }))
 
                 await this.invoiceItemModel.insertMany(invoiceItemsData)
+
+                for (const item of invoiceItemsData) {
+                    await this.productLocationService.stockOut({
+                        productCode: item.productCode,
+                        productId: item.productId,
+                        locationId,
+                        qty: item.qty,
+                        totalCost: item.price,
+                        totalPrice: item.price,
+                        placeCode: ''
+                    })
+                }
             }
 
             if (invoicePayments && invoicePayments.length > 0) {
@@ -198,7 +235,7 @@ export class InvoiceService {
                   invoiceNum: {
                     $toInt: {
                       $arrayElemAt: [
-                        { $split: ['$invoiceNumber', '-'] },
+                        { $split: ['$number', 'INV-'] },
                         1
                       ]
                     }
@@ -207,7 +244,7 @@ export class InvoiceService {
             },
             {
                 $sort: {
-                    invoiceNum: 1 // 1 for ascending, -1 for descending
+                    invoiceNum: -1 // 1 for ascending, -1 for descending
                 }
             },
             { $skip: skip },
@@ -236,24 +273,47 @@ export class InvoiceService {
         return (num + 1).toString().padStart(digits, '0')
     }
 
-    async createNewCode() {
-        const result = await this.invoiceModel.aggregate([
-            {
-              $addFields: { numberInt: { $toInt: "$number" } } // Convert to integer
-            },
-            {
-              $group: { 
-                _id: null, 
-                maxNumber: { $max: "numberInt" } // Find max
-              }
-            }
-        ]).exec()
-
-        const maxNumber = result.length > 0 ? result[0].maxNumber : 0
-        if (maxNumber == null) {
-            return this.formatNumber(0, 6)
-        } else {
-            return this.formatNumber(maxNumber, 6)
+    async createNewCode(): Promise<string> {
+        try {
+            const result = await this.invoiceModel.aggregate([
+                {
+                    $match: {
+                        number: { $regex: new RegExp('^[iI][nN][vV]-\\d+') }
+                    }
+                },
+                {
+                    $addFields: {
+                        numberInt: {
+                            $cond: {
+                                if: { $regexMatch: { input: '$number', regex: /^[iI][nN][vV]-\d+$/ } },
+                                then: {
+                                    $toInt: {
+                                        $substr: ['$number', 4, -1]
+                                    }
+                                },
+                                else: 0
+                            }
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        maxNumber: { $max: '$numberInt' }
+                    }
+                }
+            ]).exec();
+    
+            const maxNumber = result.length > 0 && result[0].maxNumber !== null 
+                ? result[0].maxNumber 
+                : 0;
+            console.log('Max number found:', maxNumber)
+    
+            const nextNumber = maxNumber
+            const newCode = this.formatNumber(nextNumber, 6)
+            return newCode
+        } catch (error) {
+            throw new Error('Failed to generate new invoice code')
         }
     }
 }

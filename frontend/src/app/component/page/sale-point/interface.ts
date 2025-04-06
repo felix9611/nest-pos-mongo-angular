@@ -13,6 +13,7 @@ export interface ProductFormDto {
     retailPrice: number
     description: string
     remark: string
+    taxType: string
 }
 
 export interface InvoiceItemDto {

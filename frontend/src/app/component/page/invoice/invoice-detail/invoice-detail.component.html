@@ -75,6 +75,18 @@
                     <input nz-input type="text" name="fax" [(ngModel)]="invoiceDetail.member.fax" [disabled]="true" />
                 </nz-form-control>
             </nz-form-item>
+            <nz-form-item *ngIf="invoiceDetail.member.phone">
+                <div class="px-1 w-[105px] flex items-center">Discount</div>
+                <nz-form-control class="w-full">
+                    <input nz-input type="text" name="discount" [(ngModel)]="invoiceDetail.discount" [disabled]="true" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item *ngIf="invoiceDetail.member.fax">
+                <div class="px-1 w-[105px] flex items-center">Discount Type</div>
+                <nz-form-control class="w-full">
+                    <input nz-input type="text" name="discountType" [(ngModel)]="invoiceDetail.discountType" [disabled]="true" />
+                </nz-form-control>
+            </nz-form-item>
 
             <nz-form-item class="lg:col-span-4">
                 <div class="px-1 w-[105px] flex items-center">Remark</div>
@@ -98,6 +110,8 @@
                             <th>Total Amount</th>
                             <th>Discount</th>
                             <th>Discount Type</th>
+                            <th>Tax Rate</th>
+                            <th>After Tax</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -105,9 +119,11 @@
                             <td>{{data.product.productCode}}</td>
                             <td>{{data.product.productName}}</td>
                             <td>{{data.qty}}</td>
-                            <td>{{data.price}}</td>
-                            <td>{{data.discount * 100}}%</td>
+                            <td>${{data.price}}</td>
+                            <td>{{data.discountType === '%' ? data.discount * 100 : data.discount}}</td>
                             <td>{{data.discountType}}</td>
+                            <td>{{data.taxRate * 100 || 0}}%</td>
+                            <td>${{data.taxAmount || 0}}</td>
                         </tr>
                     </tbody>
                 </nz-table>
@@ -130,7 +146,7 @@
                     <tbody>
                         <tr *ngFor="let data of invoiceDetail.invoicePayments">
                             <td>{{data.method}}</td>
-                            <td>{{data.amount}}</td>
+                            <td>${{data.amount}}</td>
                             <td>{{dateFormat(data.paymentTime)}}</td>
                         </tr>
                     </tbody>

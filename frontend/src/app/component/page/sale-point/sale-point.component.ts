@@ -68,7 +68,12 @@ export class SalePointComponent implements OnInit {
         retailPrice: 0,
         discount: 0,
         discountType: '',
-        allTotalPrice: 0
+        allTotalPrice: 0,
+        taxRate: 0,
+        taxRateDisplay: 0,
+        taxAmount: 0,
+        taxType: '',
+        taxCode: ''
     }
 
     productForm: ProductFormDto = {
@@ -85,7 +90,13 @@ export class SalePointComponent implements OnInit {
         costPrice: 0,
         retailPrice: 0,
         description: '',
-        remark: ''
+        remark: '',
+        taxType: ''
+    }
+
+    taxInfoFilter = {
+        taxType: '',
+        countryCode: ''
     }
 
     memberSearch: string = ''
@@ -112,31 +123,48 @@ export class SalePointComponent implements OnInit {
             this.enterProductForm.productId = data._id
             this.enterProductForm.retailPrice = data.retailPrice
             this.productForm = data
+
+            this.taxInfoFilter.taxType = data.taxType
+        }
+    }
+
+    locationIdChanged(event: any) {
+        if (event)  {
+            const data = this.locationList.find((item: any) => item._id === event)
+            this.taxInfoFilter.countryCode = data.country
+            this.findTaxInfoForSalePoint()
         }
     }
 
     qtyChanged(event: any) {
         this.enterProductForm.qty = event
         this.enterProductForm.allTotalPrice = event * this.enterProductForm.retailPrice
+        this.enterProductForm.taxAmount =  (event * (1 + this.enterProductForm.taxRate) * this.enterProductForm.retailPrice).toFixed(2)
     }
 
     typeChanged(event: any) {
         if (event === '%') {
-            this.enterProductForm.allTotalPrice = this.enterProductForm.allTotalPrice * (1 - this.enterProductForm.discount /100)
+            this.enterProductForm.allTotalPrice = this.enterProductForm.retailPrice * (1 - this.enterProductForm.discount /100) * this.enterProductForm.qty
+            this.enterProductForm.taxAmount =  ((1 + this.enterProductForm.taxRate) * this.enterProductForm.retailPrice * (1 - this.enterProductForm.discount /100) * this.enterProductForm.qty).toFixed(2)
         } else if (event === '$') {
-            this.enterProductForm.allTotalPrice = this.enterProductForm.allTotalPrice - this.enterProductForm.discount
+            this.enterProductForm.allTotalPrice = (this.enterProductForm.retailPrice - this.enterProductForm.discount) * this.enterProductForm.qty
+            this.enterProductForm.taxAmount = ((this.enterProductForm.retailPrice  - this.enterProductForm.discount) * (1 + this.enterProductForm.taxRate) * this.enterProductForm.qty).toFixed(2)
         }
     }
 
     addToList() {
-        const { productId, productCode, qty, allTotalPrice, discount, discountType } = this.enterProductForm
+        const { productId, productCode, qty, allTotalPrice, discount, discountType, taxAmount, taxRate, taxCode, taxType } = this.enterProductForm
         const addToList = {
             productId,
             productCode,
             qty,
             price: allTotalPrice,
             discount,
-            discountType
+            discountType,
+            taxAmount, 
+            taxRate,
+            taxCode, 
+            taxType
         }
 
         this.inputedProductList.push(addToList)
@@ -151,14 +179,19 @@ export class SalePointComponent implements OnInit {
             retailPrice: 0,
             disscount: 0,
             disscountType: '',
-            allTotalPrice: 0
+            allTotalPrice: 0,
+            afterTaxPrice: 0, 
+            taxType: '',
+            taxCode: '',
+            taxRate: 0, 
+            taxRateDisplay: 0
         }
     }
 
     orgTotal: number = 0
     calTotalNumber() {
         this.inputedProductList.forEach(a => {
-            this.orgTotal += a.price
+            this.orgTotal += a.taxAmount
         })
     }
       
@@ -239,18 +272,11 @@ export class SalePointComponent implements OnInit {
     }
 
     async submitPOSale() {
-        const finalItems = this.inputedProductList.map((item: any) => {
-            const discount = item.disscount ? item.disscount / 100 : 0
-            return {
-                ...item,
-                discount
-            }
-        })
 
         const finalDataSubmit = {
             ...this.invoiceForm,
             discount: this.invoiceForm.discount ? this.invoiceForm.discount / 100 : 0,
-            invoiceItems: finalItems,
+            invoiceItems: this.inputedProductList,
             invoicePayments: this.inputedPaymentList
         }
 
@@ -263,6 +289,16 @@ export class SalePointComponent implements OnInit {
         } else {
             this.message.error(res.msg)
         }
+    }
+
+    
+
+    async findTaxInfoForSalePoint() {
+        const res = await postApiWithAuth('/base/tax-information/sales-point', this.taxInfoFilter)
+        this.enterProductForm.taxRate = res.taxRate
+        this.enterProductForm.taxRateDisplay = res.taxRate * 100
+        this.enterProductForm.taxCode = res.taxCode
+        this.enterProductForm.taxType = res.taxType
     }
     
 }
