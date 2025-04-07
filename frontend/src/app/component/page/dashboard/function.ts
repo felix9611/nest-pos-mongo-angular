@@ -35,8 +35,8 @@ export function transformDataNoDate(rawData: any[], chartType: string, showInLeg
   rawData.forEach((data: any) => {
     if (data[valueName] === 0) return;
     
-
-    dataMap.dataPoints.push({ x: data[keyName], y: data[valueName] });
+    console.log(data[valueName])
+    dataMap.dataPoints.push({ label: data[keyName], y: data[valueName] });
   })
 
   return [dataMap]

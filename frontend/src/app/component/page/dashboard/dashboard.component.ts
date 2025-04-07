@@ -65,15 +65,7 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getByDeptAndDateOfCosts()
-        this.getByDeptAndDateOfCount()
-        this.getByTypeAndDateOfCosts()
-        this.getByTypeAndDateOfCount()
-        this.getByPlaceAndDateOfCount()
-        this.getByPlaceAndDateOfCosts()
-        this.getByPlaceCosts()
-        this.getByTypeCosts()
-        this.getByDeptCosts()
+        this.runSearch()
    //     this.getByTotalCost()
   //      this.getByTotalCount()
         this.loadTypeList()
@@ -84,7 +76,7 @@ export class DashboardComponent implements OnInit {
 
     typeLists: any[] = []
     async loadTypeList() {
-        this.typeLists = await getApiWithAuth('/asset/type/getAll')
+        this.typeLists = await getApiWithAuth('/product/product-type/getAll')
     }
 
     deptLists: any[] = []
@@ -98,298 +90,69 @@ export class DashboardComponent implements OnInit {
     }
 
     async runSearch() {
-        await this.getByDeptAndDateOfCosts()
-        await this.getByDeptAndDateOfCount()
-        
-        await this.getByTypeAndDateOfCount()
-        await this.getByPlaceAndDateOfCount()
-        await this.getByPlaceAndDateOfCosts()
-        await this.getByTypeAndDateOfCosts()
-        await this.getByPlaceCosts()
-        await this.getByTypeCosts()
-        await this.getByDeptCosts()
-//        await this.getByTotalCost()
-  //      await this.getByTotalCount()
+        await this.getByDeptAndQtys()
+        await this.getByDeptAndPrice()
     }
-
-
 
     globalFilter: DashboardReqFilterDto = {}
 
-    deptAndDateInCostLoading: boolean = false
-    deptAndDateInCost: any = {}
-    async getByDeptAndDateOfCosts() {
-        this.deptAndDateInCostLoading = false
+    byDeptAndQtysLoading: boolean = false
+    byDeptAndQtys: any = {}
+    async getByDeptAndQtys() {
+        this.byDeptAndQtysLoading = false
         const dataQuery: DashboardReqDto = {
-            dateType: true,
             dateTypeValue: 'YearMonth',
-            dataType: true,
             dataTypeValue: 'dept',
-            valueField: 'costs'
+            valueField: 'qtys'
         }
 
-        const res = await this.runQueryDate(dataQuery)
-        
-        this.deptAndDateInCost = {
-            data: transformData(res, 'stackedColumn', true, 'deptName', 'costs', ['year', 'monthString']),
+        const res = await this.runQueryData(dataQuery)
+        console.log(transformDataNoDate(res, 'stackedColumn', true, 'deptName', 'qtys'))
+        this.byDeptAndQtys = {
+            data: transformDataNoDate(res, 'stackedColumn', false, 'deptName', 'qtys'),
             animationEnabled: true,
             axisY: {
-                title: "Amount (HKD)"
+                title: 'Qtys'
             },
             axisX: {
-                title: "Year - Month",
-                valueFormatString: "YYYY - MMM",
-                xValueType: "dateTime"
+                title: 'Departments',
+             /*   valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime" */
             },
             toolTip: {
                 shared: true
             }
         }
-        this.deptAndDateInCostLoading = true
+        this.byDeptAndQtysLoading = true
     }
 
-    deptAndDateInCountLoading: boolean = false
-    deptAndDateInCount: any = {}
-    async getByDeptAndDateOfCount() {
-        this.deptAndDateInCountLoading = false
+    byDeptAndPriceLoading: boolean = false
+    byDeptAndPrice: any = {}
+    async getByDeptAndPrice() {
+        this.byDeptAndPriceLoading = false
         const dataQuery: DashboardReqDto = {
-            dateType: true,
             dateTypeValue: 'YearMonth',
-            dataType: true,
             dataTypeValue: 'dept',
-            valueField: 'counts'
+            valueField: 'price'
         }
 
-        const res = await this.runQueryDate(dataQuery)
-        this.deptAndDateInCount = {
-            data: transformData(res, 'stackedColumn', true, 'deptName', 'count', ['year', 'monthString']),
+        const res = await this.runQueryData(dataQuery)
+        this.byDeptAndPrice = {
+            data: transformDataNoDate(res, 'stackedColumn', false, 'deptName', 'price'),
             animationEnabled: true,
             axisY: {
-                title: "Counts"
+                title: 'Price'
             },
             axisX: {
-                title: "Year - Month",
-                valueFormatString: "YYYY - MMM",
-                xValueType: "dateTime"
+                title: 'Departments',
+             /*   valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime" */
             },
             toolTip: {
                 shared: true
             }
         }
-        this.deptAndDateInCountLoading = true
-    }
-
-    typeAndDateInCostLoading: boolean = false
-    typeAndDateInCost: any = {}
-    async getByTypeAndDateOfCosts() {
-        this.typeAndDateInCostLoading = false
-        const dataQuery: DashboardReqDto = {
-            dateType: true,
-            dateTypeValue: 'YearMonth',
-            dataType: true,
-            dataTypeValue: 'type',
-            valueField: 'costs'
-        }
-
-        const res = await this.runQueryDate(dataQuery)
-        const finalData = transformData(res, 'stackedColumn', true, 'typeName', 'costs', ['year', 'monthString'])
-        console.log(finalData, 'type scost')
-        this.typeAndDateInCost = {
-            animationEnabled: true,
-            data: finalData,
-            axisY: {
-                title: "Amount (HKD)"
-            },
-            axisX: {
-                title: "Year - Month",
-                valueFormatString: "YYYY - MMM",
-                xValueType: "dateTime"
-            },
-            toolTip: {
-                shared: true
-            }
-        }
-        this.typeAndDateInCostLoading = true
-    }
-
-    typeAndDateInCountLoading: boolean = false
-    typeAndDateInCount: any = {}
-    async getByTypeAndDateOfCount() {
-        this.typeAndDateInCountLoading = false
-        const dataQuery: DashboardReqDto = {
-            dateType: true,
-            dateTypeValue: 'YearMonth',
-            dataType: true,
-            dataTypeValue: 'type',
-            valueField: 'counts'
-        }
-
-        const res = await this.runQueryDate(dataQuery)
-        this.typeAndDateInCount = {
-            animationEnabled: true,
-            data: transformData(res, 'stackedColumn', true, 'typeName', 'count', ['year', 'monthString']),
-            axisY: {
-                title: "Counts"
-            },
-            toolTip: {
-                shared: true
-            },
-            axisX: {
-                title: "Year - Month",
-                valueFormatString: "YYYY - MMM",
-                xValueType: "dateTime"
-            },
-        }
-        this.typeAndDateInCountLoading = true
-    }
-
-    placeAndDateInCountLoading: boolean = false
-    placeAndDateInCount: any = {}
-    async getByPlaceAndDateOfCount() {
-        this.placeAndDateInCountLoading = false
-        const dataQuery: DashboardReqDto = {
-            dateType: true,
-            dateTypeValue: 'YearMonth',
-            dataType: true,
-            dataTypeValue: 'location',
-            valueField: 'counts'
-        }
-
-        const res = await this.runQueryDate(dataQuery)
-        this.placeAndDateInCount = {
-            animationEnabled: true,
-            data: transformData(res, 'stackedColumn', true, 'placeName', 'count', ['year', 'monthString']),
-            axisY: {
-                title: "Counts"
-            },
-            toolTip: {
-                shared: true
-            },
-            axisX: {
-                title: "Year - Month",
-                valueFormatString: "YYYY - MMM",
-                xValueType: "dateTime"
-            },
-        }
-        this.placeAndDateInCountLoading = true
-    }
-
-    placeAndDateInCostsLoading: boolean = false
-    placeAndDateInCosts: any = {}
-    async getByPlaceAndDateOfCosts() {
-        this.placeAndDateInCostsLoading = false
-        const dataQuery: DashboardReqDto = {
-            dateType: true,
-            dateTypeValue: 'YearMonth',
-            dataType: true,
-            dataTypeValue: 'location',
-            valueField: 'costs'
-        }
-
-        const res = await this.runQueryDate(dataQuery)
-        this.placeAndDateInCosts = {
-            animationEnabled: true,
-            data: transformData(res, 'stackedColumn', true, 'placeName', 'costs', ['year', 'monthString']),
-            axisY: {
-                title: "Amount (HKD)"
-            },
-            toolTip: {
-                shared: true
-            },
-            axisX: {
-                title: "Year - Month",
-                valueFormatString: "YYYY - MMM",
-                xValueType: "dateTime"
-            },
-        }
-        this.placeAndDateInCostsLoading = true
-    }
-
-    placeInCostsLoading: boolean = false
-    placeInCosts: any = {}
-    async getByPlaceCosts() {
-        this.placeInCostsLoading = false
-        const dataQuery: DashboardReqDto = {
-            dateType: false,
-            dateTypeValue: 'none',
-            dataType: true,
-            dataTypeValue: 'location',
-            valueField: 'costs'
-        }
-        const res = await this.runQueryData(dataQuery)
-        const data = transformDataPointsOnly(res, 'placeName', 'costs')
-        this.placeInCosts = {
-            animationEnabled: true,
-            data: [
-                {
-                    type: "pie",
-                    startAngle: 240,
-                    yValueFormatString: '$##0.00\"\"',
-                    indexLabel: "{label} {y}",
-                    dataPoints: data
-                }
-            ]
-        }
-        this.placeInCostsLoading = true
-        
-    }
-
-    typeInCostsLoading: boolean = false
-    typeInCosts: any = {}
-    async getByTypeCosts() {
-        this.typeInCostsLoading = false
-        const dataQuery: DashboardReqDto = {
-            dateType: false,
-            dateTypeValue: 'none',
-            dataType: true,
-            dataTypeValue: 'type',
-            valueField: 'costs'
-        }
-        const res = await this.runQueryData(dataQuery)
-        const data = transformDataPointsOnly(res, 'typeName', 'costs')
-        this.typeInCosts = {
-            animationEnabled: true,
-            data: [
-                {
-                    type: "pie",
-                    startAngle: 240,
-                    yValueFormatString: '$##0.00\"\"',
-                    indexLabel: "{label} {y}",
-                    dataPoints: data
-                }
-            ]
-        }
-        this.typeInCostsLoading = true
-        
-    }
-
-    deptInCostsLoading: boolean = false
-    deptInCosts: any = {}
-    async getByDeptCosts() {
-        this.deptInCostsLoading = false
-        const dataQuery: DashboardReqDto = {
-            dateType: false,
-            dateTypeValue: 'none',
-            dataType: true,
-            dataTypeValue: 'dept',
-            valueField: 'costs'
-        }
-        const res = await this.runQueryData(dataQuery)
-        const data = transformDataPointsOnly(res, 'deptName', 'costs')
-        this.deptInCosts = {
-            animationEnabled: true,
-            data: [
-                {
-                    type: "pie",
-                    startAngle: 240,
-                    yValueFormatString: '$##0.00\"\"',
-                    indexLabel: "{label} {y}",
-                    dataPoints: data
-                }
-            ]
-        }
-        this.deptInCostsLoading = true
-        
+        this.byDeptAndPriceLoading = true
     }
 
     async runQueryData(dataQuery: DashboardReqDto) {
@@ -398,15 +161,7 @@ export class DashboardComponent implements OnInit {
             filter: this.globalFilter
         }
 
-        return await postApiWithAuth('/asset/asset-list/chart-query-data', finalQuery)
+        return await postApiWithAuth('/invoice/query/data-group-by', finalQuery)
     }
 
-    async runQueryDate(dataQuery: DashboardReqDto) {
-        const finalQuery = {
-            ...dataQuery,
-            filter: this.globalFilter
-        }
-
-        return await postApiWithAuth('/asset/asset-list/chart-query-date', finalQuery)
-    }
 }

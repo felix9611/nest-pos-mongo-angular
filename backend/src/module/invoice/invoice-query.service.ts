@@ -211,7 +211,7 @@ export class InvoiceQueryService {
                     ...valueFieldObj.project
                 }
             },
-            { $sort: dataTypeObj.sort },
+        //    { $sort: dataTypeObj.sort },
             { $limit: 10 }
         ]).exec()
     }

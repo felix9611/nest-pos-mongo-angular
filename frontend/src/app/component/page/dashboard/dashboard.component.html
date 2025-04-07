@@ -7,7 +7,7 @@
                 name="date"
                 [nzShowTime]="{ nzFormat: 'HH:mm' }"
                 nzFormat="yyyy-MM-dd HH:mm:ss"
-                [(ngModel)]="globalFilter.purchaseDates"
+                [(ngModel)]="globalFilter.salesDateRange"
             ></nz-range-picker>
         </div>
         <div class="w-[210px] h-full">
@@ -54,50 +54,15 @@
         </div>
     </div>
 
-    <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-        <div class="font-bold">Costs by Year-month and Department</div>
-        <app-chart class="w-[100%]" *ngIf="deptAndDateInCostLoading" [(chartData)]="deptAndDateInCost" />
-    </div>
-
-    <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-        <div class="font-bold">Counts by Year-month and Department</div>
-        <app-chart class="w-[100%]" *ngIf="deptAndDateInCountLoading" [(chartData)]="deptAndDateInCount" />
-    </div>
-
-    <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-        <div class="font-bold">Counts by Year-month and Asset Type</div>
-        <app-chart class="w-[100%]" *ngIf="typeAndDateInCountLoading" [(chartData)]="typeAndDateInCount" />
-    </div>
-
-    <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-        <div class="font-bold">Costs by Year-month and Asset Type</div>
-        <app-chart class="w-[100%]" *ngIf="typeAndDateInCostLoading"  [(chartData)]="typeAndDateInCost" />
-    </div>
-
-    <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-        <div class="font-bold">Counts by Year-month and Location</div>
-        <app-chart class="w-[100%]" *ngIf="placeAndDateInCountLoading" [(chartData)]="placeAndDateInCount" />
-    </div>
-
-    <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-        <div class="font-bold">Costs by Year-month and Location</div>
-        <app-chart class="w-[100%]" *ngIf="placeAndDateInCostsLoading" [(chartData)]="placeAndDateInCosts" />
-    </div>
-
-    <div class="grid lg:grid-cols-2 gap-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-            <div class="font-bold">Costs by Location</div>
-            <app-chart class="w-[100%]" *ngIf="placeInCostsLoading" [(chartData)]="placeInCosts" />
+            <div class="font-bold">Total Qtys Sales by per Department</div>
+            <app-chart class="w-[100%]" *ngIf="byDeptAndQtysLoading" [(chartData)]="byDeptAndQtys" />
         </div>
         <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-            <div class="font-bold">Costs by Type</div>
-            <app-chart class="w-[100%]" *ngIf="typeInCostsLoading" [(chartData)]="typeInCosts" />
+            <div class="font-bold">Total Price Sales by per Department</div>
+            <app-chart class="w-[100%]" *ngIf="byDeptAndPriceLoading" [(chartData)]="byDeptAndPrice" />
         </div>
-    </div>
-
-    <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-        <div class="font-bold">Costs by Type</div>
-        <app-chart class="w-[100%]" *ngIf="deptInCostsLoading" [(chartData)]="deptInCosts" />
     </div>
 
 </div>
