@@ -51,7 +51,9 @@ export class InvoiceQueryService {
             project: {
                 deptName: "$_id"
             },
-            sort: {},
+            sort: {
+                deptName: 1
+            },
         }
     }
 
@@ -74,7 +76,9 @@ export class InvoiceQueryService {
             project: {
                 typeName: "$_id"
             },
-            sort: {},
+            sort: {
+                typeName: 1
+            },
         }
     }
 
@@ -96,10 +100,11 @@ export class InvoiceQueryService {
             project: {
                 year: "$_id.year",
                 month: "$_id.month",
+                monthNum: "$_id.monthNum",
             },
             sort: {
                 year: 1,
-                sortMonth: 1
+                monthNum: 1
             },
         }
     }
@@ -123,7 +128,9 @@ export class InvoiceQueryService {
             project: {
                 placeName: "$_id"
             },
-            sort: {},
+            sort: {
+                placeName: 1
+            },
         }
     }
 
@@ -211,7 +218,7 @@ export class InvoiceQueryService {
                     ...valueFieldObj.project
                 }
             },
-        //    { $sort: dataTypeObj.sort },
+            { $sort: dataTypeObj.sort },
             { $limit: 10 }
         ]).exec()
     }
