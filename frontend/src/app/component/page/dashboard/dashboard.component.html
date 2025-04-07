@@ -56,6 +56,14 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
+            <div class="font-bold">Total Qtys Sales by per Product Type</div>
+            <app-chart class="w-[100%]" *ngIf="byTypeAndQtysLoading" [(chartData)]="byTypeAndQtys" />
+        </div>
+        <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
+            <div class="font-bold">Total Price Sales by per Product Type</div>
+            <app-chart class="w-[100%]" *ngIf="byTypeAndPriceLoading" [(chartData)]="byTypeAndPrice" />
+        </div>
+        <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
             <div class="font-bold">Total Qtys Sales by per Department</div>
             <app-chart class="w-[100%]" *ngIf="byDeptAndQtysLoading" [(chartData)]="byDeptAndQtys" />
         </div>

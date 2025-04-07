@@ -92,9 +92,67 @@ export class DashboardComponent implements OnInit {
     async runSearch() {
         await this.getByDeptAndQtys()
         await this.getByDeptAndPrice()
+        await this.getByTypeAndPrice()
+        await this.getByTypeAndQtys()
     }
 
     globalFilter: DashboardReqFilterDto = {}
+
+    byTypeAndQtysLoading: boolean = false
+    byTypeAndQtys: any = {}
+    async getByTypeAndQtys() {
+        this.byTypeAndQtysLoading = false
+        const dataQuery: DashboardReqDto = {
+            dataTypeValue: 'type',
+            valueField: 'qtys'
+        }
+
+        const res = await this.runQueryData(dataQuery)
+        this.byTypeAndQtys = {
+            data: transformDataNoDate(res, 'stackedColumn', false, 'typeName', 'qtys'),
+            animationEnabled: true,
+            axisY: {
+                title: 'Qtys'
+            },
+            axisX: {
+                title: 'Product Types',
+             /*   valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime" */
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        this.byTypeAndQtysLoading = true
+    }
+
+    byTypeAndPriceLoading: boolean = false
+    byTypeAndPrice: any = {}
+    async getByTypeAndPrice() {
+        this.byTypeAndPriceLoading = false
+        const dataQuery: DashboardReqDto = {
+            dataTypeValue: 'type',
+            valueField: 'price'
+        }
+
+        const res = await this.runQueryData(dataQuery)
+        this.byTypeAndPrice = {
+            data: transformDataNoDate(res, 'stackedColumn', false, 'typeName', 'price'),
+            animationEnabled: true,
+            axisY: {
+                title: 'Price'
+            },
+            axisX: {
+                title: 'Product Types',
+             /*   valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime" */
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        this.byTypeAndPriceLoading = true
+    }
 
     byDeptAndQtysLoading: boolean = false
     byDeptAndQtys: any = {}
@@ -107,7 +165,6 @@ export class DashboardComponent implements OnInit {
         }
 
         const res = await this.runQueryData(dataQuery)
-        console.log(transformDataNoDate(res, 'stackedColumn', true, 'deptName', 'qtys'))
         this.byDeptAndQtys = {
             data: transformDataNoDate(res, 'stackedColumn', false, 'deptName', 'qtys'),
             animationEnabled: true,
@@ -131,7 +188,6 @@ export class DashboardComponent implements OnInit {
     async getByDeptAndPrice() {
         this.byDeptAndPriceLoading = false
         const dataQuery: DashboardReqDto = {
-            dateTypeValue: 'YearMonth',
             dataTypeValue: 'dept',
             valueField: 'price'
         }
