@@ -285,6 +285,7 @@ export class DashboardComponent implements OnInit {
 
         this.byYearMonthAndQtys = {
             data: [{
+                type: 'spline',
                 name: 'Sales',
                 xValueType: 'dateTime',
                 dataPoints: dataSet
@@ -320,6 +321,7 @@ export class DashboardComponent implements OnInit {
 
         this.byYearMonthAndPrice = {
             data: [{
+                type: 'spline',
                 name: 'Sales',
                 xValueType: 'dateTime',
                 dataPoints: dataSet
