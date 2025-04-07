@@ -6,7 +6,7 @@ export interface DashboardReqFilterDto {
 }
 
 export interface DashboardReqDto {
-    dateTypeValue?: 'YearMonth' | 'YearQuarter' | 'none'
-    dataTypeValue?: 'dept' | 'type' | 'location'
+    // dateTypeValue?: 'YearMonth' | 'YearQuarter' | 'none'
+    dataTypeValue?: 'dept' | 'type' | 'location' | 'year-month'
     valueField: 'qtys' | 'price'
 }

@@ -94,6 +94,11 @@ export class DashboardComponent implements OnInit {
         await this.getByDeptAndPrice()
         await this.getByTypeAndPrice()
         await this.getByTypeAndQtys()
+
+        await this.getByLocationAndQtys() 
+        await this.getByLocationAndPrice()
+
+        await this.getByYearMonthAndPrice() 
     }
 
     globalFilter: DashboardReqFilterDto = {}
@@ -159,7 +164,6 @@ export class DashboardComponent implements OnInit {
     async getByDeptAndQtys() {
         this.byDeptAndQtysLoading = false
         const dataQuery: DashboardReqDto = {
-            dateTypeValue: 'YearMonth',
             dataTypeValue: 'dept',
             valueField: 'qtys'
         }
@@ -209,6 +213,71 @@ export class DashboardComponent implements OnInit {
             }
         }
         this.byDeptAndPriceLoading = true
+    }
+
+    byLocationAndQtysLoading: boolean = false
+    byLocationAndQtys: any = {}
+    async getByLocationAndQtys() {
+        this.byLocationAndQtysLoading = false
+        const dataQuery: DashboardReqDto = {
+            dataTypeValue: 'location',
+            valueField: 'qtys'
+        }
+
+        const res = await this.runQueryData(dataQuery)
+        this.byLocationAndQtys = {
+            data: transformDataNoDate(res, 'stackedColumn', false, 'placeName', 'qtys'),
+            animationEnabled: true,
+            axisY: {
+                title: 'Qtys'
+            },
+            axisX: {
+                title: 'Locations',
+             /*   valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime" */
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        this.byLocationAndQtysLoading = true
+    }
+
+    byLocationAndPriceLoading: boolean = false
+    byLocationAndPrice: any = {}
+    async getByLocationAndPrice() {
+        this.byLocationAndPriceLoading = false
+        const dataQuery: DashboardReqDto = {
+            dataTypeValue: 'location',
+            valueField: 'price'
+        }
+
+        const res = await this.runQueryData(dataQuery)
+        this.byLocationAndPrice = {
+            data: transformDataNoDate(res, 'stackedColumn', false, 'placeName', 'price'),
+            animationEnabled: true,
+            axisY: {
+                title: 'Price'
+            },
+            axisX: {
+                title: 'Locations',
+             /*   valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime" */
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        this.byLocationAndPriceLoading = true
+    }
+
+    async getByYearMonthAndPrice() {
+        const dataQuery: DashboardReqDto = {
+            dataTypeValue: 'year-month',
+            valueField: 'price'
+        }
+
+        const res = await this.runQueryData(dataQuery)
     }
 
     async runQueryData(dataQuery: DashboardReqDto) {
