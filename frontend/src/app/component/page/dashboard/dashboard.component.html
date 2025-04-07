@@ -1,9 +1,9 @@
-<div class="bg-white p-[2rem] grid grid-cols-1 gap-3">
-    <div class="flex gap-2 p-5 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
+<div class="bg-white p-[2rem] grid grid-cols-1 gap-3 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-2 lg:flex gap-2 p-5 shawdow-lg border-2 border-[#A9A9A9] rounded-lg w-full">
         <div>
             <nz-range-picker
                 nzSize="large"
-                class="h-full"
+                class="h-full w-full"
                 name="date"
                 [nzShowTime]="{ nzFormat: 'HH:mm' }"
                 nzFormat="yyyy-MM-dd HH:mm:ss"
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
             <div class="font-bold">Total Qtys Sales by per Product Type</div>
             <app-chart class="w-[100%]" *ngIf="byTypeAndQtysLoading" [(chartData)]="byTypeAndQtys" />
