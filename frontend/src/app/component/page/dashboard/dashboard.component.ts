@@ -12,7 +12,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { DashboardReqDto, DashboardReqFilterDto } from './interface'
 import { CanvasChartComponent } from '../../components/chart/chart.component'
-import { transformData, transformDataNoDate, transformDataPointsOnly } from './function' 
+import { transformData, transformDataNoDate, transformDataPointsOnly, transformDate } from './function' 
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../state/user.service'
@@ -97,8 +97,8 @@ export class DashboardComponent implements OnInit {
 
         await this.getByLocationAndQtys() 
         await this.getByLocationAndPrice()
-
-        await this.getByYearMonthAndPrice() 
+        await this.getbyYearMonthAndQtys()
+        await this.getbyYearMonthAndPrice() 
     }
 
     globalFilter: DashboardReqFilterDto = {}
@@ -271,13 +271,74 @@ export class DashboardComponent implements OnInit {
         this.byLocationAndPriceLoading = true
     }
 
-    async getByYearMonthAndPrice() {
+    byYearMonthAndQtysLoading: boolean = false
+    byYearMonthAndQtys: any = {}
+    async getbyYearMonthAndQtys() {
+        this.byYearMonthAndQtysLoading = false
+        const dataQuery: DashboardReqDto = {
+            dataTypeValue: 'year-month',
+            valueField: 'qtys'
+        }
+
+        const res = await this.runQueryData(dataQuery)
+        const dataSet = transformDate(res, 'qtys', ['year', 'month'])
+
+        this.byYearMonthAndQtys = {
+            data: [{
+                name: 'Sales',
+                xValueType: 'dateTime',
+                dataPoints: dataSet
+            }],
+            animationEnabled: true,
+            xValueType: "dateTime",
+            axisY: {
+                title: 'Qtys'
+            },
+            axisX: {
+                title: 'Year - Month',
+                valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime"
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        this.byYearMonthAndQtysLoading = true
+    }
+
+    byYearMonthAndPriceLoading: boolean = false
+    byYearMonthAndPrice: any = {}
+    async getbyYearMonthAndPrice() {
+        this.byYearMonthAndPriceLoading = false
         const dataQuery: DashboardReqDto = {
             dataTypeValue: 'year-month',
             valueField: 'price'
         }
 
         const res = await this.runQueryData(dataQuery)
+        const dataSet = transformDate(res, 'price', ['year', 'month'])
+
+        this.byYearMonthAndPrice = {
+            data: [{
+                name: 'Sales',
+                xValueType: 'dateTime',
+                dataPoints: dataSet
+            }],
+            animationEnabled: true,
+            xValueType: "dateTime",
+            axisY: {
+                title: 'Price'
+            },
+            axisX: {
+                title: 'Year - Month',
+                valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime"
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        this.byYearMonthAndPriceLoading = true
     }
 
     async runQueryData(dataQuery: DashboardReqDto) {

@@ -54,6 +54,16 @@
         </div>
     </div>
 
+    <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
+        <div class="font-bold">Total Qtys Sales by Year & Month</div>
+        <app-chart class="w-[100%]" *ngIf="byYearMonthAndQtysLoading" [(chartData)]="byYearMonthAndQtys" />
+    </div>
+
+    <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
+        <div class="font-bold">Total Price Sales by Year & Month</div>
+        <app-chart class="w-[100%]" *ngIf="byYearMonthAndPriceLoading" [(chartData)]="byYearMonthAndPrice" />
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
             <div class="font-bold">Total Qtys Sales by per Product Type</div>
@@ -79,6 +89,7 @@
             <div class="font-bold">Total Price Sales by per Location</div>
             <app-chart class="w-[100%]" *ngIf="byLocationAndPriceLoading" [(chartData)]="byLocationAndPrice" />
         </div>
+        
     </div>
 
 </div>
