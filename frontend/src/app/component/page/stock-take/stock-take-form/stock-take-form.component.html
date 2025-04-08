@@ -91,25 +91,22 @@
                           </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <div class="px-1 w-[90px] flex items-center">Location</div>
-                        <nz-form-control>
-                            <nz-select
-                                class="w-full h-full" 
-                                name="placeId" 
-                                [(ngModel)]="itemForm.placeId"  
-                                nzAllowClear nzShowArrow disabled
-                                nzPlaceHolder="Please Select">
-                                @for (option of placeLists; track option) {
-                                <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
-                                }
-                            </nz-select>
-                        </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
                         <div class="px-1 w-[90px] flex items-center">Status</div>
                         <nz-form-control>
                             <input class="w-[100%]" nz-input type="text" name="status" [(ngModel)]="itemForm.status" disabled/>
                           </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Recorded Qtys</div>
+                        <nz-form-control class="w-full">
+                            <nz-input-number [style.width.%]="100" name="orgQty" [(ngModel)]="itemForm.orgQty" [disabled]="true"></nz-input-number>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Qtys</div>
+                        <nz-form-control class="w-full">
+                            <nz-input-number [style.width.%]="100" name="checkQty" [(ngModel)]="itemForm.checkQty"></nz-input-number>
+                        </nz-form-control>
                     </nz-form-item>
                     <nz-form-item class="lg:col-span-4">
                         <div class="px-1 w-[90px] flex items-center">Remark</div>
@@ -136,9 +133,10 @@
                 >
                     <thead>
                         <tr>
-                            <th>Asset Code</th>
-                            <th>Asset Name</th>
-                            <th>Asset Location</th>
+                            <th>Product Code</th>
+                            <th>Product Name</th>
+                            <th>Qtys</th>
+                            <th>Qty Check</th>
                             <th>Status</th>
                             <th>Check Time</th>
                             <th>Remark</th>
@@ -146,9 +144,9 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let data of editForm.stockTakeItems">
-                            <td>{{data.assetCode}}</td>
-                            <td>{{data.assetlist.assetName}}</td>
-                            <td>{{data.location.placeName}}</td>
+                            <td>{{data.productCode}}</td>
+                            <td>{{data.product.productName}}</td>
+                            <td>{{data.qty}}</td>
                             <td>{{data.status}}</td>
                             <td>{{ dateFormat(data.checkTime) }}</td>
                             <td>{{ data.remark }}</td>

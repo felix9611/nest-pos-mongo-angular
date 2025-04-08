@@ -6,6 +6,7 @@ export interface StockTakeItemDto {
     placeId: string
     status: string
     checkTime: string
+    qty: number
     remark?: string
 }
 
@@ -16,6 +17,8 @@ export interface StockTakeItemFromDto {
     productName: string
     placeId: string
     status: string
+    orgQty?: number
+    checkQty?: number
     remark?: string
 }
 

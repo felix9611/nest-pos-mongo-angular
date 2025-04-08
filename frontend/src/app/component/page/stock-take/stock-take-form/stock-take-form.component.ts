@@ -13,7 +13,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { FormsModule } from '@angular/forms'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, Router } from '@angular/router'
-import { StockTakeFormEdit, StockTakeItemFromDto } from './interface'
+import { StockTakeFormEdit, StockTakeItemDto, StockTakeItemFromDto } from './interface'
 import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { MatButtonModule } from '@angular/material/button'
@@ -21,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
 import { Subscription } from 'rxjs'
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 
 @Component({
     standalone: true,
@@ -38,13 +39,15 @@ import { Subscription } from 'rxjs'
         FormsModule,
         NzDatePickerModule,
         MatIconModule, 
-        MatButtonModule
+        MatButtonModule,
+        NzInputNumberModule
     ],
     templateUrl: './stock-take-form.component.html',
     styleUrl: './stock-take-form.component.css',
 })
 export class StockTakeFormComponent implements OnInit {
     private rightSubscription: Subscription
+await: any
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
@@ -99,7 +102,9 @@ export class StockTakeFormComponent implements OnInit {
         productName: '',
         placeId: '',
         status: '',
-        remark: ''
+        remark: '',
+        orgQty: 0,
+        checkQty: 0
     }
 
     ngOnInit() {
@@ -134,21 +139,21 @@ export class StockTakeFormComponent implements OnInit {
         if (event) {
             const data = await getApiWithAuth(`/product/product-list/code/${event}`)
             this.itemForm.productId = data._id
-            this.itemForm.productCode = data.productCode
+          //  this.itemForm.productCode = data.productCode
             this.itemForm.productName = data.productName
-            this.itemForm.placeId = data.placeId
-            this.placeCheckStatus(data.placeId)
+            this.placeCheckStatus(data._id)
         }
     }
 
 
-    placeCheckStatus(placeIdRecord: string) {
-        if (placeIdRecord === this.editForm.actionPlaceId) {
+    async placeCheckStatus(productId: string) {
+        const res = await postApiWithAuth('/product/product-list/location/check', { productId, locationId: this.editForm.actionPlaceId })
+        if (res.status === true) {
             this.itemForm.status = 'Exist'
-        } else {
-            this.itemForm.status = 'Wrong Location'
+            this.itemForm.orgQty = res.data.qty
+        } else if (res.status === false) {
+            this.itemForm.status = 'Not Exist OR Wrong Location'
         }
-
     }
 
     async submitItem() {
@@ -158,7 +163,8 @@ export class StockTakeFormComponent implements OnInit {
             productCode: this.itemForm.productCode,
             placeId: this.itemForm.placeId,
             status: this.itemForm.status,
-            remark: this.itemForm.remark
+            remark: this.itemForm.remark,
+            qty: this.itemForm.checkQty
         }
 
         const res = await postApiWithAuth('/product/stock-take/item-submit', finalData)
@@ -169,6 +175,7 @@ export class StockTakeFormComponent implements OnInit {
         } else {
             this.message.error('Ooops! something wrong! Please try again!')
         }
+
     }
 
     dateFormat(data: string) {
