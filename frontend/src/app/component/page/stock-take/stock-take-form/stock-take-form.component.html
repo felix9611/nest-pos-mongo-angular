@@ -79,15 +79,15 @@
             <div *ngIf="editForm.status === 1">
                 <form nz-form class="p-2 gap-2">
                     <nz-form-item>
-                        <div class="px-1 w-[90px] flex items-center">Asset Code</div>
+                        <div class="px-1 w-[90px] flex items-center">Product Code</div>
                         <nz-form-control>
-                            <input class="w-[100%]" nz-input type="text" name="assetCode" [(ngModel)]="itemForm.assetCode" (ngModelChange)="assetCodeChanged($event)"/>
+                            <input class="w-[100%]" nz-input type="text" name="assetCode" [(ngModel)]="itemForm.productCode" (ngModelChange)="assetCodeChanged($event)"/>
                           </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <div class="px-1 w-[90px] flex items-center">Asset Name</div>
+                        <div class="px-1 w-[90px] flex items-center">Product Name</div>
                         <nz-form-control>
-                            <input class="w-[100%]" nz-input type="text" name="assetName" [(ngModel)]="itemForm.assetName" disabled />
+                            <input class="w-[100%]" nz-input type="text" name="assetName" [(ngModel)]="itemForm.productName" disabled />
                           </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>

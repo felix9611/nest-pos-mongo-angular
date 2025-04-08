@@ -27,6 +27,8 @@ import { SalePointComponent } from './page/sale-point/sale-point.component'
 import { InvoiceDetailComponent } from './page/invoice/invoice-detail/invoice-detail.component'
 import { InvoiceListComponent } from './page/invoice/invoice-list/invoice-list.component'
 import { StockDashboardComponent } from './page/dashboard/stock-dashboard/stock-dashboard.component'
+import { StockTakeListComponent } from './page/stock-take/stock-take-list/stock-take-list.component'
+import { StockTakeFormComponent } from './page/stock-take/stock-take-form/stock-take-form.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -177,6 +179,16 @@ export const pagesRoutes: Routes = [
     {
         path: 'invoice-detail',
         component: InvoiceDetailComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'stock-take-list',
+        component: StockTakeListComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'stock-take-form',
+        component: StockTakeFormComponent,
         canActivate: [AuthGuard]
     }
 ]

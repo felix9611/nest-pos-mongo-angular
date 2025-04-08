@@ -46,7 +46,7 @@ export class StockTakeListComponent implements OnInit {
     ) {
 
         this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'Stock Take', 'stock-takes')
+            const answer = findMenuItem(data, 'Stock Take', 'stock-take-list')
             this.userRightInside = {
                 read: answer?.read ?? false,
                 write: answer.write ?? false,
@@ -103,7 +103,7 @@ export class StockTakeListComponent implements OnInit {
     }
 
     async loadStockTakeLists() {
-        const res = await postApiWithAuth('/asset/stock-take/list', this.searchForm)
+        const res = await postApiWithAuth('/product/stock-take/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
     }
@@ -114,7 +114,7 @@ export class StockTakeListComponent implements OnInit {
     }
 
     async submitForm() {
-        const res = await postApiWithAuth('/asset/stock-take/create-form', this.editForm)
+        const res = await postApiWithAuth('/product/stock-take/create-form', this.editForm)
         if (res.msg) {
             this.message.error(res.msg)
         } else {
@@ -159,7 +159,7 @@ export class StockTakeListComponent implements OnInit {
     }
 
     async finshForm() {
-        const res = await getApiWithAuth(`/asset/stock-take/finish/${this.handleId}`)
+        const res = await getApiWithAuth(`/product/stock-take/finish/${this.handleId}`)
         if (res.finished) {
             this.message.success(res.msg)
             this.loadStockTakeLists()
@@ -171,7 +171,7 @@ export class StockTakeListComponent implements OnInit {
     }
 
     async cancelForm() {
-        const res = await getApiWithAuth(`/asset/stock-take/void/${this.handleId}`)
+        const res = await getApiWithAuth(`/product/stock-take/void/${this.handleId}`)
         if (res.finished) {
             this.message.success(res.msg)
             this.loadStockTakeLists()

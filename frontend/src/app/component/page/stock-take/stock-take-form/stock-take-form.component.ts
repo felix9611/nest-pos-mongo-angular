@@ -52,7 +52,7 @@ export class StockTakeFormComponent implements OnInit {
         private userStoreService: UserStoreService
     ) {
         this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'Stock Take', 'stock-takes')
+            const answer = findMenuItem(data, 'Stock Take', 'stock-take-list')
             this.userRightInside = {
                 read: answer?.read ?? false,
                 write: answer.write ?? false,
@@ -94,9 +94,9 @@ export class StockTakeFormComponent implements OnInit {
 
     itemForm: StockTakeItemFromDto = {
         stockTakeId: '',
-        assetId: '',
-        assetCode: '',
-        assetName: '',
+        productId: '',
+        productCode: '',
+        productName: '',
         placeId: '',
         status: '',
         remark: ''
@@ -113,7 +113,7 @@ export class StockTakeFormComponent implements OnInit {
     }
 
     async getOne() {
-        this.editForm = await getApiWithAuth(`/asset/stock-take/one/${ this.theId}`)    
+        this.editForm = await getApiWithAuth(`/product/stock-take/one/${ this.theId}`)    
     }
 
     placeLists: any[] = []
@@ -122,7 +122,7 @@ export class StockTakeFormComponent implements OnInit {
     }
 
     async updateForm() {
-        const res = await postApiWithAuth('/asset/stock-take/update-form', this.editForm)
+        const res = await postApiWithAuth('/product/stock-take/update-form', this.editForm)
         if (res.finished) {
             this.message.success(res.msg)
         } else {
@@ -132,10 +132,10 @@ export class StockTakeFormComponent implements OnInit {
 
     async assetCodeChanged(event: any) {
         if (event) {
-            const data = await getApiWithAuth(`/asset/asset-list/code/${event}`)
-            this.itemForm.assetId = data._id
-            this.itemForm.assetCode = data.assetCode
-            this.itemForm.assetName = data.assetName
+            const data = await getApiWithAuth(`/product/product-list/code/${event}`)
+            this.itemForm.productId = data._id
+            this.itemForm.productCode = data.productCode
+            this.itemForm.productName = data.productName
             this.itemForm.placeId = data.placeId
             this.placeCheckStatus(data.placeId)
         }
@@ -154,14 +154,14 @@ export class StockTakeFormComponent implements OnInit {
     async submitItem() {
         const finalData = {
             stockTakeId: this.editForm._id,
-            assetId: this.itemForm.assetId,
-            assetCode: this.itemForm.assetCode,
+            productId: this.itemForm.productId,
+            productCode: this.itemForm.productCode,
             placeId: this.itemForm.placeId,
             status: this.itemForm.status,
             remark: this.itemForm.remark
         }
 
-        const res = await postApiWithAuth('/asset/stock-take/item-submit', finalData)
+        const res = await postApiWithAuth('/product/stock-take/item-submit', finalData)
 
         if (res._id) {
             this.message.success('Added!')

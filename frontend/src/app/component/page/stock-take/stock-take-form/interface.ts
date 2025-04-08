@@ -1,8 +1,8 @@
 export interface StockTakeItemDto {
     _id?: string
     stockTakeId: string
-    assetId: string
-    assetCode: string
+    productId: string
+    productCode: string
     placeId: string
     status: string
     checkTime: string
@@ -11,9 +11,9 @@ export interface StockTakeItemDto {
 
 export interface StockTakeItemFromDto {
     stockTakeId: string
-    assetId: string
-    assetCode: string
-    assetName: string
+    productId: string
+    productCode: string
+    productName: string
     placeId: string
     status: string
     remark?: string
