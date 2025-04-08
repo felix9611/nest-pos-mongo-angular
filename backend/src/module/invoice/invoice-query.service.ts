@@ -219,7 +219,7 @@ export class InvoiceQueryService {
                 }
             },
             { $sort: dataTypeObj.sort },
-            { $limit: 10 }
+            // { $limit: 10 }
         ]).exec()
     }
 }

@@ -3,14 +3,16 @@ import { ProductService } from './product.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from '../../tool/open-api-body'
-import { CreateProductDto, ListProductLocationtRequestDto, ListProductRequestDto, StockInOutProductLocationDto, StockMoveProductLocationDto, UpdateProductDto } from './product.dto'
+import { CreateProductDto, DashboardReqDto, ListProductLocationtRequestDto, ListProductRequestDto, StockInOutProductLocationDto, StockMoveProductLocationDto, UpdateProductDto } from './product.dto'
 import { ProductLocationService } from './productLocation.service'
+import { ProductLocationQueryService } from './productLocation-query.service'
 
 @Controller('product/product-list')
 export class ProductController {
     constructor(
         private productService: ProductService,
-        private productLocationService: ProductLocationService
+        private productLocationService: ProductLocationService,
+        private productLocationQueryService: ProductLocationQueryService,
     ){}
 
     @Post('create')
@@ -89,5 +91,11 @@ export class ProductController {
     @UseGuards(AuthGuard)
     async removeFile(@Param('id') id: string) {
         return await this.productService.voidFileById(id)
+    }
+
+    @Post('query/data-group-by')
+    @UseGuards(AuthGuard)
+    async getByDeptAndQty(@Body() query: DashboardReqDto) {
+        return await this.productLocationQueryService.getByDataType(query)
     }
 }

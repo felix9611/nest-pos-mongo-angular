@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-api-body'
+import { AnyCnameRecord } from 'dns'
 
 export interface CreateProductDto {
     productCode: string
@@ -69,4 +70,19 @@ export interface ProductFileDto {
     fileType: string
     base64: string
 }
+
+export interface DashboardReqDto {
+    dataTypeValue?: 'dept' | 'type' | 'location' | 'year-month' |'none'
+   // valueField?: 'qtys' | 'price'
+    filter: DashboardReqFilterDto
+}
+
+export interface DashboardReqFilterDto {
+    productCode?: string
+    productName?: string
+    typeIds?: string[]
+    placeIds?: string[]
+    deptIds?: string[]
+}
+
 
