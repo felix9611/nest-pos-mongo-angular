@@ -5,6 +5,7 @@ import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.
 import { StockTake, StockTakeSchema } from './stock-take.schema'
 import { StockTakeItem, StockTakeItemSchema } from './stock-take-item.schema'
 import { StockTakeService } from './stock-take.service'
+import { StockTakeController } from './stcok-take.controller'
 
 @Module({
     imports: [
@@ -14,7 +15,7 @@ import { StockTakeService } from './stock-take.service'
             { name: StockTakeItem.name, schema: StockTakeItemSchema }
         ])
     ],
-    controllers: [],
+    controllers: [StockTakeController],
     providers: [ActionRecordService, StockTakeService]
 })
 export class StockTakeMoudule {}

@@ -26,3 +26,13 @@ export interface StockTakeItemDto {
     checkTime: string
     remark?: string
 }
+
+export interface StockTakeItemDtoSubmit {
+    stockTakeId: string
+    productId: string
+    productCode: string
+    placeId: string
+    qty: number
+    status: string
+    remark?: string
+}
