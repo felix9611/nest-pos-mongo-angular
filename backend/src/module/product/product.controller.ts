@@ -3,7 +3,7 @@ import { ProductService } from './product.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from '../../tool/open-api-body'
-import { CreateProductDto, DashboardReqDto, ListProductLocationtRequestDto, ListProductRequestDto, StockInOutProductLocationDto, StockMoveProductLocationDto, UpdateProductDto } from './product.dto'
+import { CheckProductAndLocationDto, CreateProductDto, DashboardReqDto, ListProductLocationtRequestDto, ListProductRequestDto, StockInOutProductLocationDto, StockMoveProductLocationDto, UpdateProductDto } from './product.dto'
 import { ProductLocationService } from './productLocation.service'
 import { ProductLocationQueryService } from './productLocation-query.service'
 
@@ -97,5 +97,11 @@ export class ProductController {
     @UseGuards(AuthGuard)
     async getByDeptAndQty(@Body() query: DashboardReqDto) {
         return await this.productLocationQueryService.getByDataType(query)
+    }
+
+    @Post('location/check')
+    @UseGuards(AuthGuard)
+    async checkProductAndLocationDto(@Body() data: CheckProductAndLocationDto) {
+        return await this.productLocationService.checkProductAndLocationDto(data)
     }
 }

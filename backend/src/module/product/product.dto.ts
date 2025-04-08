@@ -85,4 +85,8 @@ export interface DashboardReqFilterDto {
     deptIds?: string[]
 }
 
+export interface CheckProductAndLocationDto {
+    productId: string
+    locationId: string
+}
 
