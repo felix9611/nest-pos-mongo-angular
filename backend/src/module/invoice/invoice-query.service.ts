@@ -23,7 +23,7 @@ export class InvoiceQueryService {
                 'invoice.created_at': { $gte: new Date(salesDateRange[0]), $lte: new Date(salesDateRange[1]) }
             } : {},
             ...typeIds && typeIds.length > 0 ? { 'product.typeId': { $in: typeIds } } : {},
-            ...placeIds && placeIds.length > 0 ? { 'invoice.location_id': { $in: placeIds } } : {},
+            ...placeIds && placeIds.length > 0 ? { 'invoice.locationId': { $in: placeIds } } : {},
             ...deptIds && deptIds.length > 0 ? { 'product.deptId': { $in: deptIds } } : {},
             ...productCode ? { 'product.productCode': { $regex: productCode, $options: 'i' } } : {},
             ...productName ? { 'product.productName': { $regex: productName, $options: 'i' } } : {},
