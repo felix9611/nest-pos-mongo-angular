@@ -15,7 +15,7 @@ export class ProductLocationQueryService {
     
         return {
             ...typeIds && typeIds.length > 0 ? { 'product.typeId': { $in: typeIds } } : {},
-            ...placeIds && placeIds.length > 0 ? { locatonId: { $in: placeIds } } : {},
+            ...placeIds && placeIds.length > 0 ? { locationId: { $in: placeIds } } : {},
             ...deptIds && deptIds.length > 0 ? { 'product.deptId': { $in: deptIds } } : {},
             ...productCode ? { 'product.productCode': { $regex: productCode, $options: 'i' } } : {},
             ...productName ? { 'product.productName': { $regex: productName, $options: 'i' } } : {}
