@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
-import { getApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
+import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import { NzTableModule } from 'ng-zorro-antd/table'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
@@ -11,12 +11,12 @@ import moment from 'moment'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { DashboardReqDto, DashboardReqFilterDto } from './interface'
-import { CanvasChartComponent } from '../../components/chart/chart.component'
+import { CanvasChartComponent } from '../../../components/chart/chart.component'
 import { transformData, transformDataNoDate, transformDataPointsOnly, transformDate } from './function' 
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
-import { UserStoreService } from '../../../../state/user.service'
-import { findMenuItem } from '../../tool-function'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
 import { Subscription } from 'rxjs'
 
 @Component({
@@ -34,10 +34,10 @@ import { Subscription } from 'rxjs'
         NzSelectModule,
         NzDatePickerModule,
     ],
-    templateUrl: './dashboard.component.html',
-    styleUrl: './dashboard.component.css',
+    templateUrl: './stock-dashboard.component.html',
+    // styleUrl: './invoice-dashboard.component.css',
 })
-export class DashboardComponent implements OnInit {
+export class StockDashboardComponent implements OnInit {
     private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
@@ -97,8 +97,6 @@ export class DashboardComponent implements OnInit {
 
         await this.getByLocationAndQtys() 
         await this.getByLocationAndPrice()
-        await this.getbyYearMonthAndQtys()
-        await this.getbyYearMonthAndPrice() 
     }
 
     globalFilter: DashboardReqFilterDto = {}
@@ -108,21 +106,27 @@ export class DashboardComponent implements OnInit {
     async getByTypeAndQtys() {
         this.byTypeAndQtysLoading = false
         const dataQuery: DashboardReqDto = {
-            dataTypeValue: 'type',
-            valueField: 'qtys'
+            dataTypeValue: 'type'
         }
 
         const res = await this.runQueryData(dataQuery)
+
+        const qtys = transformDataNoDate(res, 'column', false, 'typeName', 'totalCost')
+        const qtysDataSet = qtys[0].dataPoints
+
         this.byTypeAndQtys = {
-            data: transformDataNoDate(res, 'stackedColumn', false, 'typeName', 'qtys'),
+            data: [
+                {
+                    name: 'Total Qtys',
+                    dataPoints: qtysDataSet
+                }
+            ],
             animationEnabled: true,
             axisY: {
                 title: 'Qtys'
             },
             axisX: {
-                title: 'Product Types',
-             /*   valueFormatString: "YYYY - MMM",
-                xValueType: "dateTime" */
+                title: 'Product Types'
             },
             toolTip: {
                 shared: true
@@ -136,13 +140,28 @@ export class DashboardComponent implements OnInit {
     async getByTypeAndPrice() {
         this.byTypeAndPriceLoading = false
         const dataQuery: DashboardReqDto = {
-            dataTypeValue: 'type',
-            valueField: 'price'
+            dataTypeValue: 'type'
         }
 
         const res = await this.runQueryData(dataQuery)
+
+        const cost = transformDataNoDate(res, 'column', false, 'typeName', 'totalCost')
+        const costDataSet = cost[0].dataPoints
+
+        const retail = transformDataNoDate(res, 'column', false, 'typeName', 'totalPrice')
+        const retailDataSet = retail[0].dataPoints
+
         this.byTypeAndPrice = {
-            data: transformDataNoDate(res, 'stackedColumn', false, 'typeName', 'price'),
+            data: [
+                {
+                    name: 'Total Cost Price',
+                    dataPoints: costDataSet
+                },
+                {
+                    name: 'Total Retail Price',
+                    dataPoints: retailDataSet
+                }
+            ],
             animationEnabled: true,
             axisY: {
                 title: 'Price'
@@ -164,13 +183,20 @@ export class DashboardComponent implements OnInit {
     async getByDeptAndQtys() {
         this.byDeptAndQtysLoading = false
         const dataQuery: DashboardReqDto = {
-            dataTypeValue: 'dept',
-            valueField: 'qtys'
+            dataTypeValue: 'dept'
         }
 
         const res = await this.runQueryData(dataQuery)
+        const qtys = transformDataNoDate(res, 'column', false, 'deptName', 'totalQty')
+        const qtysDataSet = qtys[0].dataPoints
+
         this.byDeptAndQtys = {
-            data: transformDataNoDate(res, 'stackedColumn', false, 'deptName', 'qtys'),
+            data: [
+                {
+                    name: 'Total Qtys',
+                    dataPoints: qtysDataSet
+                }
+            ],
             animationEnabled: true,
             axisY: {
                 title: 'Qtys'
@@ -192,13 +218,27 @@ export class DashboardComponent implements OnInit {
     async getByDeptAndPrice() {
         this.byDeptAndPriceLoading = false
         const dataQuery: DashboardReqDto = {
-            dataTypeValue: 'dept',
-            valueField: 'price'
+            dataTypeValue: 'dept'
         }
 
         const res = await this.runQueryData(dataQuery)
+        const cost = transformDataNoDate(res, 'column', false, 'deptName', 'totalCost')
+        const costDataSet = cost[0].dataPoints
+
+        const retail = transformDataNoDate(res, 'column', false, 'deptName', 'totalPrice')
+        const retailDataSet = retail[0].dataPoints
+
         this.byDeptAndPrice = {
-            data: transformDataNoDate(res, 'stackedColumn', false, 'deptName', 'price'),
+            data: [
+                {
+                    name: 'Total Cost Price',
+                    dataPoints: costDataSet
+                },
+                {
+                    name: 'Total Retail Price',
+                    dataPoints: retailDataSet
+                }
+            ],
             animationEnabled: true,
             axisY: {
                 title: 'Price'
@@ -220,21 +260,26 @@ export class DashboardComponent implements OnInit {
     async getByLocationAndQtys() {
         this.byLocationAndQtysLoading = false
         const dataQuery: DashboardReqDto = {
-            dataTypeValue: 'location',
-            valueField: 'qtys'
+            dataTypeValue: 'location'
         }
 
         const res = await this.runQueryData(dataQuery)
+        const qtys = transformDataNoDate(res, 'column', false, 'placeName', 'totalQty')
+        const qtysDataSet = qtys[0].dataPoints
+
         this.byLocationAndQtys = {
-            data: transformDataNoDate(res, 'stackedColumn', false, 'placeName', 'qtys'),
+            data: [
+                {
+                    name: 'Total Qtys',
+                    dataPoints: qtysDataSet
+                }
+            ],
             animationEnabled: true,
             axisY: {
                 title: 'Qtys'
             },
             axisX: {
                 title: 'Locations',
-             /*   valueFormatString: "YYYY - MMM",
-                xValueType: "dateTime" */
             },
             toolTip: {
                 shared: true
@@ -248,13 +293,27 @@ export class DashboardComponent implements OnInit {
     async getByLocationAndPrice() {
         this.byLocationAndPriceLoading = false
         const dataQuery: DashboardReqDto = {
-            dataTypeValue: 'location',
-            valueField: 'price'
+            dataTypeValue: 'location'
         }
 
         const res = await this.runQueryData(dataQuery)
+        const cost = transformDataNoDate(res, 'column', false, 'placeName', 'totalCost')
+        const costDataSet = cost[0].dataPoints
+
+        const retail = transformDataNoDate(res, 'column', false, 'placeName', 'totalPrice')
+        const retailDataSet = retail[0].dataPoints
+
         this.byLocationAndPrice = {
-            data: transformDataNoDate(res, 'stackedColumn', false, 'placeName', 'price'),
+            data: [
+                {
+                    name: 'Total Cost Price',
+                    dataPoints: costDataSet
+                },
+                {
+                    name: 'Total Retail Price',
+                    dataPoints: retailDataSet
+                }
+            ],
             animationEnabled: true,
             axisY: {
                 title: 'Price'
@@ -271,85 +330,13 @@ export class DashboardComponent implements OnInit {
         this.byLocationAndPriceLoading = true
     }
 
-    byYearMonthAndQtysLoading: boolean = false
-    byYearMonthAndQtys: any = {}
-    async getbyYearMonthAndQtys() {
-        this.byYearMonthAndQtysLoading = false
-        const dataQuery: DashboardReqDto = {
-            dataTypeValue: 'year-month',
-            valueField: 'qtys'
-        }
-
-        const res = await this.runQueryData(dataQuery)
-        const dataSet = transformDate(res, 'qtys', ['year', 'month'])
-
-        this.byYearMonthAndQtys = {
-            data: [{
-                type: 'spline',
-                name: 'Sales',
-                xValueType: 'dateTime',
-                dataPoints: dataSet
-            }],
-            animationEnabled: true,
-            xValueType: "dateTime",
-            axisY: {
-                title: 'Qtys'
-            },
-            axisX: {
-                title: 'Year - Month',
-                valueFormatString: "YYYY - MMM",
-                xValueType: "dateTime"
-            },
-            toolTip: {
-                shared: true
-            }
-        }
-        this.byYearMonthAndQtysLoading = true
-    }
-
-    byYearMonthAndPriceLoading: boolean = false
-    byYearMonthAndPrice: any = {}
-    async getbyYearMonthAndPrice() {
-        this.byYearMonthAndPriceLoading = false
-        const dataQuery: DashboardReqDto = {
-            dataTypeValue: 'year-month',
-            valueField: 'price'
-        }
-
-        const res = await this.runQueryData(dataQuery)
-        const dataSet = transformDate(res, 'price', ['year', 'month'])
-
-        this.byYearMonthAndPrice = {
-            data: [{
-                type: 'spline',
-                name: 'Sales',
-                xValueType: 'dateTime',
-                dataPoints: dataSet
-            }],
-            animationEnabled: true,
-            xValueType: "dateTime",
-            axisY: {
-                title: 'Price'
-            },
-            axisX: {
-                title: 'Year - Month',
-                valueFormatString: "YYYY - MMM",
-                xValueType: "dateTime"
-            },
-            toolTip: {
-                shared: true
-            }
-        }
-        this.byYearMonthAndPriceLoading = true
-    }
-
     async runQueryData(dataQuery: DashboardReqDto) {
         const finalQuery = {
             ...dataQuery,
             filter: this.globalFilter
         }
 
-        return await postApiWithAuth('/invoice/query/data-group-by', finalQuery)
+        return await postApiWithAuth('/product/product-list/query/data-group-by', finalQuery)
     }
 
 }

@@ -53,7 +53,7 @@ export class ProductLocationQueryService {
                 {
                     $lookup: {
                         from: "locations",
-                        let: { locationIdStr: { $toObjectId: '$invoice.locationId' } }, // Convert deptId to ObjectId
+                        let: { locationIdStr: { $toObjectId: '$locationId' } }, // Convert deptId to ObjectId
                         pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$locationIdStr'] } } }],
                         as: "location"
                     }
