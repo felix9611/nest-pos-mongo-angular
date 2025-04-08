@@ -9,7 +9,7 @@ import { VendorComponent } from './page/vendor/vendor.component'
 import { LocationComponent } from './page/location/location.component'
 import { ActionRecordComponent } from './page/action-record/action-record.component'
 import { TaxInformationComponent } from './page/tax-information/tax-information.component'
-import { DashboardComponent } from './page/dashboard/dashboard.component'
+import { InvoiceDashboardComponent } from './page/dashboard/invoice-dashboard/invoice-dashboard.component'
 import { MenuListComponent } from './page/menu/menu.component'
 import { ExcelFieldMatchComponent } from './page/excel-field-match/excel-field-match.component'
 import { ProductTypeComponent } from './page/product/product-type/product-type.component'
@@ -26,6 +26,7 @@ import { MemberListComponent } from './page/member/member-list/member-list.compo
 import { SalePointComponent } from './page/sale-point/sale-point.component'
 import { InvoiceDetailComponent } from './page/invoice/invoice-detail/invoice-detail.component'
 import { InvoiceListComponent } from './page/invoice/invoice-list/invoice-list.component'
+import { StockDashboardComponent } from './page/dashboard/stock-dashboard/stock-dashboard.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -34,10 +35,14 @@ export const pagesRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     
-   
     {
-        path: 'dashboard',
-        component: DashboardComponent,
+        path: 'stock-dashboard',
+        component: StockDashboardComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'invoice-dashboard',
+        component: InvoiceDashboardComponent,
         canActivate: [AuthGuard]
     },
     {

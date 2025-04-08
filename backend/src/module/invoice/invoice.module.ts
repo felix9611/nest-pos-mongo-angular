@@ -13,6 +13,7 @@ import { ProductLocation, ProductLocationSchema } from '../product/productLocati
 import { ProductLocationService } from '../product/productLocation.service'
 import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schame'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
+import { InvoiceQueryService } from './invoice-query.service'
 
 @Module({
     imports: [
@@ -28,7 +29,7 @@ import { InvRecordService } from '../InvRecord/InvRecord.service'
         ])
     ],
     controllers: [InvoiceController],
-    providers: [ActionRecordService, InvoiceService, ProductLocationService, InvRecordService],
+    providers: [ActionRecordService, InvoiceService, ProductLocationService, InvRecordService, InvoiceQueryService],
     exports: []
 })
 export class InvoiceMoudule {}
