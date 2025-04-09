@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { ProductLocation } from './productLocation.schame'
 import { Model } from 'mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
-import {  ListProductLocationtRequestDto, StockInOutProductLocationDto, StockMoveProductLocationDto } from './product.dto'
+import {  CheckProductAndLocationDto, ListProductLocationtRequestDto, StockInOutProductLocationDto, StockMoveProductLocationDto } from './product.dto'
 import { Product } from './product.schame'
 import { Location } from '../location/location.schame'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
@@ -327,6 +327,26 @@ export class ProductLocationService {
             limit,
             totalPages: Math.ceil(total / limit),
             lists,
+        }
+    }
+    
+    async checkProductAndLocationDto(req: CheckProductAndLocationDto) {
+        const { productId, locationId } = req
+
+        const checkProduct = await this.productLocationModel.findOne({
+            productId,
+            locationId
+        })
+
+        if (checkProduct) {
+            return {
+                status: true,
+                data: checkProduct
+            }
+        } else {
+            return {
+                status: false
+            }
         }
     }
 }
