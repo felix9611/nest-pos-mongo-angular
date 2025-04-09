@@ -25,6 +25,9 @@ export class StockTakeItem {
     @Prop({ type: SchemaTypes.String, required: true })
     status: string
 
+    @Prop({ type: SchemaTypes.String, required: true })
+    finalStatus: string
+
     @Prop({ type: SchemaTypes.Date, required: true })
     checkTime: string
 

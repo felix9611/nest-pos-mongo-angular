@@ -4,14 +4,20 @@ import { InjectModel } from '@nestjs/mongoose';
 import { StockTake } from './stock-take.schema';
 import { StockTakeItem } from './stock-take-item.schema';
 import { Model } from 'mongoose';
-import { ListStockTakeDto, StockTakeForm, UpdateStockTakeForm } from './stock-take.dto';
+import { ListStockTakeDto, StockTakeForm, StockTakeItemDtoSubmit, UpdateStockTakeForm } from './stock-take.dto';
+import { ProductLocation } from '../product/productLocation.schame';
+import { ProductLocationService } from '../product/productLocation.service';
+import { Product } from '../product/product.schame';
 
 @Injectable()
 export class StockTakeService {
     constructor(
         @InjectModel(StockTake.name) private stockTakeModel: Model<StockTake>,
         @InjectModel(StockTakeItem.name) private stockTakeItemModel: Model<StockTakeItem>,
-        private actionRecordService: ActionRecordService
+        @InjectModel(ProductLocation.name) private productLocationModel: Model<ProductLocation>,
+        @InjectModel(Product.name) private productModel: Model<Product>,
+        private actionRecordService: ActionRecordService,
+        private productLocationService: ProductLocationService
     ) {}
 
     async create(createData: StockTakeForm, username?: string) {
@@ -211,10 +217,60 @@ export class StockTakeService {
         }
     }
 
-    async stockTakeItemSubmit(data: any) {
+    async stockTakeItemSubmit(data: StockTakeItemDtoSubmit) {
+
+        const oldRecord = await this.productLocationModel.findOne(
+            {
+                productId: data.productId,
+                locationId: data.placeId
+            }
+        )
+
+        let finalStatus = ''
+
+        if (!oldRecord) {
+
+            const product = await this.productModel.findOne({ _id: data.productId }).exec()
+
+            const totalCost = (product?.costPrice ?? 0) * data.qty
+            const totalPrice = (product?.retailPrice ?? 0) * data.qty
+
+            const create = new this.productLocationModel({
+                productId: data.productId,
+                locationId: data.placeId,
+                qty: data.qty,
+                totalPrice,
+                totalCost
+            })    
+            await create.save()
+
+            finalStatus = 'Created New Stock Record'
+        } else if (oldRecord.qty === data.qty) {
+            finalStatus = 'Qtys Matched'
+        } else if (oldRecord.qty > data.qty || oldRecord.qty < data.qty) {
+            finalStatus = 'Qtys No Matched & Updated'
+
+            const product = await this.productModel.findOne({ _id: data.productId }).exec()
+
+            const totalCost = (product?.costPrice ?? 0) * data.qty
+            const totalPrice = (product?.retailPrice ?? 0) * data.qty
+
+            await this.productLocationModel.updateOne(
+                {
+                    _id: oldRecord._id
+                },
+                {
+                    qty: data.qty,
+                    totalPrice,
+                    totalCost
+                }
+            ).exec()
+
+        }
     
         const finalData = {
             ...data,
+            finalStatus,
             checkTime: new Date()
         }
     

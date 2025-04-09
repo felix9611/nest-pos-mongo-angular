@@ -161,7 +161,7 @@ await: any
             stockTakeId: this.editForm._id,
             productId: this.itemForm.productId,
             productCode: this.itemForm.productCode,
-            placeId: this.itemForm.placeId,
+            placeId: this.editForm.actionPlaceId,
             status: this.itemForm.status,
             remark: this.itemForm.remark,
             qty: this.itemForm.checkQty
