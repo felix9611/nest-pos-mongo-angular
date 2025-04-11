@@ -12,12 +12,14 @@ export class InvRecordQueryService {
     ) {}
 
     getFilter(query: DashboardReqFilterDto) {
-            const { dateRange, dataType } = query  
+            const { dateRange, placeIds, productCode } = query  
     
         return {
             ...dateRange && dateRange.length > 0 ? { 
                 createdAt: { $gte: new Date(dateRange[0]), $lte: new Date(dateRange[1]) }
-            } : {}
+            } : {},
+            ...placeIds && placeIds.length > 0 ? { $or: [{ locFrom: { $in: placeIds } }, { locTo: { $in: placeIds } }] } : {},
+            ...productCode ? { 'product.productCode': { $regex: productCode, $options: 'i' } } : {},
         }
     }
 
@@ -48,7 +50,7 @@ export class InvRecordQueryService {
     }
 
     async getByDataType(query: DashboardReqDto) {
-        const { valueField, dataType, filter } = query
+        const { dataType, filter } = query
 
         if (!dataType) {
             throw new Error('dataType is required')
@@ -82,6 +84,15 @@ export class InvRecordQueryService {
         }
 
         const data = await this.invRecordModel.aggregate([
+            {
+                $lookup: {
+                    from: "products",
+                    let: { productIdStr: { $toObjectId: '$productId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$productIdStr'] } } }],
+                    as: "product"
+                }
+            },
+            { $unwind: { path: "$product", preserveNullAndEmptyArrays: true } },
             { $match: filterObj },
             { $group: { ...valueFieldObj.group, ...getYearMonthObj.group } },
             { $project: { ...valueFieldObj.project, _id: 0, ...getYearMonthObj.project } },

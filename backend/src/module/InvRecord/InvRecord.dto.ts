@@ -20,5 +20,6 @@ export interface DashboardReqDto {
 
 export interface DashboardReqFilterDto {
     dateRange?: string[]
-    dataType: 'stockIn' | 'stockOut' | 'stockMove'
+    placeIds?: string[]
+    productCode?: string
 }
