@@ -69,6 +69,16 @@
             <div class="font-bold">Total Price Sales by per Location</div>
             <app-chart class="w-[100%]" *ngIf="byLocationAndPriceLoading" [(chartData)]="byLocationAndPrice" />
         </div>
+
+        <div class="lg:col-span-2 p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
+            <div class="font-bold">Total Qtys of Inventory Reocrd</div>
+            <app-chart class="w-[100%]" *ngIf="invintoryRecordQtysLoading" [(chartData)]="invintoryRecordQtys" />
+        </div>
+
+        <div class="lg:col-span-2 p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
+            <div class="font-bold">Total Cost of Inventory Reocrd</div>
+            <app-chart class="w-[100%]" *ngIf="invintoryRecordPricesLoading" [(chartData)]="invintoryRecordPrices" />
+        </div>
         
     </div>
 

@@ -94,9 +94,11 @@ export class StockDashboardComponent implements OnInit {
         await this.getByDeptAndPrice()
         await this.getByTypeAndPrice()
         await this.getByTypeAndQtys()
-
         await this.getByLocationAndQtys() 
         await this.getByLocationAndPrice()
+
+        await this.getInvintoryRecordQtys()
+        await this.getInvintoryRecordPrices()
     }
 
     globalFilter: DashboardReqFilterDto = {}
@@ -330,6 +332,106 @@ export class StockDashboardComponent implements OnInit {
         this.byLocationAndPriceLoading = true
     }
 
+    invintoryRecordQtysLoading: boolean = false
+    invintoryRecordQtys: any = {}
+    async getInvintoryRecordQtys() {
+        this.invintoryRecordQtysLoading = false
+        const resStockIn = await this.runInvintoryRecordQueryData({ dataTypeValue: 'stockIn' })
+        const resStocMove = await this.runInvintoryRecordQueryData({ dataTypeValue: 'stockMove' })
+        const resStocOut = await this.runInvintoryRecordQueryData({ dataTypeValue: 'stockOut' })
+
+        const stockIns = transformDate(resStockIn, 'qtys', ['year', 'month'])
+        const stockOuts = transformDate(resStocOut, 'qtys', ['year', 'month'])
+        const stockMoves = transformDate(resStocMove, 'qtys', ['year', 'month'])
+
+        this.invintoryRecordQtys = {
+            data: [
+                {
+                    name: 'Stock In',
+                    type: 'spline',
+                    xValueType: 'dateTime',
+                    dataPoints: stockIns
+                },
+                {
+                    name: 'Stock Out',
+                    type: 'spline',
+                    xValueType: 'dateTime',
+                    dataPoints: stockOuts
+                },
+                {
+                    name: 'Stock Move',
+                    type: 'spline',
+                    xValueType: 'dateTime',
+                    dataPoints: stockMoves
+                }
+            ],
+            animationEnabled: true,
+            axisY: {
+                title: 'Price'
+            },
+            axisX: {
+                title: 'Date - Month',
+                valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime"
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+
+        this.invintoryRecordQtysLoading = true
+    }
+
+    invintoryRecordPricesLoading: boolean = false
+    invintoryRecordPrices: any = {}
+    async getInvintoryRecordPrices() {
+        this.invintoryRecordPricesLoading = false
+        const resStockIn = await this.runInvintoryRecordQueryData({ dataTypeValue: 'stockIn' })
+        const resStocMove = await this.runInvintoryRecordQueryData({ dataTypeValue: 'stockMove' })
+        const resStocOut = await this.runInvintoryRecordQueryData({ dataTypeValue: 'stockOut' })
+
+        const stockIns = transformDate(resStockIn, 'costs', ['year', 'month'])
+        const stockOuts = transformDate(resStocOut, 'costs', ['year', 'month'])
+        const stockMoves = transformDate(resStocMove, 'costs', ['year', 'month'])
+
+        this.invintoryRecordPrices = {
+            data: [
+                {
+                    name: 'Stock In',
+                    type: 'spline',
+                    xValueType: 'dateTime',
+                    dataPoints: stockIns
+                },
+                {
+                    name: 'Stock Out',
+                    type: 'spline',
+                    xValueType: 'dateTime',
+                    dataPoints: stockOuts
+                },
+                {
+                    name: 'Stock Move',
+                    type: 'spline',
+                    xValueType: 'dateTime',
+                    dataPoints: stockMoves
+                }
+            ],
+            animationEnabled: true,
+            axisY: {
+                title: 'Price'
+            },
+            axisX: {
+                title: 'Date - Month',
+                valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime"
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+
+        this.invintoryRecordPricesLoading = true
+    }
+
     async runQueryData(dataQuery: DashboardReqDto) {
         const finalQuery = {
             ...dataQuery,
@@ -337,6 +439,17 @@ export class StockDashboardComponent implements OnInit {
         }
 
         return await postApiWithAuth('/product/product-list/query/data-group-by', finalQuery)
+    }
+
+    async runInvintoryRecordQueryData(dataQuery: DashboardReqDto) {
+        const finalQuery = {
+            dataType: dataQuery.dataTypeValue,
+            filter: {
+                ...this.globalFilter.placeIds && this.globalFilter.placeIds.length > 0 ? { placeIds: this.globalFilter.placeIds } : {}
+            }
+        }
+
+        return await postApiWithAuth('/inventory-record/query', finalQuery)
     }
 
 }

@@ -20,7 +20,7 @@ export class InvoiceQueryService {
 
         return {
             ...salesDateRange && salesDateRange.length > 0 ? { 
-                'invoice.created_at': { $gte: new Date(salesDateRange[0]), $lte: new Date(salesDateRange[1]) }
+                'invoice.createdAt': { $gte: new Date(salesDateRange[0]), $lte: new Date(salesDateRange[1]) }
             } : {},
             ...typeIds && typeIds.length > 0 ? { 'product.typeId': { $in: typeIds } } : {},
             ...placeIds && placeIds.length > 0 ? { 'invoice.locationId': { $in: placeIds } } : {},

@@ -12,3 +12,14 @@ export interface ListInvRecordDto {
     limit: number,
     dateRange?: string[]
 }
+
+export interface DashboardReqDto {
+    dataType: 'stockIn' | 'stockOut' | 'stockMove'
+    filter: DashboardReqFilterDto
+}
+
+export interface DashboardReqFilterDto {
+    dateRange?: string[]
+    placeIds?: string[]
+    productCode?: string
+}
