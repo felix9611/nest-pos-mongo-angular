@@ -62,11 +62,11 @@
             <app-chart class="w-[100%]" *ngIf="byDeptAndPriceLoading" [(chartData)]="byDeptAndPrice" />
         </div>
         <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-            <div class="font-bold">Total Qtys Sales by per Location</div>
+            <div class="font-bold">Total In-Stock Qtys by per Location</div>
             <app-chart class="w-[100%]" *ngIf="byLocationAndQtysLoading" [(chartData)]="byLocationAndQtys" />
         </div>
         <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
-            <div class="font-bold">Total Price Sales by per Location</div>
+            <div class="font-bold">Total Price and Cost by per Location</div>
             <app-chart class="w-[100%]" *ngIf="byLocationAndPriceLoading" [(chartData)]="byLocationAndPrice" />
         </div>
 
