@@ -60,13 +60,13 @@
             <nz-form-item *ngIf="invoiceDetail.member.phone">
                 <div class="px-1 w-[105px] flex items-center">Phone No.</div>
                 <nz-form-control class="w-full">
-                    <input nz-input type="text" name="memberName" [(ngModel)]="invoiceDetail.member.phone" [disabled]="true" />
+                    <input nz-input type="text" name="phoneNo" [(ngModel)]="invoiceDetail.member.phone" [disabled]="true" />
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item *ngIf="invoiceDetail.member.phone">
                 <div class="px-1 w-[105px] flex items-center">Email</div>
                 <nz-form-control class="w-full">
-                    <input nz-input type="text" name="phoneNo" [(ngModel)]="invoiceDetail.member.email" [disabled]="true" />
+                    <input nz-input type="text" name="email" [(ngModel)]="invoiceDetail.member.email" [disabled]="true" />
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item *ngIf="invoiceDetail.member.fax">
