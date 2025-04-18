@@ -77,7 +77,7 @@ export class ReturnInvoiceService {
     async create(createData: UpdateReturnInvoiceDto) {
         const { returnItems, _id, returnInvoiceNo, returnLocationId, ..._rest } = createData
 
-        const invoiceData = await this.invoiceModel.findOne({ invoiceNo: returnInvoiceNo }).exec()
+        const invoiceData = await this.invoiceModel.findOne({ number: returnInvoiceNo }).exec()
 
         if (!invoiceData) {
             throw new Error('Invoice not found')
