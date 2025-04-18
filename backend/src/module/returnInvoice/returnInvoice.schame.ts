@@ -24,6 +24,9 @@ export class ReturnInvoice extends BaseSchema {
     @Prop({ type: SchemaTypes.String })
     returnDatail: string
 
+    @Prop({ type: SchemaTypes.String })
+    returnMethod: string
+
     @Prop({ type: SchemaTypes.String, required: true })
     processMethod: string
 
