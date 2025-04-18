@@ -14,7 +14,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { ActivatedRoute, Router } from '@angular/router'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { UserStoreService } from '../../../../../state/user.service'
-import { debounceTime, Subscription } from 'rxjs'
+import { debounceTime, Subscription, timer } from 'rxjs'
 import { findMenuItem } from '../../../tool-function'
 
 @Component({
@@ -40,7 +40,7 @@ export class ReturnInvoiceFormComponent implements OnInit {
             private message: NzMessageService,
             private userStoreService: UserStoreService
     ) {
-        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+         this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Create Return', 'create-return-invoice')
             this.userRightInside = {
                 read: answer?.read ?? false,
@@ -52,12 +52,13 @@ export class ReturnInvoiceFormComponent implements OnInit {
                 }
          })
     }
+    
 
 
     ngOnDestroy() {
         if (this.userStoreService.menuRole$) {
             this.rightSubscription.unsubscribe()
-        }
+       }
     }
 
     userRightInside: any = {
@@ -189,6 +190,11 @@ export class ReturnInvoiceFormComponent implements OnInit {
             }
 
             this.message.info('Data save successfully!')
+
+            timer(2500).subscribe(() => {
+                this.routeTo.navigate([`/return-invoice-detail`], { queryParams: { id: data._id } })
+             //   this.routeTo.navigate([`/return-invoice-list`])
+            })
         }
     }
 
