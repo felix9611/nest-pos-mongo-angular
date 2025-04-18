@@ -24,8 +24,8 @@ export class ReturnInvoiceService {
             {
                 $lookup: {
                     from: 'invoices', // Ensure correct collection name
-                    let: { locationIdStr: { $toObjectId: '$locationId' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$locationIdStr'] } } }],
+                    let: { locationIdStr: '$invoiceNumber' }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$number', '$$locationIdStr'] } } }],
                     as: 'invoice'
                 }
             },
@@ -33,7 +33,7 @@ export class ReturnInvoiceService {
             {
                 $lookup: {
                     from: 'members',
-                    let: { memberIdStr: { $toObjectId: { $cond: { if: '$hasMemberId', then: '$invoice.memberId', else: null } } } },
+                    let: { memberIdStr:  { $toObjectId: '$invoice.memberId' } },
                     pipeline: [
                         {
                             $match: {
