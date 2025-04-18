@@ -13,10 +13,12 @@ import { Location, LocationSchema } from '../location/location.schame'
 import { ProductFile, ProductFileSchema } from './product-file.schame'
 import { ProductLocationQueryService } from './productLocation-query.service'
 import { ReturnInvoice, ReturnInvoiceSchema } from './returnInvoice.schame'
+import { ReturnItem, ReturnItemSchema } from './return-item.schema'
 
 @Module({
     imports: [MongooseModule.forFeature([
         { name: ReturnInvoice.name, schema: ReturnInvoiceSchema }, 
+        { name: ReturnItem.name, schema: ReturnItemSchema }, 
         { name: ActionRecord.name, schema: ActionRecordSchema },
     ]), Product],
     providers: [ActionRecordService,],

@@ -1,4 +1,4 @@
-import { HydratedDocument, SchemaTypes } from 'mongoose'
+import { HydratedDocument, SchemaTypes, Types } from 'mongoose'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { BaseSchema } from '../base/baseSchema'
 
@@ -14,6 +14,9 @@ export class ReturnInvoice extends BaseSchema {
 
     @Prop({ type: SchemaTypes.String, required: true })
     returnReason: string
+
+    @Prop({ type: Types.ObjectId, required: true })
+    returnLocationId: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String, required: true })
     returnDatail: string
