@@ -11,6 +11,11 @@ import { NzTableModule } from 'ng-zorro-antd/table'
 import { UpdateReturnInvoiceDto } from './interface'
 import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
+import { ActivatedRoute, Router } from '@angular/router'
+import { NzMessageService } from 'ng-zorro-antd/message'
+import { UserStoreService } from '../../../../../state/user.service'
+import { debounceTime, Subscription } from 'rxjs'
+import { findMenuItem } from '../../../tool-function'
 
 @Component({
     imports: [
@@ -27,7 +32,40 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
         ],
         templateUrl: './return-invoice-form.component.html'
 })
-export class ReturnInvoiceFormComponent implements OnInit{
+export class ReturnInvoiceFormComponent implements OnInit {
+    private rightSubscription: Subscription
+    constructor(
+            private route: ActivatedRoute, 
+            private routeTo: Router,
+            private message: NzMessageService,
+            private userStoreService: UserStoreService
+    ) {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Create Return', 'create-return-invoice')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                     // keep default value
+                }
+         })
+    }
+
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false
+    }
+
     ngOnInit(): void {
         this.loadLocationList()
     }
@@ -131,7 +169,25 @@ export class ReturnInvoiceFormComponent implements OnInit{
 
     async submitForm() {
         const data = await postApiWithAuth('/return-invoice/create', this.returnInvoiceForm)
-        console.log(data)
+        if (data._id) {
+            this.returnInvoiceForm = {
+                returnInvoiceNo: '',
+                returnReason: '',
+                returnLocationId: '',
+                returnDatail: '',
+                returnMethod: '',
+                processMethod: '',
+                refund: false,
+                refundAmount: 0,
+                refundMethod: '',
+                returnToVendor: false,
+                returnItems: [],
+        
+                _id: ''
+            }
+
+            this.message.info('Data save successfully!')
+        }
     }
 
 }
