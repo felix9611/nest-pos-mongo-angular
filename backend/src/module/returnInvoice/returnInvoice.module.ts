@@ -7,6 +7,7 @@ import { ReturnItem, ReturnItemSchema } from './return-item.schema'
 import { ReturnInvoiceService } from './returnInvoice.service'
 import { Location, LocationSchema } from '../location/location.schame'
 import { Invoice, InvoiceSchema } from '../invoice/invoice.schema'
+import { ReturnInvoiceController } from './returnInvoice.controller'
 
 @Module({
     imports: [MongooseModule.forFeature([
@@ -18,6 +19,6 @@ import { Invoice, InvoiceSchema } from '../invoice/invoice.schema'
     ])],
     providers: [ActionRecordService, ReturnInvoiceService],
     exports: [],
-    controllers: []
+    controllers: [ReturnInvoiceController]
 })
 export class ReturnInvoiceMoudule {}
