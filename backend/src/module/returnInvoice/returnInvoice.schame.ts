@@ -19,21 +19,24 @@ export class ReturnInvoice extends BaseSchema {
     returnLocationId: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String, required: true })
+    returnCaseNumber: Types.ObjectId
+
+    @Prop({ type: SchemaTypes.String })
     returnDatail: string
 
     @Prop({ type: SchemaTypes.String, required: true })
     processMethod: string
 
-    @Prop({ type: SchemaTypes.Boolean, required: true })
+    @Prop({ type: SchemaTypes.Boolean })
     refund: boolean
 
-    @Prop({ type: SchemaTypes.Double, required: true })
+    @Prop({ type: SchemaTypes.Double })
     refundAmount: number
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     refundMethod: string
 
-    @Prop({ type: SchemaTypes.Boolean, required: true })
+    @Prop({ type: SchemaTypes.Boolean })
     returnToVendor: boolean
 }
 
