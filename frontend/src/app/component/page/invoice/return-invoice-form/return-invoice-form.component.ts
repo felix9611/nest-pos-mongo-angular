@@ -102,7 +102,9 @@ export class ReturnInvoiceFormComponent implements OnInit {
 
     invoiceDetail: any = {}
 
-    goBackList() {}
+    goBackList() {
+        this.routeTo.navigate(['invoice-list'])
+    }
 
     async returnInvoiceNoChanged(event: any) {
         if (event)  {
