@@ -70,7 +70,7 @@ export class ExcelFieldMatchBody extends ExcelFieldMatchUpdateBody {
 
 export class ExcelFieldMatchListResponseBody extends CommonPageAndListResponse {
     @ApiProperty({ description: 'List of data', type: () => ExcelFieldMatchBody, isArray: true })
-    list: ExcelFieldMatchBody[]
+    lists: ExcelFieldMatchBody[]
 }
 
 export class ExcelFieldMatchListQuery extends CommonPageAndList {
