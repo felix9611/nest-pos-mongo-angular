@@ -20,20 +20,59 @@ export class InvoiceService {
         private actionRecordService: ActionRecordService
     ) {}
 
+    async getOneByNumber(number:  string) {
+        const baseData = await this.invoiceModel.aggregate([
+            { $match: { number }},
+            {
+                $lookup: {
+                    from: 'members',
+                    let: { memberIdStr: { $toObjectId: { $cond: { if: '$hasMemberId', then: '$memberId', else: null } } } },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$_id', '$$memberIdStr'] },
+                                        { $ne: ['$$memberIdStr', null] } // Skip if memberIdStr is null
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'member'
+                }
+            },
+            { $unwind: { path: '$member', preserveNullAndEmptyArrays: true } },
+        ]).exec()
+
+        const invoiceData = baseData[0]
+
+        const itemData = await this.invoiceItemModel.aggregate([
+            { $match: { invoiceId: invoiceData._id } },
+            {
+                $lookup: {
+                  from: 'products', // Ensure correct collection name
+                  let: { productIdStr: { $toObjectId: '$productId' } }, // Convert placeId to ObjectId
+                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$productIdStr'] } } }],
+                  as: 'product'
+                }
+            },
+            { $unwind: { path: '$product', preserveNullAndEmptyArrays: true } }
+        ]).exec()
+
+    
+        const paymentData = await this.invoicePaymentModel.find({ invoiceId: invoiceData._id }).exec()
+
+        return {
+            ...invoiceData,
+            invoiceItems: itemData,
+            invoicePayments: paymentData
+        }
+    }
+
     async getOneById(_id: string) {
         const baseData = await this.invoiceModel.aggregate([
             { $match: { _id: new Types.ObjectId(_id) } },
-            {
-                $addFields: {
-                    hasMemberId: {
-                        $and: [
-                            { $ne: ['$memberId', null] }, // Not null
-                            { $ne: ['$memberId', ''] },   // Not empty string
-                            { $ifNull: ['$memberId', false] } // Ensure it exists
-                        ]
-                    }
-                }
-            },
             {
                 $lookup: {
                     from: 'members',
