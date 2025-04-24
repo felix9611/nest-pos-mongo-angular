@@ -20,8 +20,8 @@ export class ProductTypeController {
     }
    
     @ApiOperation({ summary: 'Update Product Type' })
-  @ApiBody({ type: UpdateProductTypeBody })
-  @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @ApiBody({ type: UpdateProductTypeBody })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
     async update(@Body() updateDto: UpdateproductTypeModelDto) {
@@ -38,7 +38,7 @@ export class ProductTypeController {
     }
 
     @ApiOperation({ summary: 'Void data by Id'})
-  @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
+    @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
@@ -54,8 +54,8 @@ export class ProductTypeController {
     }
 
     @ApiOperation({ summary: 'Page and list'})
-  @ApiBody({ type: ProductTypeQuery })
-  @ApiResponse({ description: 'If successful', status: 201, type: ListProductTypeQueryRes })
+    @ApiBody({ type: ProductTypeQuery })
+    @ApiResponse({ description: 'If successful', status: 201, type: ListProductTypeQueryRes })
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListproductTypeModelRequestDto) {
