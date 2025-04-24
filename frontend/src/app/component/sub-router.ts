@@ -29,6 +29,9 @@ import { InvoiceListComponent } from './page/invoice/invoice-list/invoice-list.c
 import { StockDashboardComponent } from './page/dashboard/stock-dashboard/stock-dashboard.component'
 import { StockTakeListComponent } from './page/stock-take/stock-take-list/stock-take-list.component'
 import { StockTakeFormComponent } from './page/stock-take/stock-take-form/stock-take-form.component'
+import { ReturnInvoiceFormComponent } from './page/invoice/return-invoice-form/return-invoice-form.component'
+import { ReturnInvoiceListComponent } from './page/invoice/return-invoice-list/return-invoice-list.component'
+import { ReturnInvoiceDetailComponent } from './page/invoice/return-invoice-detail/return-invoice-detail.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -179,6 +182,21 @@ export const pagesRoutes: Routes = [
     {
         path: 'invoice-detail',
         component: InvoiceDetailComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'create-return-invoice',
+        component: ReturnInvoiceFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'return-invoice-list',
+        component: ReturnInvoiceListComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'return-invoice-detail',
+        component: ReturnInvoiceDetailComponent,
         canActivate: [AuthGuard]
     },
     {

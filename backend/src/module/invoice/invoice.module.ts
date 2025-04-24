@@ -26,10 +26,11 @@ import { InvoiceQueryService } from './invoice-query.service'
             { name: Location.name, schema: LocationSchema },
             { name: ProductLocation.name, schema: ProductLocationSchema },
             { name: InvRecord.name, schema: InvRecordSchema }
-        ])
+        ]),
+        Invoice
     ],
     controllers: [InvoiceController],
     providers: [ActionRecordService, InvoiceService, ProductLocationService, InvRecordService, InvoiceQueryService],
-    exports: []
+    exports: [Invoice]
 })
 export class InvoiceMoudule {}

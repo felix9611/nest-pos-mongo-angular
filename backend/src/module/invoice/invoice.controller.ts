@@ -23,6 +23,12 @@ export class InvoiceController {
         return await this.invoiceService.getOneById(id)
     }
 
+    @Get('number/:number')
+    @UseGuards(AuthGuard)
+    async getOneByNumber(@Param('number') number: string) {
+        return await this.invoiceService.getOneByNumber(number)
+    }
+
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: InvoiceListRequestDto) {
