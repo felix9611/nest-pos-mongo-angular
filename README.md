@@ -16,12 +16,26 @@
 <strong>Password:</strong> <code>888888</code></p>
 <p><em>Note: Backend and Frontend both hosted on self-hosted Raspberry Pi5 with Cloudflare</em></p>
 
-<h2>📸 Example Images</h2>
 <!-- Add example images here if available -->
-<img src="https://github.com/felix9611/springboot-pos-vue/blob/main/image/pos-1.png" alt="Example Image 1">
-<img src="https://github.com/felix9611/springboot-pos-vue/blob/main/image/pos-2.png" alt="Example Image 2">
-<img src="https://github.com/felix9611/springboot-pos-vue/blob/main/image/pos-3.png" alt="Example Image 3">
-<img src="https://github.com/felix9611/springboot-pos-vue/blob/main/image/pos-4.png" alt="Example Image 4">
+<h2>📸 Example Screenshots</h2>
+
+<h3>Dashboard</h3>
+<img src="https://github.com/felix9611/nest-pos-mongo-angular/blob/main/image/pos-1.png" >
+
+<h3>Stock Take Form View</h3>
+<img src="https://github.com/felix9611/nest-pos-mongo-angular/blob/main/image/pos-2.png" >
+
+<h3>Stock In</h3>
+<img src="https://github.com/felix9611/nest-pos-mongo-angular/blob/main/image/pos-3.png" >
+
+<h3>Product Form</h3>
+<img src="https://github.com/felix9611/nest-pos-mongo-angular/blob/main/image/pos-4.png" >
+
+<h3>Product List</h3>
+<img src="https://github.com/felix9611/nest-pos-mongo-angular/blob/main/image/pos-5.png" >
+
+<h3>POS</h3>
+<img src="https://github.com/felix9611/nest-pos-mongo-angular/blob/main/image/pos-6.png" 
 
 <h2>🚀 Key Features</h2>
 <ul>
