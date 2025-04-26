@@ -190,8 +190,8 @@ export class SysUserService {
 
     const filters = {
       ...username ? { name: { $regex: username, $options: 'i' } } : {},
-      ...roleIds ? { roleIds: { $in: roleIds} } : {},
-      ...deptIds ? { deptId: { $in: deptIds} } : {},
+      ...roleIds && roleIds.length > 0 ? { roles: { $in: roleIds} } : {},
+      ...deptIds && deptIds.length > 0  ? { deptId: { $in: deptIds} } : {},
       status: 1
     }
 

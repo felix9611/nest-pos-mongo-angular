@@ -4,6 +4,27 @@
             <div class="w-[150px]">
                 <input class="h-full" nz-input type="text" id="name" name="name" placeholder="Input Name/Code" [(ngModel)]="searchForm.name" />
             </div>
+            <div class="w-[200px]">
+                <nz-select 
+                    nzSize="large"
+                    name="department" 
+                    [(ngModel)]="searchForm.roleIds"  
+                    nzPlaceHolder="Roles"  
+                    nzMode="multiple"  
+                    nzAllowClear  nzShowArrow
+                    [nzShowArrow]="true">
+                    @for (option of roleLists; track option) {
+                        <nz-option [nzLabel]="option.name" [nzValue]="option._id"></nz-option>
+                    }
+                </nz-select>
+            </div>
+            <div class="w-[200px]">
+                <nz-select name="deptId" nzSize="large" [(ngModel)]="searchForm.deptIds" nzAllowClear nzMode="multiple"   nzShowArrow nzPlaceHolder="Departments">
+                    @for (option of deptLists; track option) {
+                      <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
+                    }
+                  </nz-select>
+            </div>
             <div (click)="loadUserLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
                 Search
             </div>
