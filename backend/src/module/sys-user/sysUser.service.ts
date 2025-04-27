@@ -207,10 +207,10 @@ export class SysUserService {
             as: 'department'
           }
       },
-      { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } }
+      { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+      { $skip: skip },
+      { $limit: limit },
     ])
-    .skip(skip)
-    .limit(limit)
     .exec()
 
     const total = await this.sysUserModel.countDocuments().exec()
