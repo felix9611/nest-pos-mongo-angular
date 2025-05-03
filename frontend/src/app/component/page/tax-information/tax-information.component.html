@@ -165,5 +165,16 @@
             </ng-container>
            
         </nz-modal>
+
+        <nz-modal
+            [(nzVisible)]="removeDialog" 
+            nzTitle="Confirm Delete"
+            (nzOnCancel)="closeRemoveDialog()"
+            (nzOnOk)="handleRemove()"
+        >
+            <ng-container *nzModalContent>
+                Are you sure to confirm delete this record?
+            </ng-container>
+        </nz-modal>
     </div>
 </div>
