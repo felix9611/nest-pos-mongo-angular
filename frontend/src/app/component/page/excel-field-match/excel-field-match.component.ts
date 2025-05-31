@@ -54,6 +54,12 @@ export class ExcelFieldMatchComponent {
         })
     }
 
+    fieldForm: any = {
+        dbFieldName: '',
+        excelFieldName: '',
+        sort: 0
+    }
+
     userRightInside: any = {
         read: false,
         write: false,
@@ -165,7 +171,12 @@ export class ExcelFieldMatchComponent {
     }
 
     fieldAddRow(): void {
-        this.editForm.fieldLists = [...this.editForm.fieldLists, { dbFieldName: '', excelFieldName: '', sort: 0 }]
+        this.editForm.fieldLists = [...this.editForm.fieldLists, { ...this.fieldForm }]
+        this.fieldForm = {
+            dbFieldName: '',
+            excelFieldName: '',
+            sort: 0
+        }
     }
 
     deleteRow(index: number): void {
