@@ -6,16 +6,16 @@ export type ProductTypeDocument = HydratedDocument<ProductType>
 @Schema()
 export class ProductType extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    typeCode: string
+    typeCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    typeName: string
+    typeName!: string
 
     @Prop({ type: SchemaTypes.String })
-    typeOtherName: string
+    typeOtherName?: string
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 }
 
 export const ProductTypeSchema = SchemaFactory.createForClass(ProductType)

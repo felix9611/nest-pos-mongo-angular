@@ -26,61 +26,60 @@ export interface ExcelFieldMatchListRequestDto {
     type?: string
 }
 
-
 export class ExcelFieldListBody {
     @ApiProperty({ description: 'Datebase field name' })
-    dbFieldName: string
+    dbFieldName?: string
 
     @ApiProperty({ description: 'Excel field name' })
-    excelFieldName: string
+    excelFieldName?: string
 
     @ApiProperty({ description: 'Sort number' })
-    sort: number
+    sort?: number
 }
 
 export class ExcelFieldMatchCreateBody {
     @ApiProperty({ description: 'Function Code' })
-    functionCode: string
+    functionCode!: string
 
     @ApiProperty({ description: 'Function Name' })
-    functionName: string
+    functionName!: string
 
     @ApiProperty({ description: 'Function Type' })
-    functionType: string
+    functionType!: string
 
     @ApiProperty({ description: 'Created At', type: ExcelFieldListBody, isArray: true })
-    fieldLists: ExcelFieldList[]
+    fieldLists?: ExcelFieldList[]
 }
 
 export class ExcelFieldMatchUpdateBody extends ExcelFieldMatchCreateBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 export class ExcelFieldMatchBody extends ExcelFieldMatchUpdateBody {
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class ExcelFieldMatchListResponseBody extends CommonPageAndListResponse {
-    @ApiProperty({ description: 'List of data', type: () => ExcelFieldMatchBody, isArray: true })
-    lists: ExcelFieldMatchBody[]
+    @ApiProperty({ description: 'List of data', type: ExcelFieldMatchBody, isArray: true })
+    list?: ExcelFieldMatchBody[]
 }
 
 export class ExcelFieldMatchListQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
-    name: string
+    name?: string
 
     @ApiProperty({ description: 'For search data keywords' }) 
     @IsOptional() 
-    type: string
+    type?: string
 }
 
 

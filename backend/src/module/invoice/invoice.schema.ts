@@ -6,31 +6,31 @@ export type InvoiceDocument = HydratedDocument<Invoice>
 @Schema()
 export class Invoice extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    number: string
+    number!: string
 
     @Prop({ type: Types.ObjectId, required: true })
-    memberId: Types.ObjectId
+    memberId!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true })
-    locationId: Types.ObjectId
+    locationId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.Double, required: true })
-    totalAmount: number
+    totalAmount!: number
 
     @Prop({ type: SchemaTypes.Double })
-    discount: number
+    discount?: number
 
     @Prop({ type: SchemaTypes.String })
-    discountType: string
+    discountType?: string
 
     @Prop({ type: SchemaTypes.Double })
-    taxTotal: number
+    taxTotal?: number
 
     @Prop({ type: SchemaTypes.String })
-    taxRefNo: string
+    taxRefNo?: string
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 }
 
 export const InvoiceSchema = SchemaFactory.createForClass(Invoice)

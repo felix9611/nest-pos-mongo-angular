@@ -31,63 +31,63 @@ export interface SysMenuTree extends SysMenuDto {
 
 export class CreateSysMenuBody {
     @ApiProperty({ description: 'Main Id , blank will be main' })
-    mainId: string
+    mainId?: string
 
     @ApiProperty({ description: 'Name' })
-    name: string
+    name!: string
 
     @ApiProperty({ description: 'Icon String' })
-    icon: string
+    icon?: string
 
     @ApiProperty({ description: 'path' })
-    path: string
+    path!: string
 
     @ApiProperty({ description: 'Sorting Order Number' })
-    sort: number
+    sort!: number
 
     @ApiProperty({ description: 'Menu Type' })
-    type: string
+    type?: string
 
     @ApiProperty({ description: 'Excel Function Code' })
-    excelFunctionCode: string
+    excelFunctionCode?: string
 
     @ApiProperty({ description: 'Excel Function Name' })
-    excelFunctionName: string
+    excelFunctionName?: string
 }
 
 export class UpdateSysMenuBody extends CreateSysMenuBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 export class SysMenuBody extends UpdateSysMenuBody {
     @ApiProperty({ description: 'Created At' }) 
-    createdAt: string    
+    createdAt!: string    
     @ApiProperty({ description: 'Updated At' })            
-    updatedAt: string
+    updatedAt?: string
     @ApiProperty({ description: '1 = Active, 0 = inactive' })    
-    status: number
+    status!: number
 }
 
 export class ListTreeMenuBody {
     @ApiProperty({ description: 'Menu ID Lists' })
-    ids: string[]
+    ids?: string[]
 }
 
 export class TreeMenuBody extends SysMenuBody {
     @ApiProperty({ description: 'Children Menu', type: SysMenuBody, isArray: true }) 
-    childrens: SysMenuBody[] 
+    childrens?: SysMenuBody[] 
 }
 
 export class MainMenuBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
     @ApiProperty({ description: 'Main Id , blank will be main' })
-    mainId: string
+    mainId?: string
     @ApiProperty({ description: 'Name' })
-    name: string
+    name?: string
 }
 
 export class MenuQueryBody {
     @ApiProperty({ description: 'Name for search' })
-    name: string
+    name?: string
 }

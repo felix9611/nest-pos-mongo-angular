@@ -205,7 +205,7 @@ export class TaxInformationService {
         const { nameCode, tax, page, limit } = req
         const skip = (page - 1) * limit
 
-        const filters = {
+        const filters: any = {
             ...nameCode? {
                 $or: [
                     {

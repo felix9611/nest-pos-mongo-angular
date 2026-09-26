@@ -5,34 +5,34 @@ import { BaseSchema } from '../base/baseSchema'
 export type StockTakeItemDocument = HydratedDocument<StockTakeItem >
 @Schema()
 export class StockTakeItem {
-    _id: Types.ObjectId
+    _id!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'StockTake' })
-    stockTakeId: string
+    stockTakeId!: string
     
     @Prop({ type: Types.ObjectId, required: true, ref: 'AssetList' })
-    productId: string 
+    productId!: string 
 
     @Prop({ type: SchemaTypes.String, required: true })
-    productCode: string
+    productCode!: string
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Location' })
-    placeId: string 
+    placeId!: string 
 
     @Prop({ type: SchemaTypes.Number, required: true })
-    qty: number
+    qty!: number
 
     @Prop({ type: SchemaTypes.String, required: true })
-    status: string
+    status!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    finalStatus: string
+    finalStatus!: string
 
     @Prop({ type: SchemaTypes.Date, required: true })
-    checkTime: string
+    checkTime!: string
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 }
 
 export const StockTakeItemSchema = SchemaFactory.createForClass(StockTakeItem)

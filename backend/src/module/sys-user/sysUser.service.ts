@@ -34,7 +34,7 @@ export class SysUserService {
       } else {
         const newPasswordString = hashPassword('888888', salt)
 
-        const finalData = {
+        const finalData: any = {
           username: userData.username,
           password: newPasswordString,
           avatarBase64: userData.avatarBase64,

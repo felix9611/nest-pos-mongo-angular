@@ -24,95 +24,94 @@ export interface ListRoleRequestDto {
     name?: string
 }
 
-
 export class CreateSysRole {
     @ApiProperty({ description: 'Name' })
-    name: string
+    name!: string
 
     @ApiProperty({ description: 'Code' })
-    code: string
+    code!: string
 
     @ApiProperty({ description: 'Remark' })
-    remark: string
+    remark?: string
 
     @ApiProperty({ description: 'Menu Id List' })
-    meunIds: string[]
+    menuIds!: string[]
 
     @ApiProperty({ description: 'Read Right' })
-    read: boolean
+    read?: boolean
 
     @ApiProperty({ description: 'Write Right' })
-    write: boolean
+    write?: boolean
 
     @ApiProperty({ description: 'Delete Right' })
-    delete: boolean
+    delete?: boolean
 
     @ApiProperty({ description: 'Update Right' })
-    update: boolean
+    update?: boolean
 
     @ApiProperty({ description: 'Upload Right' })
-    upload: boolean
+    upload?: boolean
 }
 
 export class UpdateSysRole extends CreateSysRole {
     @ApiProperty({ description: 'ID' })
-    _id: string
+    _id!: string
 }
 
 export class UpdateRoleMenuPermissionBody {
     @ApiProperty({ description: 'ID' })
-    id: string
+    id!: string
 
     @ApiProperty({ description: 'Menu ID Lists' })
-    menuIds: string[]
+    menuIds!: string[]
 }
 
 export class ListPermissionBody {
     @ApiProperty({ description: 'Menu ID Lists' })
-    menuIds: string[]
+    menuIds!: string[]
 }
 
 export class SysRoleBody extends UpdateSysRole {
     @ApiProperty({ description: 'Status' })
-    status: number
+    status!: number
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 }
 
 export class ListSysRoleQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
-    name: string
+    name?: string
 }
 
 
 export class SysRoleQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [SysRoleBody], description: 'Data List' })
-    lists: SysRoleBody[]
+    lists?: SysRoleBody[]
 }
 
 export class SysMenuBodyWithPerm extends SysMenuBody {
     @ApiProperty({ description: 'Read Right' })
-    read: boolean
+    read?: boolean
 
     @ApiProperty({ description: 'Write Right' })
-    write: boolean
+    write?: boolean
 
     @ApiProperty({ description: 'Delete Right' })
-    delete: boolean
+    delete?: boolean
 
     @ApiProperty({ description: 'Update Right' })
-    update: boolean
+    update?: boolean
 
     @ApiProperty({ description: 'Upload Right' })
-    upload: boolean
+    upload?: boolean
 }
 
 
 export class SysRoleBodyWithMenu extends SysRoleBody {
     @ApiProperty({ description: 'Menu Lists', type: SysMenuBodyWithPerm, isArray: true })
-    menuLists: SysMenuBodyWithPerm[]
+    menuLists?: SysMenuBodyWithPerm[]
 }

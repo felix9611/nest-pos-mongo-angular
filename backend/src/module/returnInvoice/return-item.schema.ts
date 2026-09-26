@@ -5,34 +5,34 @@ import { BaseSchema } from '../base/baseSchema'
 export type ReturnItemDocument = HydratedDocument<ReturnItem>
 @Schema()
 export class ReturnItem {
-    _id: Types.ObjectId
+    _id!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true })
-    returnDataId: Types.ObjectId
+    returnDataId!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true })
-    returnInvoiceId: Types.ObjectId
+    returnInvoiceId!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true })
-    productId: Types.ObjectId
+    productId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.Number, required: true })
-    qty: number
+    qty!: number
 
     @Prop({ type: SchemaTypes.Double, required: true })
-    price: number
+    price!: number
 
     @Prop({ type: SchemaTypes.String })
-    taxType: string
+    taxType?: string
 
     @Prop({ type: SchemaTypes.String })
-    taxCode: string
+    taxCode?: string
 
     @Prop({ type: SchemaTypes.Double })
-    taxRate: number
+    taxRate?: number
 
     @Prop({ type: SchemaTypes.Double })
-    taxAmount: number 
+    taxAmount?: number 
 }
 
 export const ReturnItemSchema = SchemaFactory.createForClass(ReturnItem)

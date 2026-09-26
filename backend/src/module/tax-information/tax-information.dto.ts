@@ -46,72 +46,72 @@ export interface TaxInfoForSalePoint {
 
 export class TaxInformationCreateBody {
     @ApiProperty({ description: 'Nation Code' })
-    nationCode: string
+    nationCode?: string
 
     @ApiProperty({ description: 'Nation Name' })
-    nationName: string
+    nationName?: string
 
     @ApiProperty({ description: 'Country Code' })
-    countryCode: string
+    countryCode?: string
 
     @ApiProperty({ description: 'Country Name' })
-    countryName: string
+    countryName?: string
 
     @ApiProperty({ description: 'Tax Type' })
-    taxType: string
+    taxType?: string
 
     @ApiProperty({ description: 'Tax Code' })
-    taxCode: string
+    taxCode?: string
 
     @ApiProperty({ description: 'Tax Name' })
-    taxName: string
+    taxName?: string
 
     @ApiProperty({ description: 'Tax Rate' })
-    taxRate: number
+    taxRate?: number
 
     @ApiProperty({ description: 'Import Rate' })
-    importRate: number
+    importRate?: number
 
     @ApiProperty({ description: 'Remark' })
     @IsOptional()
-    remark: string
+    remark?: string
 }
 
 export class TaxInformationUpdateBody extends TaxInformationCreateBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 export class TaxInformationBody extends TaxInformationUpdateBody {
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class TaxInformationListQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
-    nameCode: string
+    nameCode?: string
 
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
-    tax: string
+    tax?: string
 }
 
 export class TaxInformationListQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: TaxInformationBody, isArray: true, description: 'Data List' })
-    lists: TaxInformationBody[]
+    lists?: TaxInformationBody[]
 }
 
 export class TaxInfoForSalePointBody {
     @ApiProperty({ description: 'Tax Type' }) 
-    taxType: string
+    taxType?: string
 
     @ApiProperty({ description: 'Country Code' })
-    countryCode: string
+    countryCode?: string
 }

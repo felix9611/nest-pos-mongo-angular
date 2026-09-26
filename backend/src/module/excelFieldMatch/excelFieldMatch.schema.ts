@@ -12,16 +12,16 @@ export type ExcelFieldMatchDocument = HydratedDocument<ExcelFieldMatch>
 @Schema()
 export class ExcelFieldMatch extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    functionCode: string
+    functionCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    functionName: string
+    functionName!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    functionType: string
+    functionType!: string
 
     @Prop({ type: SchemaTypes.Array, schema: { type: ExcelFieldMatch } })
-    fieldLists: any[]
+    fieldLists?: any[]
 }
 
 export const ExcelFieldMatchSchema = SchemaFactory.createForClass(ExcelFieldMatch)

@@ -70,271 +70,271 @@ export interface FinalQuery {
 
 export class CreateInvoiceItemBody {
     @ApiProperty({ description: 'Product Id' })
-    productId: string
+    productId!: string
 
     @ApiProperty({ description: 'Product Code' })
-    productCode: string
+    productCode!: string
 
     @ApiProperty({ description: 'Quantity' })
-    qty: number
+    qty!: number
 
     @ApiProperty({ description: 'Price' })
-    price: number
+    price!: number
 
     @ApiProperty({ description: 'Discount' })
-    discount: number
+    discount?: number
 
     @ApiProperty({ description: 'Discount Type, $ or %' })
-    discountType: string
+    discountType?: string
 
     @ApiProperty({ description: 'Tax Type' })
-    taxType: string
+    taxType?: string
 
     @ApiProperty({ description: 'Tax Code' })
-    taxCode: string
+    taxCode?: string
 
     @ApiProperty({ description: 'Tax Rate' })
-    taxRate: number
+    taxRate?: number
 
     @ApiProperty({ description: 'Tax Amount' })
-    taxAmount: number 
+    taxAmount?: number 
 }
 
 export class InvoiceItemBody extends CreateInvoiceItemBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Invoice data Id' })
-    invoiceId: string
+    invoiceId!: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class FullInvoiceItemBody extends InvoiceItemBody {
     @ApiProperty({ description: 'Product Data', type: PureProductBody })
-    product: PureProductBody
+    product?: PureProductBody
 }
 
 
 export class CreateInvoicePaymentBody {
     @ApiProperty({ description: 'Payment Method' })
-    method: string
+    method!: string
 
     @ApiProperty({ description: 'Payment Amount' })
-    amount: number
+    amount!: number
 
     @ApiProperty({ description: 'Payment Time' })
-    paymentTime: string
+    paymentTime!: string
 }
 
 export class InvoicePaymentBody extends CreateInvoicePaymentBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Invoice data Id' })
-    invoiceId: string
+    invoiceId!: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class MainInvoiceBody {
     @ApiProperty({ description: 'Member Id' })
-    memberId: string
+    memberId!: string
 
     @ApiProperty({ description: 'Location Id' })
-    locationId: string
+    locationId!: string
 
     @ApiProperty({ description: 'Location Code' })
-    locationCode: string
+    locationCode!: string
 
     @ApiProperty({ description: 'Total Amount' })
-    totalAmount: number
+    totalAmount!: number
 
     @ApiProperty({ description: 'Discount' })
-    discount: number
+    discount?: number
 
     @ApiProperty({ description: 'Discount Type, $ or %' })
-    discountType: string
+    discountType?: string
 
     @ApiProperty({ description: 'Tax Total' })
-    taxTotal: number
+    taxTotal?: number
 
     @ApiProperty({ description: 'Remark' })
-    remark: string
+    remark?: string
 }
 
 export class CreateInvoiceBody extends MainInvoiceBody {
 
     @ApiProperty({ type: CreateInvoiceItemBody, isArray: true, description: 'Invoice Items' })
-    invoiceItems: CreateInvoiceItemBody[]
+    invoiceItems?: CreateInvoiceItemBody[]
 
     @ApiProperty({ type: CreateInvoicePaymentBody, isArray: true, description: 'Invoice Payments' })
-    invoicePayments: CreateInvoicePaymentBody[]
+    invoicePayments?: CreateInvoicePaymentBody[]
 }
 
 export class InvoiceBody extends MainInvoiceBody {
     @ApiProperty({ description: 'Invoice data Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Invoice Number' })
-    number: string
+    number!: string
 
     @ApiProperty({ type: InvoiceItemBody, isArray: true, description: 'Invoice Items' })
-    invoiceItems: InvoiceItemBody[]
+    invoiceItems?: InvoiceItemBody[]
 
     @ApiProperty({ type: InvoicePaymentBody, isArray: true, description: 'Invoice Payments' })
-    invoicePayments: InvoicePaymentBody[]
+    invoicePayments?: InvoicePaymentBody[]
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 
 export class DetailInvoiceBody extends MainInvoiceBody {
     @ApiProperty({ description: 'Invoice data Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Invoice Number' })
-    number: string
+    number!: string
 
     @ApiProperty({ type: FullInvoiceItemBody, isArray: true, description: 'Invoice Items' })
-    invoiceItems: FullInvoiceItemBody[]
+    invoiceItems?: FullInvoiceItemBody[]
 
     @ApiProperty({ type: InvoicePaymentBody, isArray: true, description: 'Invoice Payments' })
-    invoicePayments: InvoicePaymentBody[]
+    invoicePayments?: InvoicePaymentBody[]
 
     @ApiProperty({ description: 'Member Data', type: MemberBody })
-    member: MemberBody
+    member!: MemberBody
     
     @ApiProperty({ description: 'Location Data', type: LocationBody })
-    location: LocationBody
+    location!: LocationBody
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 
 export class PureDetailInvoiceBody extends MainInvoiceBody {
     @ApiProperty({ description: 'Invoice data Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Invoice Number' })
-    number: string
+    number!: string
     
     @ApiProperty({ description: 'Location Data', type: LocationBody })
-    location: LocationBody
+    location?: LocationBody
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class ListInvoiceQueryReq extends CommonPageAndList {
     @ApiProperty({ description: 'Invoice Number' })
     @IsOptional()
-    number: string
+    number?: string
 
     @ApiProperty({ description: 'Date Range' })
     @IsOptional()
-    dateRange: string
+    dateRange?: string
 }
 
 export class ListInvoiceQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: PureDetailInvoiceBody, isArray: true, description: 'Data List' })
-    lists: PureDetailInvoiceBody[]
+    lists?: PureDetailInvoiceBody[]
 }
 
 export class InvoiceQueryFilter {
     
     @ApiProperty({ description: 'Type Ids', isArray: true })
     @IsOptional()
-    typeIds: string[] 
+    typeIds?: string[] 
 
     @ApiProperty({ description: 'Location Ids', isArray: true })
     @IsOptional()
-    placeIds: string[] 
+    placeIds?: string[] 
 
     @ApiProperty({ description: 'Department Ids', isArray: true })
     @IsOptional()
-    deptIds: string[] 
+    deptIds?: string[] 
 
     @ApiProperty({ description: 'Sales Date Range', isArray: true })
     @IsOptional()
-    salesDateRange: string[]
+    salesDateRange?: string[]
 
     @ApiProperty({ description: 'Product Code' })
     @IsOptional()
-    productCode: string 
+    productCode?: string 
 
     @ApiProperty({ description: 'Product Name' })
     @IsOptional()
-    productName: string
+    productName?: string
 }
 
 export class InvoiceQueryReq {
     @ApiProperty({ type: InvoiceQueryFilter, description: 'Filter' })
-    filter: InvoiceQueryFilter
+    filter?: InvoiceQueryFilter
 
     @ApiProperty({ description: 'Value Field, qtys or price' })
-    valueField: string
+    valueField?: string
 
     @ApiProperty({ description: 'Data Type, dept or type or location' })
-    dataTypeValue: string
+    dataTypeValue?: string
 }
 
 export class InvoiceQueryRes {
     @ApiProperty({ description: 'Department Name' })
-    deptName: string
+    deptName?: string
 
     @ApiProperty({ description: 'Type Name' })
-    typeName: string
+    typeName?: string
 
     @ApiProperty({ description: 'Year' })
-    year: string
+    year?: string
 
     @ApiProperty({ description: 'Month Name' })
-    month: string
+    month?: string
 
     @ApiProperty({ description: 'Month Number' })
-    monthNum: number
+    monthNum?: number
 
     @ApiProperty({ description: 'Location Name' })
-    placeName: string
+    placeName?: string
 
     @ApiProperty({ description: 'Qtys' })
-    qtys: number
+    qtys?: number
 
     @ApiProperty({ description: 'Total Price' })
-    price: number
+    price?: number
 }

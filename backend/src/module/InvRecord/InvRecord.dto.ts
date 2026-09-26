@@ -32,87 +32,87 @@ export interface DashboardReqFilterDto {
 
 export class InvRecordRes {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Product Id' })
-    productId: string
+    productId!: string
 
     @ApiProperty({ description: 'Loc From Id' })
-    locFrom: string
+    locFrom!: string
 
     @ApiProperty({ description: 'Loc To Id' })
-    locTo: string
+    locTo!: string
 
     @ApiProperty({ description: 'Quantity' })
-    qty: number
+    qty?: number
 
     @ApiProperty({ description: 'Cost' })
-    cost: number
+    cost?: number
 
     @ApiProperty({ description: 'Staff Id' })
-    staffId: string
+    staffId?: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Product Data', type: PureProductBody })
-    product: PureProductBody
+    product?: PureProductBody
 
     @ApiProperty({ description: 'Location From Data', type: LocationBody })
-    locFromData: LocationBody
+    locFromData?: LocationBody
 
     @ApiProperty({ description: 'Location To Data', type: LocationBody })
-    locToData: LocationBody
+    locToData?: LocationBody
 }
 
 export class ListInvRecordRes extends CommonPageAndList {
     @ApiProperty({ type: InvRecordRes, isArray: true, description: 'Data List' })
-    lists: InvRecordRes[]
+    lists?: InvRecordRes[]
 }
 
 export class ListInvRecordReq extends CommonPageAndListResponse {
     @ApiProperty({ description: 'Date Range', isArray: true })
     @IsOptional()
-    dateRange: string[]
+    dateRange?: string[]
 }
 
 export class DashboardReqFilter {
     @ApiProperty({ description: 'Date Range', isArray: true })
     @IsOptional()
-    dateRange: string[]
+    dateRange?: string[]
 
     @ApiProperty({ description: 'Location Id list', isArray: true })
     @IsOptional()
-    placeIds: string[]
+    placeIds?: string[]
 
     @ApiProperty({ description: 'Product Code' })
     @IsOptional()
-    productCode: string
+    productCode?: string
 }
 
 export class DashboardReqBody {
     @ApiProperty({ description: 'Data Type, stockIn or stockOut or stockMove' })
-    dataType: 'stockIn' | 'stockOut' | 'stockMove'
+    dataType!: 'stockIn' | 'stockOut' | 'stockMove'
 
     @ApiProperty({ description: 'Filter', type: DashboardReqFilter })
-    filter: DashboardReqFilter
+    filter?: DashboardReqFilter
 }
 
 export class DashboardResBody {
     @ApiProperty({ description: 'Year' })
-    year: string
+    year?: string
 
     @ApiProperty({ description: 'Month Name' })
-    month: string
+    month?: string
 
     @ApiProperty({ description: 'Month Number' })
-    monthNum: number
+    monthNum?: number
 
     @ApiProperty({ description: 'Total Quantity' })
-    qtys: number
+    qtys?: number
 
     @ApiProperty({ description: 'Total Cost' })
-    costs: number
+    costs?: number
 }
 
 

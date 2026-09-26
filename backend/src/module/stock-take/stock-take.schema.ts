@@ -5,31 +5,31 @@ import { BaseSchema } from '../base/baseSchema'
 export type StockTakeDocument = HydratedDocument<StockTake>
 @Schema()
 export class StockTake {
-    _id: Types.ObjectId
+    _id!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String, required: true })
-    actionName: string
+    actionName!: string
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Location' })
-    actionPlaceId: string 
+    actionPlaceId!: string 
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 
     @Prop({ type: SchemaTypes.Date, required: true })
-    createdTime: string
+    createdTime!: string
 
     @Prop({ type: SchemaTypes.Date })
-    finishTime: string
+    finishTime?: string
 
     @Prop({ type: SchemaTypes.Number, required: true})
-    status: number
+    status?: number
 
     @Prop({ type: SchemaTypes.String })
-    createBy: string
+    createBy?: string
 
     @Prop({ type: SchemaTypes.String })
-    finishBy: string
+    finishBy?: string
 }
 
 export const StockTakeSchema = SchemaFactory.createForClass(StockTake)

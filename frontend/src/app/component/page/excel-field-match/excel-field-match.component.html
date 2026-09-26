@@ -103,42 +103,51 @@
                     </nz-form-item>
                     <nz-form-item>
                         <nz-form-label [nzSpan]="4" nzFor="type">Field Seting</nz-form-label>
-                        <nz-form-control>
-                            <nz-table
-                                [nzData]="editForm.fieldLists"
-                                #dataTable
-                                nzFrontPagination="false"
-                            >
-                                <thead>
-                                    <tr>
-                                        <th>Database Field Key</th>
-                                        <th>Excel Field Name Key</th>
-                                        <th>Field Sort</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let option of editForm.fieldLists; let i = index">
-                                        <td>
-                                            <input nz-input type="text" id="dbFieldName" name="dbFieldName" [(ngModel)]="option.dbFieldName" />
-                                        </td>
-                                        <td>
-                                            <input nz-input type="text" id="excelFieldName" name="excelFieldName" [(ngModel)]="option.excelFieldName" />
-                                        </td>
-                                        <td>
-                                            <nz-input-number [style.width.%]="100" name="sort" [(ngModel)]="option.sort"></nz-input-number>
-                                        </td>
-                                        <td>
-                                            <button nz-button nzType="link" nzDanger (click)="deleteRow(i)">Delete</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </nz-table>
-                            <div class="text-center" (click)="fieldAddRow()">
-                                + Add Row
+                        <div class="w-full">
+                            <div class="grid grid-cols-4 text-center bg-gray-100 py-2">
+                                <div>Database Field Key</div>
+                                <div>Excel Field Name Key</div>
+                                <div>Field Sort</div>
+                                <div>Action</div>
                             </div>
+                            <div *ngFor="let option of editForm.fieldLists; let i = index">
+                                <div class="grid grid-cols-4 py-2 divide-y-1 divide-gray-100">
+                                    <div class="px-1">{{  option.dbFieldName  }}</div>
+                                    <div class="px-1">{{  option.excelFieldName  }}</div>
+                                    <div class="text-center">{{  option.sort  }}</div>
+                                    <div class="text-center">
+                                        <button nz-button nzType="link" nzDanger (click)="deleteRow(i)">Delete</button>
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="4" nzFor="dbFieldName">Database Field Key</nz-form-label>
+                      <nz-form-control>
+                        <input nz-input type="text" id="dbFieldName" name="dbFieldName" [(ngModel)]="fieldForm.dbFieldName" />
+                      </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="4" nzFor="dbFieldName">Database Field Key</nz-form-label>
+                      <nz-form-control>
+                        <input nz-input type="text" id="dbFieldName" name="dbFieldName" [(ngModel)]="fieldForm.excelFieldName" />
+                      </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="4" nzFor="dbFieldName">Sort</nz-form-label>
+                        <nz-form-control class="w-full">
+                            <nz-input-number [style.width.%]="100" name="sort" [(ngModel)]="fieldForm.sort"></nz-input-number>
                         </nz-form-control>
                     </nz-form-item>
+
+                    <div class="text-center" (click)="fieldAddRow()">
+                                + Add To Row
+                    </div>
+                    
+                    
                 </form>
             </ng-container>
            
