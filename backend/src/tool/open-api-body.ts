@@ -2,47 +2,47 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class ReturnMsg {
     @ApiProperty({ description: 'Message' })
-    msg: string
+    msg?: string
 }
 
 export class CommonPageAndList {
     @ApiProperty({ description: 'Page Number' })
-    page: number
+    page?: number
 
     @ApiProperty({ description: 'Page limit datas limit' })
-    limit: number
+    limit?: number
 }
 
 export class CommonPageAndListResponse {
     @ApiProperty({ description: 'Page Number' })
-    page: number
+    page?: number
 
     @ApiProperty({ description: 'Page limit datas limit' })
-    limit: number
+    limit?: number
 
     @ApiProperty({ description: 'Count of all data' })
-    total: number
+    total?: number
 
     @ApiProperty({ description: 'Total pages number' })
-    totalPages: number
+    totalPages?: number
 }
 
 export class CommonId {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id?: string
     
 }
 
 export class CommonBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id?: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt?: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status?: number
 }

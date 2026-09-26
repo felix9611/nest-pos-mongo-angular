@@ -11,31 +11,31 @@ export interface ActionRecordCreateDto {
 }
 
 export interface ActionRecordListDto {
-    page: number,
+    page: number
     limit: number
 }
 
 export class ActionRecordBody {
     @ApiProperty({ description: 'Action Name' })
-    actionName: string
+    actionName?: string | undefined
 
     @ApiProperty({ description: 'Action Method' })
-    actionMethod: string
+    actionMethod?: string | undefined
 
     @ApiProperty({ description: 'Action From' })
-    actionFrom: string
+    actionFrom?: string | undefined
 
     @ApiProperty({ description: 'Data in action', example: {} })
-    actionData: object
+    actionData?: object | undefined
 
     @ApiProperty({ description: 'Success or not' })
-    actionSuccess: string
+    actionSuccess: string | undefined
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: Date
+    createdAt?: Date | undefined
 }
 
 export class ListActionRecordRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [ActionRecordBody], description: 'Data List' })
-    lists: ActionRecordBody[]
+    lists?: ActionRecordBody[] | undefined
 }

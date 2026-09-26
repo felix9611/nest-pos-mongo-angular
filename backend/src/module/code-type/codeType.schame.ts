@@ -6,13 +6,13 @@ export type CodeTypeDocument = HydratedDocument<CodeType>
 @Schema()
 export class CodeType extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    valueCode: string
+    valueCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    valueName: string
+    valueName!: string
 
     @Prop({ type: SchemaTypes.String, required: true  })
-    type: string
+    type!: string
 }
 
 export const CodeTypeSchema = SchemaFactory.createForClass(CodeType)

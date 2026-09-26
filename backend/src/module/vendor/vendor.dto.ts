@@ -27,71 +27,70 @@ export interface ListVendorRequestDto {
     contact: string
 }
 
-
 export class CreateVendorBody {
     @ApiProperty({ description: 'Vendor Code' })
-    vendorCode: string
+    vendorCode!: string
 
     @ApiProperty({ description: 'Vendor Name' })
-    vendorName: string
+    vendorName!: string
 
     @ApiProperty({ description: 'Vendor Other Name' })
-    vendorOtherName: string
+    vendorOtherName?: string
 
     @ApiProperty({ description: 'Type' })
-    type: string
+    type!: string
 
     @ApiProperty({ description: 'Email Address' })
-    email: string
+    email?: string
 
     @ApiProperty({ description: 'Phone Number' })
-    phone: string
+    phone!: string
 
     @ApiProperty({ description: 'Fax Number' })
-    fax: string
+    fax?: string
 
     @ApiProperty({ description: 'Contact Address' })
-    address: string
+    address!: string
 
     @ApiProperty({ description: 'Contact Person Name' })
-    contactPerson: string
+    contactPerson!: string
 
     @ApiProperty({ description: 'Remark' })
-    remark: string
+    remark?: string
 }
 
 export class UpdateVendorBody extends CreateVendorBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 export class VendorBody extends UpdateVendorBody {
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class ListVendorQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
-    name: string
+    name?: string
 
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
-    place: string
+    place?: string
 
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
-    contact: string
+    contact?: string
 }
 
 export class ListVendorQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: VendorBody, isArray: true, description: 'Data List' })
-    lists: VendorBody[]
+    lists?: VendorBody[]
 }

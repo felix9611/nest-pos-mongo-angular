@@ -32,18 +32,18 @@ export interface ListUserRequestDto {
 
 export class SysUserBody {
     @ApiProperty({ description: 'Username' })
-    username: string
+    username!: string
 
     @ApiProperty({ description: 'Avatar Base64 Data' })
     @IsOptional()
-    avatarBase64: string
+    avatarBase64?: string
 
     @ApiProperty({ description: 'Department Data Id' })
     @IsOptional()
     deptId?: number
 
     @ApiProperty({ description: 'Email Address' })
-    email: string
+    email?: string
 
     @ApiProperty({ description: 'User Roles ID List', example: [] })
     @IsOptional()
@@ -52,94 +52,95 @@ export class SysUserBody {
 
 export class CreateUserBody {
     @ApiProperty({ description: 'Create User Key String' })
-    key: string
+    key!: string
 
     @ApiProperty({ description: 'User Data', type: SysUserBody })
-    userData: SysUserBody
+    userData!: SysUserBody
 }
 
 export class UpdateUserBody extends SysUserBody {
     @ApiProperty({ description: 'Password' })
-    password: string
+    password!: string
 
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 export class FullUserBody extends UpdateUserBody {
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class UserDataWithDepartment extends FullUserBody {
     @ApiProperty({ description: 'Department Data', type: DepartmentBody })
-    department: DepartmentBody
+    department?: DepartmentBody
 }
 
 export class LoginRecordBody {
     @ApiProperty({ description: 'Data Id' }) 
-    _id: string
+    _id!: string
     
     @ApiProperty({ description: 'Username' }) 
-    username: string
+    username!: string
     
     @ApiProperty({ description: 'Login Time' }) 
-    loginTime: string
+    loginTime!: string
     
     @ApiProperty({ description: 'Login Status' }) 
-    loginStatus: string
+    loginStatus!: string
     
     @ApiProperty({ description: 'IP Address' }) 
-    ipAddress: string
+    ipAddress!: string
 }
 
 export class UserDetailBody extends UserDataWithDepartment {
     @ApiProperty({ description: 'Role Lists', type: SysRoleBody, isArray: true })
-    roleLists: SysRoleBody[]
+    roleLists?: SysRoleBody[]
 
     @ApiProperty({ description: 'Login Records', type: LoginRecordBody, isArray: true })
-    loginRecords: LoginRecordBody[]
+    loginRecords?: LoginRecordBody[]
 }
 
 export class UpdatePasswordBody {
     @ApiProperty({ description: 'Username' }) 
-    username: string
+    username!: string
 
     @ApiProperty({ description: 'Password' })
-    password: string
+    password!: string
 }
 
 export class SelfUpdatePasswordBody {
     @ApiProperty({ description: 'Password' })
-    password: string
+    password!: string
 }
 
 export class UpdateAvatarBody {
     @ApiProperty({ description: 'Username' }) 
-    username: string
+    usernames!: string
 
     @ApiProperty({ description: 'Photo Base64 Data' })
-    photo: string
+    photos?: string
 }
 
 export class ListSysUserQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords in username' })  
-    username: string
+    usernames?: string
 
     @ApiProperty({ description: 'For search data keywords in dept data ids' })
-    deptIds: string[]
+    deptIdss?: string[]
 
     @ApiProperty({ description: 'For search data keywords in role data ids' })
-    roleIds: string[]
+    roleIdss?: string[]
 }
 
 export class SysRoleQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: UserDataWithDepartment, isArray: true, description: 'Data List' })
-    lists: UserDataWithDepartment[]
+    lists?: UserDataWithDepartment[]
 }
+

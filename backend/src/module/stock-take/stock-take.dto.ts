@@ -45,115 +45,115 @@ export interface StockTakeItemDtoSubmit {
 
 export class StockTakeItemDtoSubmitBody {
     @ApiProperty({ description: 'Stock Take Form Data Id' })
-    stockTakeId: string
+    stockTakeId!: string
 
     @ApiProperty({ description: 'Product Data Id' })
-    productId: string
+    productId!: string
 
     @ApiProperty({ description: 'Product Code' })
-    productCode: string
+    productCode!: string
 
     @ApiProperty({ description: 'Location Data Id' })
-    placeId: string
+    placeId!: string
 
     @ApiProperty({ description: 'Quantity' })
-    qty: number
+    qty!: number
 
     @ApiProperty({ description: 'Status' })
-    status: string
+    status!: string
 
     @ApiProperty({ description: 'Remark', required: false })
-    remark: string
+    remark?: string
 }
 
 export class StockTakeItemBody {
     @ApiProperty({ description: 'Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Stock Take Form Data Id' })
-    stockTakeId: string
+    stockTakeId!: string
     
     @ApiProperty({ description: 'Product Data Id' })
-    productId: string 
+    productId!: string 
 
     @ApiProperty({ description: 'Product Code' })
-    productCode: string
+    productCode!: string
 
     @ApiProperty({ description: 'Location Data Id' })
-    placeId: string 
+    placeId!: string 
 
     @ApiProperty({ description: 'Quantity' })
-    qty: number
+    qty!: number
 
     @ApiProperty({ description: 'Status' })
-    status: string
+    status!: string
 
     @ApiProperty({ description: 'Final Status' })
-    finalStatus: string
+    finalStatus?: string
 
     @ApiProperty({ description: 'Check Time' })
-    checkTime: string
+    checkTime!: string
 
     @ApiProperty({ description: 'Remark' })
-    remark: string
+    remark?: string
 }
 
 export class StockTakeItemBodyWithProduct extends StockTakeItemBody {
     @ApiProperty({ description: 'Product Data', type: PureProductBody })
-    product: PureProductBody
+    product?: PureProductBody
 }
 
 export class UpdateStockTakeFormBody {
     @ApiProperty({ description: 'Id for update only' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Action Name' })
-    actionName: string
+    actionName!: string
 
     @ApiProperty({ description: 'Action Place Id' })
-    actionPlaceId: string
+    actionPlaceId!: string
 
     @ApiProperty({ description: 'Remark' })
     @IsOptional()
-    remark: string
+    remark?: string
 }
 
 export class StockTakeFormBody extends UpdateStockTakeFormBody {
     @ApiProperty({ description: 'Created Time' })
-    createdTime: string
+    createdTime!: string
 
     @ApiProperty({ description: 'Finish Time' })
-    finishTime: string
+    finishTime?: string
 
     @ApiProperty({ description: 'Status' })
-    status: number
+    status!: number
 
     @ApiProperty({ description: 'Created By' })
-    createBy: string
+    createBy?: string
 
     @ApiProperty({ description: 'Finish By' })
-    finishBy: string
+    finishBy?: string
 }
 
 export class DetailStockTakeFormBody extends StockTakeFormBody {
     @ApiProperty({ description: 'Stock Take Items', type: [StockTakeItemBodyWithProduct] })
-    stockTakeItems: StockTakeItemBodyWithProduct[]
+    stockTakeItems?: StockTakeItemBodyWithProduct[]
 }
 
 export class StockTakeFormBodyWithLocation extends StockTakeFormBody {
     @ApiProperty({ description: 'Location Data', type: LocationBody })
-    location: LocationBody
+    location?: LocationBody
 }
 
 export class StockTakeFormQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
-    name: string
+    name?: string
 
     @ApiProperty({ description: 'For search data keywords', isArray: true })
-    placeIds: string
+    placeIds?: string
 }
 
 export class StockTakeListResponse extends CommonPageAndList {
     @ApiProperty({ type: [StockTakeFormBodyWithLocation], description: 'Data List' })
-    lists: StockTakeFormBodyWithLocation[]
+    lists?: StockTakeFormBodyWithLocation[]
 }

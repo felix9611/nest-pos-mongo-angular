@@ -6,28 +6,28 @@ export type SysMenuDocument = HydratedDocument<SysMenu>
 @Schema()
 export class SysMenu extends BaseSchema {
     @Prop({ type: SchemaTypes.String })
-    mainId: string
+    mainId?: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    name: string
+    name!: string
 
     @Prop({ type: SchemaTypes.String })
-    icon: string
+    icon?: string
 
     @Prop({ type: SchemaTypes.String })
     path?: string
 
     @Prop({ type: SchemaTypes.Number, required: true })
-    sort: number
+    sort!: number
 
     @Prop({ type: SchemaTypes.String })
-    type: string
+    type?: string
 
     @Prop({ type: SchemaTypes.String })
-    excelFunctionCode: string
+    excelFunctionCode?: string
 
     @Prop({ type: SchemaTypes.String })
-    excelFunctionName: string
+    excelFunctionName?: string
 }
 
 export const SysMenuSchema = SchemaFactory.createForClass(SysMenu)

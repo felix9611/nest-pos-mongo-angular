@@ -7,25 +7,25 @@ export type TaxInformationDocument = HydratedDocument<TaxInformation>
 @Schema()
 export class TaxInformation extends BaseSchema {
     @Prop({ type: SchemaTypes.String })
-    nationCode: string
+    nationCode?: string
 
     @Prop({ type: SchemaTypes.String })
-    nationName: string
+    nationName?: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    countryCode: string
+    countryCode!: string
 
     @Prop({ type: SchemaTypes.String })
-    countryName: string
+    countryName!: string
 
     @Prop({ type: SchemaTypes.String })
-    taxType: string
+    taxType!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    taxCode: string
+    taxCode!: string
 
     @Prop({ type: SchemaTypes.String })
-    taxName: string
+    taxName!: string
 
     @Prop({ type: SchemaTypes.Double, required: true })
     taxRate?: number

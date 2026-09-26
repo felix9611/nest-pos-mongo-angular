@@ -9,25 +9,25 @@ export type SysUserDocument = HydratedDocument<SysUser>
 @Schema()
 export class SysUser extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    username: string
+    username!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    password: string
+    password!: string
 
     @Prop({ type: SchemaTypes.String })
     avatarBase64?: string
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Department' })
-    deptId: Types.ObjectId
+    deptId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String })
-    email: string
+    email?: string
 
     @Prop({ type: SchemaTypes.Date })
     lastLogin?: Date
 
     @Prop({ type: [Types.ObjectId], ref: 'SysRole' })
-    roles: Types.ObjectId[]
+    roles?: Types.ObjectId[]
 
 }
 

@@ -21,57 +21,57 @@ export interface ListproductTypeModelRequestDto {
 export class ImportProductTypeBody {
 
     @ApiProperty({ description: 'Type Code' })
-    typeCode: string
+    typeCode!: string
 
     @ApiProperty({ description: 'Type Name' })
-    typeName: string
+    typeName!: string
 
     @ApiProperty({ description: 'Type Other Name' })
-    typeOtherName: string
+    typeOtherName?: string
 
     @ApiProperty({ description: 'Type for catelog' })
-    remark: string
+    remark?: string
 }
 
 export class CreateProductTypeBody {
 
     @ApiProperty({ description: 'Type Code' })
-    typeCode: string
+    typeCode!: string
 
     @ApiProperty({ description: 'Type Name' })
-    typeName: string
+    typeName!: string
 
     @ApiProperty({ description: 'Type Other Name' })
-    typeOtherName: string
+    typeOtherName?: string
 
     @ApiProperty({ description: 'Type for catelog' })
-    remark: string
+    remark?: string
 }
 
 export class UpdateProductTypeBody extends CreateProductTypeBody {
 
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 export class ProductTypeBody extends UpdateProductTypeBody {
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class ProductTypeQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
-    name: string
+    name?: string
 }
 
 export class ListProductTypeQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [ProductTypeBody], description: 'Data List' })
-    lists: ProductTypeBody[]
+    lists?: ProductTypeBody[]
 }

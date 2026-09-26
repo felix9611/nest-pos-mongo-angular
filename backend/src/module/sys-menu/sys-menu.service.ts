@@ -211,7 +211,7 @@ export class SysMenuService {
         { mainId:{ $in: ids}  }
       ]}).exec()  // GET first round datas
 
-      const initialIds = [...new Set(
+      const initialIds: any = [...new Set(
         result
           .map((record: any) => record.mainId)
           .filter((mainId: any) => mainId !== '')

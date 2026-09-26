@@ -99,298 +99,298 @@ export interface CheckProductAndLocationDto {
 export class BaseProductBody {
     @ApiProperty({ description: 'Product Code' })
     @IsOptional()
-    productCode: string
+    productCode!: string
 
     @ApiProperty({ description: 'Product Name' })
-    productName: string
+    productName!: string
 
     @ApiProperty({ description: 'Item Code' })
-    itemCode: string
+    itemCode!: string
 
     @ApiProperty({ description: 'Brand Code' })
-    brandCode: string
+    brandCode?: string
 
     @ApiProperty({ description: 'Brand Name' })
-    brandName: string
+    brandName!: string
 
     @ApiProperty({ description: 'Type Data Id' })
-    typeId: string
+    typeId!: string
 
     @ApiProperty({ description: 'Department Data Id' })
-    deptId: string
+    deptId!: string
 
     @ApiProperty({ description: 'Vendor Data Id' })
-    vendorId: string
+    vendorId!: string
 
     @ApiProperty({ description: 'Unit' })
-    unit: string
+    unit!: string
 
     @ApiProperty({ description: 'Cost Price' })
-    costPrice: number
+    costPrice!: number
 
     @ApiProperty({ description: 'Retail Price' })
-    retailPrice: number
+    retailPrice!: number
 
     @ApiProperty({ description: 'Description' })
-    description: string
+    description?: string
 
     @ApiProperty({ description: 'Remark' })
-    remark: string
+    remark?: string
 
     @ApiProperty({ description: 'Tax Type' })
-    taxType: string
+    taxType!: string
     
 }
 
 export class UploadProductFileBody {
     @ApiProperty({ description: 'File Name' })
-    fileName: string
+    fileName!: string
 
     @ApiProperty({ description: 'File Type' })
-    fileType: string
+    fileType!: string
 
     @ApiProperty({ description: 'Base64 data' })
-    base64: string
+    base64!: string
 }
 
 export class UpdateProductBody extends BaseProductBody  {
     @ApiProperty({ description: 'Product Files', type: UploadProductFileBody, isArray: true })
-    uploaProductFiles: UploadProductFileBody[]
+    uploaProductFiles?: UploadProductFileBody[]
 
     @ApiProperty({ description: 'Product Id' })
-    _id: string
+    _id!: string
 }
 
 export class PureProductBody extends BaseProductBody {
     @ApiProperty({ description: 'Product Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class ProductFileBody extends UploadProductFileBody {
     @ApiProperty({ description: 'Product Id' })
-    productId: string
+    productId!: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })
-    status: number
+    status!: number
 }
 
 export class ProductBodyWithFiles extends PureProductBody {
     @ApiProperty({ description: 'Created At', type: ProductFileBody, isArray: true })
-    productFiles: ProductFileBody[]
+    productFiles?: ProductFileBody[]
 }
 
 export class ListPageProductRequestBody extends CommonPageAndList {
     @ApiProperty({ description: 'Product Name for search' })
-    name: string
+    name?: string
 }
 
 export class ListProductBody extends PureProductBody {
     @ApiProperty({ description: 'Department', type: DepartmentBody })
-    department: DepartmentBody
+    department?: DepartmentBody
 
     @ApiProperty({ description: 'Type', type: ProductTypeBody })
-    producttype: ProductTypeBody
+    producttype?: ProductTypeBody
 }
 
 export class ListPageProductResponse extends CommonPageAndListResponse {
     @ApiProperty({ description: 'Lists Data', type: ListProductBody, isArray: true })
-    lists: ListProductBody[]
+    lists?: ListProductBody[]
 }
 
 export class ListProductLocationBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
        
     @ApiProperty({ description: 'Product Location Id' })
-    productId: string
+    productId!: string
     
     @ApiProperty({ description: 'Location Id' })
-    locationId: string
+    locationId!: string
     
     @ApiProperty({ description: 'Quantity' })
-    qty: number
+    qty!: number
     
     @ApiProperty({ description: 'Total Price' })
-    totalPrice: number
+    totalPrice!: number
     
     @ApiProperty({ description: 'Total Cost' })
-    totalCost: number
+    totalCost!: number
 }
 
 export class FullProductLocationBody extends ListProductLocationBody {
     @ApiProperty({ description: 'Product', type: PureProductBody, isArray: true })
-    product: PureProductBody
+    product?: PureProductBody
 
     @ApiProperty({ description: 'Location', type: LocationBody, isArray: true })
-    location: LocationBody
+    location?: LocationBody
 }
 
 export class ListPageProductLocationRequest extends CommonPageAndList {
     @ApiProperty({ description: 'Product Ids', isArray: true })
-    locationIds: string[]
+    locationIds?: string[]
 
     @ApiProperty({ description: 'Asset Code' })
-    assetCode: string
+    assetCode?: string
 } 
 
 export class ListPageProductLocationResponse extends CommonPageAndListResponse {
     @ApiProperty({ description: 'Lists Data', type: FullProductLocationBody, isArray: true })
-    lists: FullProductLocationBody[]
+    lists?: FullProductLocationBody[]
 }
 
 export class CheckProductAndLocationRequestBody {
     @ApiProperty({ description: 'Product Id' })
-    productId: string
+    productId!: string
 
     @ApiProperty({ description: 'Location Id' })
-    locationId: string
+    locationId!: string
 }
 
 export class CheckProductAndLocationResponseBody {
     @ApiProperty({ description: 'Found Status' })
-    status: boolean
+    status!: boolean
 
     @ApiProperty({ description: 'Data if scucess', type: ListProductLocationBody })
-    data: ListProductLocationBody
+    data?: ListProductLocationBody
 }
 
 export class StockInRequestBody {
     @ApiProperty({ description: 'Product Code' })
-    productCode: string
+    productCode!: string
 
     @ApiProperty({ description: 'Product Id' })
-    productId: string
+    productId!: string
 
     @ApiProperty({ description: 'Location Code' })
-    placeCode: string
+    placeCode!: string
 
     @ApiProperty({ description: 'Location Id' })
-    locationId: string
+    locationId!: string
 
     @ApiProperty({ description: 'Quantity' })
-    qty: number
+    qty!: number
 
     @ApiProperty({ description: 'Total Cost' })
-    totalCost: number 
+    totalCost?: number 
 
     @ApiProperty({ description: 'Total Price' })
-    totalPrice: number
+    totalPrice?: number
 }
 
 export class StockMoveRequestBody {
     @ApiProperty({ description: 'Product Code' })
-    productCode: string
+    productCode!: string
 
     @ApiProperty({ description: 'Product Id' })
-    productId: string
+    productId!: string
 
     @ApiProperty({ description: 'Quantity' })
-    qty: number
+    qty!: number
 
     @ApiProperty({ description: 'From Location Code' })
-    fromPlaceCode: string 
+    fromPlaceCode!: string 
 
     @ApiProperty({ description: 'From Location Id' })
-    fromLocationId: string
+    fromLocationId!: string
 
     @ApiProperty({ description: 'To Location Code' })
-    toPlaceCode: string
+    toPlaceCode!: string
 
     @ApiProperty({ description: 'To Location Id' })
-    toLocationId: string
+    toLocationId!: string
 
     @ApiProperty({ description: 'Total Cost' })
-    totalCost: number
+    totalCost!: number
 
     @ApiProperty({ description: 'Total Price' })
-    totalPrice : number
+    totalPrice! : number
 }
 
 export class StockOutRequestBody {
     @ApiProperty({ description: 'Product Code' })
-    productCode: string
+    productCode!: string
 
     @ApiProperty({ description: 'Product Id' })
-    productId: string
+    productId!: string
 
     @ApiProperty({ description: 'Location Code' })
-    placeCode: string 
+    placeCode!: string 
 
     @ApiProperty({ description: 'Location Id' })
-    locationId: string 
+    locationId!: string 
 
     @ApiProperty({ description: 'Quantity' })
-    qty: number 
+    qty!: number 
 
     @ApiProperty({ description: 'Total Cost' })
-    totalCost: number 
+    totalCost!: number 
 
     @ApiProperty({ description: 'Total Price' })
-    totalPrice: number
+    totalPrice!: number
 }
 
 export class DashboardReqFilter {
     @ApiProperty({ description: 'Product Code' })
     @IsOptional()
-    productCode: string
+    productCode?: string
 
     @ApiProperty({ description: 'Product Name' })
     @IsOptional()
-    productName: string
+    productName?: string
 
     @ApiProperty({ description: 'Type Id', isArray: true })
     @IsOptional()
-    typeIds: string[]
+    typeIds?: string[]
 
     @ApiProperty({ description: 'Location Id', isArray: true })
     @IsOptional()
-    placeIds: string[]
+    placeIds?: string[]
 
     @ApiProperty({ description: 'Department Id', isArray: true })
     @IsOptional()
-    deptIds: string[]
+    deptIds?: string[]
 }
 
 export class GetByDeptAndQtyRequestBody {
     @ApiProperty({ description: 'Data Type Value, dept OR type OR location' })
-    dataTypeValue: 'dept' | 'type' | 'location'
+    dataTypeValue!: 'dept' | 'type' | 'location'
 
     @ApiProperty({ description: 'Filters', type: DashboardReqFilter })
-    filter: DashboardReqFilter
+    filter?: DashboardReqFilter
 }
 
 export class ProductLocationQueryResponse {
     @ApiProperty({ description: 'Department Name' })
-    deptName: string
+    deptName?: string
 
     @ApiProperty({ description: 'Location Name' })
-    placeName: string
+    placeName?: string
 
     @ApiProperty({ description: 'Type Name' })
-    typeName: string
+    typeName?: string
 
     @ApiProperty({ description: 'Total Quantitys' })
-    totalQty: number
+    totalQty?: number
 
     @ApiProperty({ description: 'Total Price' })
-    totalPrice: number
+    totalPrice?: number
 
     @ApiProperty({ description: 'Total Cost' })
-    totalCost: number
+    totalCost?: number
 
 }

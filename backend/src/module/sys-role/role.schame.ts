@@ -6,31 +6,31 @@ export type SysRoleDocument = HydratedDocument<SysRole>
 @Schema()
 export class SysRole extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    name: string
+    name!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    code: string
+    code!: string
 
     @Prop({ type: SchemaTypes.String})
     remark?: string
 
     @Prop({ type: SchemaTypes.Mixed })
-    menuIds: any
+    menuIds!: any
 
     @Prop({ type: SchemaTypes.Boolean })
-    read: boolean
+    read?: boolean
 
     @Prop({ type: SchemaTypes.Boolean })
-    write: boolean
+    write?: boolean
 
     @Prop({ type: SchemaTypes.Boolean })
-    delete: boolean
+    delete?: boolean
 
     @Prop({ type: SchemaTypes.Boolean })
-    upload: boolean
+    upload?: boolean
 
     @Prop({ type: SchemaTypes.Boolean })
-    update: boolean
+    update?: boolean
 }
 
 export const SysRoleSchema = SchemaFactory.createForClass(SysRole)

@@ -219,7 +219,7 @@ export class StockTakeService {
 
     async stockTakeItemSubmit(data: StockTakeItemDtoSubmit) {
 
-        const oldRecord = await this.productLocationModel.findOne(
+        const oldRecord: any = await this.productLocationModel.findOne(
             {
                 productId: data.productId,
                 locationId: data.placeId

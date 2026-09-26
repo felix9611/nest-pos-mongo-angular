@@ -6,28 +6,28 @@ export type MemberDocument = HydratedDocument<Member>
 @Schema()
 export class Member extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true})
-    memberCode: string
+    memberCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    name: string
+    name!: string
 
     @Prop({ type: SchemaTypes.String })
-    address: string
+    address?: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    phone: string
+    phone!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    email: string
+    email!: string
 
     @Prop({ type: SchemaTypes.String })
-    fax: string
+    fax?: string
 
     @Prop({ type: Types.ObjectId, required: true })
-    classId: Types.ObjectId
+    classId?: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 }
 
 export const MemberSchema = SchemaFactory.createForClass(Member)

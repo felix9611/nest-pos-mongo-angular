@@ -6,16 +6,16 @@ export type ProductFileDocument = HydratedDocument<ProductFile>
 @Schema()
 export class ProductFile extends BaseSchema {
     @Prop({ type: Types.ObjectId, required: true, ref: 'ProductList' })
-    productId: Types.ObjectId
+    productId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String })
-    fileName: string
+    fileName!: string
 
     @Prop({ type: SchemaTypes.String })
-    fileType: string
+    fileType!: string
 
     @Prop({ type: SchemaTypes.String })
-    base64: string
+    base64!: string
 
 }
 

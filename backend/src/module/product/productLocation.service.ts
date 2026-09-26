@@ -56,12 +56,12 @@ export class ProductLocationService {
 
         if (!checkToLocation) throw new Error('No any this location record!')
 
-        const fromData = await this.productLocationModel.findOne({
+        const fromData: any = await this.productLocationModel.findOne({
             productId: checkProduct._id,
             locationId: checkFormLocation._id
         })
 
-        const toData = await this.productLocationModel.findOne({
+        const toData: any = await this.productLocationModel.findOne({
             productId: checkProduct._id,
             locationId: checkToLocation._id
         })
@@ -150,7 +150,7 @@ export class ProductLocationService {
 
         if (!checLocation) throw new Error('No any this location record!')
 
-        const findOldData = await this.productLocationModel.findOne({ 
+        const findOldData: any = await this.productLocationModel.findOne({ 
             productId: checkProduct._id, 
             locationId: checLocation?._id 
         }) 
@@ -213,7 +213,7 @@ export class ProductLocationService {
 
         if (!checLocation) throw new Error('No any this location record!')
 
-        const findOldData = await this.productLocationModel.findOne({ 
+        const findOldData: any = await this.productLocationModel.findOne({ 
             productId: checkProduct._id, 
             locationId: checLocation?._id 
         })

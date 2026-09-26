@@ -41,116 +41,116 @@ export interface ListMemberDto {
 
 export class MemberSpecialDayCreateBody {
     @ApiProperty({ description: 'Name' })
-    name: string
+    name!: string
 
     @ApiProperty({ description: 'Date' })
-    date: string
+    date!: string
 
     @ApiProperty({ description: 'Remark' })
     @IsOptional()
-    remark: string  
+    remark?: string  
 }
 
 export class MemberSpecialDayBody extends MemberSpecialDayCreateBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
     
     @ApiProperty({ description: 'Created At' })
-    createdAt: string 
+    createdAt!: string 
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })
-    status: number
+    status!: number
 
     @ApiProperty({ description: 'Member ID' })
-    memberId: string
+    memberId!: string
 }
 
 export class CreateMemberMainBody {
     @ApiProperty({ description: 'Member Name' })
-    name: string
+    name!: string
 
     @ApiProperty({ description: 'Member Address' })
-    address: string
+    address!: string
 
     @ApiProperty({ description: 'Member Phone No.' })
-    phone: string
+    phone!: string
 
     @ApiProperty({ description: 'Member Email' })
-    email: string
+    email!: string
 
     @ApiProperty({ description: 'Member Fax No.' })
-    fax: string
+    fax?: string
 
     @ApiProperty({ description: 'Member Class ID' })
-    classId: string
+    classId?: string
 
     @ApiProperty({ description: 'Remark' })
-    remark: string
+    remark?: string
 }
 
 export class CreateMemberBody extends CreateMemberMainBody {
     @ApiProperty({ description: 'Member Special Days', type: MemberSpecialDayCreateBody, isArray: true })
-    specialDays: MemberSpecialDayCreateBody[]
+    specialDays?: MemberSpecialDayCreateBody[]
 }
 
 export class UpdateMemberBody extends CreateMemberMainBody {
     @ApiProperty({ description: 'Member Special Days', type: MemberSpecialDayCreateBody, isArray: true })
-    specialDays: MemberSpecialDayCreateBody[]
+    specialDays?: MemberSpecialDayCreateBody[]
 
     @ApiProperty({ description: 'Member ID' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Member Code' })
-    memberCode: string
+    memberCode!: string
 }
 
 export class MemberBody extends CreateMemberMainBody {
     @ApiProperty({ description: 'Member ID' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Member Code' })
-    memberCode: string
+    memberCode!: string
     
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })
-    status: number
+    status!: number
 
     @ApiProperty({ description: 'Member Special Days', type: MemberSpecialDayBody, isArray: true })
-    memberSpecialDays: MemberSpecialDayBody[]
+    memberSpecialDays?: MemberSpecialDayBody[]
 
     @ApiProperty({ description: 'Member Class', type: () => MemberClassBody })
-    memberClass: MemberClassBody 
+    memberClass?: MemberClassBody 
 }
 
 export class MemberListResponseBody extends CommonPageAndListResponse {
     @ApiProperty({ description: 'List of data', type: MemberBody, isArray: true })
-    lists: MemberBody[]
+    lists?: MemberBody[]
 }
 
 export class MemberListQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
-    name: string
+    name?: string
 
     @ApiProperty({ description: 'For search data keywords' }) 
     @IsOptional() 
-    contact: string
+    contact?: string
 
     @ApiProperty({ description: 'For search data keywords' }) 
     @IsOptional()
-    classIds: string[]
+    classIds?: string[]
 }
 
 export class AllMemberListQuery {
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
-    name: string
+    name?: string
 }

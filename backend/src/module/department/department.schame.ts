@@ -6,13 +6,13 @@ export type SysRoleDocument = HydratedDocument<Department>
 @Schema()
 export class Department extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    deptCode: string
+    deptCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    deptName: string
+    deptName!: string
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 }
 
 export const DepartmentSchema = SchemaFactory.createForClass(Department)

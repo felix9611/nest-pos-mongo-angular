@@ -6,46 +6,46 @@ export type ProductTypeDocument = HydratedDocument<Product>
 @Schema()
 export class Product extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    productCode: string
+    productCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    productName: string
+    productName!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    itemCode: string
+    itemCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    brandCode: string
+    brandCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    brandName: string
+    brandName!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    typeId: string
+    typeId!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    deptId: string
+    deptId!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    vendorId: string
+    vendorId!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    unit: string
+    unit!: string
 
     @Prop({ type: Types.Double, required: true })
-    costPrice: number
+    costPrice!: number
 
     @Prop({ type: Types.Double, required: true })
-    retailPrice: number
+    retailPrice!: number
 
     @Prop({ type: SchemaTypes.String })
-    description: string
+    description?: string
 
     @Prop({ type: SchemaTypes.String })
-    taxType: string
+    taxType?: string
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product)

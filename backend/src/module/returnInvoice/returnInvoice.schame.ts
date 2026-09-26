@@ -7,40 +7,40 @@ export type ReturnInvoiceDocument = HydratedDocument<ReturnInvoice>
 @Schema()
 export class ReturnInvoice extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    invoiceNumber: string
+    invoiceNumber!: string
 
     @Prop({ type: SchemaTypes.Date, required: true })
-    returnDate: string
+    returnDate!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    returnReason: string
+    returnReason!: string
 
     @Prop({ type: Types.ObjectId, required: true })
-    returnLocationId: Types.ObjectId
+    returnLocationId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String, required: true })
-    returnCaseNumber: Types.ObjectId
+    returnCaseNumber!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String })
-    returnDatail: string
+    returnDatail?: string
 
     @Prop({ type: SchemaTypes.String })
-    returnMethod: string
+    returnMethod!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    processMethod: string
+    processMethod!: string
 
     @Prop({ type: SchemaTypes.Boolean })
-    refund: boolean
+    refund?: boolean
 
     @Prop({ type: SchemaTypes.Double })
-    refundAmount: number
+    refundAmount?: number
 
     @Prop({ type: SchemaTypes.String })
-    refundMethod: string
+    refundMethod?: string
 
     @Prop({ type: SchemaTypes.Boolean })
-    returnToVendor: boolean
+    returnToVendor?: boolean
 }
 
 export const ReturnInvoiceSchema = SchemaFactory.createForClass(ReturnInvoice)

@@ -6,34 +6,34 @@ export type LocationDocument = HydratedDocument<Location>
 @Schema()
 export class Location extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    placeCode: string
+    placeCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    placeName: string
+    placeName!: string
 
     @Prop({ type: SchemaTypes.String })
-    placeOtherName: string
+    placeOtherName?: string
 
     @Prop({ type: SchemaTypes.String })
-    country: string
+    country!: string
 
     @Prop({ type: SchemaTypes.String })
-    address: string
+    address!: string
 
     @Prop({ type: SchemaTypes.String })
-    zipCode: string
+    zipCode?: string
 
     @Prop({ type: SchemaTypes.String })
-    email: string
+    email?: string
 
     @Prop({ type: SchemaTypes.String })
-    phone: string
+    phone?: string
 
     @Prop({ type: SchemaTypes.String })
-    fax: string
+    fax?: string
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 }
 
 export const LocationSchema = SchemaFactory.createForClass(Location)

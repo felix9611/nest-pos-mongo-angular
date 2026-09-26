@@ -21,41 +21,41 @@ export interface ListMemberClassRequestDto {
 export class CreateMemberClassBody {
 
     @ApiProperty({ description: 'Class Code' })
-    classCode: string
+    classCode!: string
 
     @ApiProperty({ description: 'Class Name' })
-    className: string
+    className!: string
 
     @ApiProperty({ description: 'Remark' })
-    remark: string
+    remark?: string
 }
 
 export class UpdateMemberClassBody extends CreateMemberClassBody {
 
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 
 export class MemberClassBody extends UpdateMemberClassBody {
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class ListMemberClassQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
-    name: string
+    name?: string
 }
 
 export class ListMemberClassQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [MemberClassBody], description: 'Data List' })
-    lists: MemberClassBody[]
+    lists?: MemberClassBody[]
 }

@@ -5,37 +5,37 @@ import { BaseSchema } from '../base/baseSchema'
 export type InvoiceItemDocument = HydratedDocument<InvoiceItem>
 @Schema()
 export class InvoiceItem {
-    _id: Types.ObjectId
+    _id!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true })
-    invoiceId: Types.ObjectId
+    invoiceId!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true })
-    productId: Types.ObjectId
+    productId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.Number, required: true })
-    qty: number
+    qty!: number
 
     @Prop({ type: SchemaTypes.Double, required: true })
-    price: number
+    price!: number
 
     @Prop({ type: SchemaTypes.Double })
-    discount: number
+    discount?: number
 
     @Prop({ type: SchemaTypes.String })
-    discountType: string
+    discountType?: string
 
     @Prop({ type: SchemaTypes.String })
-    taxType: string
+    taxType?: string
 
     @Prop({ type: SchemaTypes.String })
-    taxCode: string
+    taxCode?: string
 
     @Prop({ type: SchemaTypes.Double })
-    taxRate: number
+    taxRate?: number
 
     @Prop({ type: SchemaTypes.Double })
-    taxAmount: number 
+    taxAmount?: number 
 }
 
 export const InvoiceItemSchema = SchemaFactory.createForClass(InvoiceItem)

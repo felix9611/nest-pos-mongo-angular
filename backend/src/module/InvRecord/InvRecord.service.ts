@@ -20,7 +20,7 @@ export class InvRecordService {
         const { page, limit, dateRange } = dto
         const skip = (page - 1) * limit
 
-        const filter = {
+        const filter: any = {
             ...dateRange && dateRange.length > 0 ? { createdAt: { $gte: new Date(dateRange[0]), $lte: new Date(dateRange[1])} } : {}
         }
 

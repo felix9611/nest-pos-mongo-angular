@@ -6,16 +6,16 @@ export type VendorDocument = HydratedDocument<Vendor>
 @Schema()
 export class Vendor extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
-    vendorCode: string
+    vendorCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    vendorName: string
+    vendorName!: string
 
     @Prop({ type: SchemaTypes.String })
     vendorOtherName?: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    type: string
+    type!: string
 
     @Prop({ type: SchemaTypes.String })
     email?: string
@@ -27,10 +27,10 @@ export class Vendor extends BaseSchema {
     fax?: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    address: string
+    address!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    contactPerson: string
+    contactPerson!: string
 
     @Prop({ type: SchemaTypes.String })
     remark?: string

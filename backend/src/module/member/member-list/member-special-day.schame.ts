@@ -6,16 +6,16 @@ export type MemberDocument = HydratedDocument<MemberSpecialDay>
 @Schema()
 export class MemberSpecialDay extends BaseSchema {
     @Prop({ type: Types.ObjectId, required: true })
-    memberId: Types.ObjectId
+    memberId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String })
-    name: string
+    name!: string
 
     @Prop({ type: SchemaTypes.Date })
-    date: string
+    date!: string
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 }
 
 export const MemberSpecialDaySchema = SchemaFactory.createForClass(MemberSpecialDay)

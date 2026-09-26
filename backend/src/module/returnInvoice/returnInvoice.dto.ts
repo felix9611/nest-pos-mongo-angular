@@ -45,192 +45,192 @@ export interface InvoiceListRequestDto {
 
 export class CreateReturnInvoiceItemBody {
     @ApiProperty({ description: 'Return Invoice Id' })
-    returnInvoiceId: string
+    returnInvoiceId!: string
 
     @ApiProperty({ description: 'Product Id' })
-    productId: string
+    productId!: string
 
     @ApiProperty({ description: 'Quantity' })
-    qty: number
+    qty!: number
 
     @ApiProperty({ description: 'Price' })
-    price: number
+    price!: number
 
     @ApiProperty({ description: 'Tax Type' })
-    taxType: string
+    taxType?: string
 
     @ApiProperty({ description: 'Tax Code' })
-    taxCode: string
+    taxCode?: string
 
     @ApiProperty({ description: 'Tax Rate' })
-    taxRate: number
+    taxRate?: number
 
     @ApiProperty({ description: 'Tax Amount' })
-    taxAmount: number
+    taxAmount?: number
 }
 
 export class CreateReturnInvoiceBody {
     @ApiProperty({ description: 'Return Invoice Number' })
-    returnInvoiceNo: string
+    returnInvoiceNo!: string
 
     @ApiProperty({ description: 'Return Reason' })
-    returnReason: string
+    returnReason!: string
 
     @ApiProperty({ description: 'Return Location Id' })
-    returnLocationId: string
+    returnLocationId!: string
 
     @ApiProperty({ description: 'Return Detail'})
-    returnDatail: string
+    returnDatail!: string
 
     @ApiProperty({ description: 'Return Method' })
-    returnMethod: string
+    returnMethod!: string
 
     @ApiProperty({ description: 'Process Method' })
-    processMethod: string
+    processMethod!: string
 
     @ApiProperty({ description: 'Refund or not' })
-    refund: boolean
+    refund?: boolean
 
     @ApiProperty({ description: 'Refund Amount' })
-    refundAmount:  number
+    refundAmount!:  number
 
     @ApiProperty({ description: 'Refund Method' })
-    refundMethod: string
+    refundMethod!: string
 
     @ApiProperty({ description: 'Return To Vendor or not' })
-    returnToVendor: boolean
+    returnToVendor?: boolean
 
     @ApiProperty({ description: 'Return Items', type: CreateReturnInvoiceItemBody, isArray: true })
-    returnItems: CreateReturnInvoiceItemBody[]
+    returnItems?: CreateReturnInvoiceItemBody[]
 }
 
 export class MainReturnInvoiceBody {
     @ApiProperty({ description: 'Invoice Number' })  
-    invoiceNumber: string
+    invoiceNumber!: string
 
     @ApiProperty({ description: 'Return Date' })
-    returnDate: string
+    returnDate!: string
 
     @ApiProperty({ description: 'Return Reason' })
-    returnReason: string
+    returnReason!: string
 
     @ApiProperty({ description: 'Return Location Id' })
-    returnLocationId: string
+    returnLocationId!: string
 
     @ApiProperty({ description: 'Return Case Number' })
-    returnCaseNumber: string
+    returnCaseNumber!: string
 
     @ApiProperty({ description: 'Return Detail'})
-    returnDatail: string
+    returnDatail!: string
 
     @ApiProperty({ description: 'Return Method' })
-    returnMethod: string
+    returnMethod!: string
 
     @ApiProperty({ description: 'Process Method' })
-    processMethod: string
+    processMethod!: string
 
     @ApiProperty({ description: 'Refund or not' })
-    refund: boolean
+    refund?: boolean
 
     @ApiProperty({ description: 'Refund Amount' })
-    refundAmount: number
+    refundAmount?: number
 
     @ApiProperty({ description: 'Refund Method' })
-    refundMethod: string
+    refundMethod?: string
 
     @ApiProperty({ description: 'Return To Vendor or not' })
-    returnToVendor: boolean
+    returnToVendor?: boolean
 
     @ApiProperty({ description: 'Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class DetailReturnInvoiceItemBody {
     @ApiProperty({ description: 'Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Return Main Data Id' })
-    returnDataId: string
+    returnDataId!: string
     
     @ApiProperty({ description: 'Return Invoice Id' })
-    returnInvoiceId: string
+    returnInvoiceId!: string
     
     @ApiProperty({ description: 'Product Id' })
-    productId: string
+    productId!: string
     
     @ApiProperty({ description: 'Quantity' })
-    qty: number
+    qty!: number
     
     @ApiProperty({ description: 'Price' })
-    price: number
+    price!: number
     
     @ApiProperty({ description: 'Tax Type' })
-    taxType: string
+    taxType?: string
     
     @ApiProperty({ description: 'Tax Code' })
-    taxCode: string
+    taxCode?: string
     
     @ApiProperty({ description: 'Tax Rate' })
-    taxRate: number
+    taxRate?: number
     
     @ApiProperty({ description: 'Tax Amount' })
-    taxAmount: number 
+    taxAmount?: number 
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 
     @ApiProperty({ description: 'Product Data', type: PureProductBody })
-    product: PureProductBody
+    product?: PureProductBody
 }
 
 export class DetailReturnInvoiceBody extends MainReturnInvoiceBody {
     @ApiProperty({ description: 'Invoice Data', type: InvoiceBody })
-    invoice: InvoiceBody
+    invoice!: InvoiceBody
 
     @ApiProperty({ description: 'Member Data', type: MemberBody })
-    member: MemberBody
+    member!: MemberBody
 
     @ApiProperty({ description: 'Return Items', type: DetailReturnInvoiceItemBody })
-    returnItems:DetailReturnInvoiceItemBody
+    returnItems?:DetailReturnInvoiceItemBody
 }
 
 export class ReturnInvoiceBody extends MainReturnInvoiceBody {
     @ApiProperty({ description: 'Location Data', type: LocationBody })
-    location: LocationBody
+    location?: LocationBody
 }
 
 export class ReturnInvoiceListResponseBody extends CommonPageAndListResponse {
     @ApiProperty({ description: 'Return Invoice Data', type: ReturnInvoiceBody, isArray: true })
-    lists: ReturnInvoiceBody[]
+    lists?: ReturnInvoiceBody[]
 }
 
 export class ReturnInvoiceListRequestBody extends CommonPageAndList {
     @ApiProperty({ description: 'Case Number' })
     @IsOptional()
-    caseNumber: string
+    caseNumber?: string
 
     @ApiProperty({ description: 'Invoice Number' })
     @IsOptional()
-    invoiceNumber: string
+    invoiceNumber?: string
 
     @ApiProperty({ description: 'Date Range', isArray: true })
     @IsOptional()
-    dateRange: string
+    dateRange?: string
 }
 
 

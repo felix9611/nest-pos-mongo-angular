@@ -5,19 +5,19 @@ import { BaseSchema } from '../base/baseSchema'
 export type InvoicePaymentDocument = HydratedDocument<InvoicePayment>
 @Schema()
 export class InvoicePayment {
-    _id: Types.ObjectId
+    _id!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true })
-    invoiceId: Types.ObjectId
+    invoiceId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String, required: true })
-    method: string
+    method!: string
 
     @Prop({ type: SchemaTypes.Double, required: true })
-    amount: number
+    amount!: number
 
     @Prop({ type: SchemaTypes.Date, required: true })
-    paymentTime: string
+    paymentTime!: string
 }
 
 export const InvoicePaymentSchema = SchemaFactory.createForClass(InvoicePayment)

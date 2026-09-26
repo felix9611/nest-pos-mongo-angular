@@ -5,19 +5,19 @@ import { HydratedDocument, SchemaTypes, Types } from 'mongoose'
 export type SysUserDocument = HydratedDocument<LoginRecord>
 @Schema()
 export class LoginRecord {
-    _id: Types.ObjectId
+    _id!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String, required: true })
-    username: string
+    username!: string
 
     @Prop({ type: SchemaTypes.Date, required: true })
-    loginTime: string
+    loginTime!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    loginStatus: string
+    loginStatus!: string
 
     @Prop({ type: SchemaTypes.String })
-    ipAddress: string
+    ipAddress?: string
 }
 
 export const LoginRecordSchema = SchemaFactory.createForClass(LoginRecord)

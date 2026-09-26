@@ -4,59 +4,59 @@ import { SysRoleBody } from '../sys-role/role.dto'
 
 export class LoginBody {
     @ApiProperty({ description: 'Username' })
-    username: string
+    username!: string
 
     @ApiProperty({ description: 'Password' })
-    password: string
+    password!: string
 
     @ApiProperty({ description: 'IP Address' })
-    ipAddress: string
+    ipAddress!: string
 }
 
 export class TokenBody {
     @ApiProperty({ description: 'Token' })
-    accessToken: string
+    accessToken!: string
 }
 
 export class VerifyTokenRes {
     @ApiProperty({ description: 'Token', example: true })
-    status: boolean
+    status!: boolean
 }
 
 export class UserDetailDto {
     @ApiProperty({ description: 'ID' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Username' })
-    username: string
+    username!: string
 
     @ApiProperty({ description: 'Base64 data of avatar' })
-    avatarBase64: string
+    avatarBase64?: string
 
     @ApiProperty({ description: 'Department ID' })
-    deptId: string
+    deptId!: string
     
     @ApiProperty({ description: 'Email Address' })
-    email: string
+    email!: string
 
     @ApiProperty({ description: 'User Roles ID List', example: [] })
-    roles: any[]
+    roles?: any[]
 
     @ApiProperty({ description: 'Date Time ofLast Login' })
-    lastLogin: string
+    lastLogin?: string
 
     @ApiProperty({ description: 'User Status' })
-    status: number
+    status!: number
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: 'Department'})
-    department: DepartmentBody
+    department!: DepartmentBody
 
     @ApiProperty({ description: 'Role Lists', type: SysRoleBody, isArray: true})
-    roleLists: SysRoleBody[]
+    roleLists!: SysRoleBody[]
 }
