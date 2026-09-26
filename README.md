@@ -48,8 +48,8 @@
 <h2>⚙️ Tech Stack</h2>
 <h3>Frontend:</h3>
 <ul>
-  <li>Angular 19.2</li>
-  <li>Node.js 20</li>
+  <li>Angular 22</li>
+  <li>Node.js 22</li>
   <li>Typescript</li>
   <li>Tailwind CSS</li>
   <li>Canvas.js 3.12.5</li>
@@ -57,8 +57,8 @@
 </ul>
 <h3>Backend:</h3>
 <ul>
-  <li>Nest.js 11.0</li>
-  <li>Mongoose 8.12.1 for database interaction</li>
+  <li>Nest.js 12.0</li>
+  <li>Mongoose 9.10 for database interaction</li>
   <li>MongoDB v8.0</li>
   <li>Nest.js OpenAPI UI 11.0 for API documentation</li>
 </ul>
@@ -124,4 +124,10 @@ http://localhost:4200
   <li><strong>Improved Business Operations</strong> with real-time inventory tracking and reporting.</li>
   <li><strong>Enhanced Data Security</strong> through JWT-based user authentication.</li>
   <li><strong>Reduced Costs</strong> by eliminating the need for on-premise installations.</li>
+</ul>
+
+<h2>Version Update Note</h2>
+<ul>
+  <li><strong>Node updated to version 22 at 24 Sep 2026</strong></li>
+  <li><strong>Please remove package lock files and folder node_modules both Backend & Frontend folder, and reinstall node_modules</li>
 </ul>
