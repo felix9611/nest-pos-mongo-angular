@@ -37,8 +37,8 @@
                 <tr *ngFor="let data of dataTable.data">
                     <td>{{ data.product.productCode }}</td>
                     <td>{{ data.product.productName }}</td>
-                    <td>{{ data.locFromData && data.locFromData.placeName ?? '' }}</td>
-                    <td>{{ data.locToData &&data.locToData.placeName ?? '' }}</td>
+                    <td>{{ (data.locFromData && data.locFromData.placeName) ?? '' }}</td>
+                    <td>{{ (data.locToData && data.locToData.placeName) ?? '' }}</td>
                     <td>{{ data.qty }}</td>
                     <td>{{ dateFormat(data.createdAt) }}</td>
                 </tr>

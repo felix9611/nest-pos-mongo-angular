@@ -15,8 +15,6 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
 import { Subscription } from 'rxjs'
-import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
-import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { InvoiceListRequestDto } from './interface'
 
@@ -33,9 +31,7 @@ import { InvoiceListRequestDto } from './interface'
         NzTableModule, 
         NzInputModule, 
         NzPaginationModule,
-        NzDatePickerModule,
-        DownloadExcelTemplateComponent,
-        UploadDialogComponent
+        NzDatePickerModule
     ],
     templateUrl: './invoice-list.component.html',
     styleUrl: './invoice-list.component.css',
