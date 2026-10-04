@@ -159,7 +159,32 @@ export class ProductTypeService {
         }
     }
 
-    async listPageRole(request: ListproductTypeModelRequestDto) {
+    async listWithFilters(request: ListproductTypeModelRequestDto) {
+        const { name } = request
+
+        const filters = {
+            ...name? {
+                $or: [
+                    {
+                        typeName: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        typeCode: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        typeOtherName: { $regex: name, $options: 'i' }
+                    }
+                ],
+            } : {},
+            status: 1
+        }
+
+        const lists = await this.productTypeModel.find(filters).exec()
+
+        return lists
+    }
+
+    async listPage(request: ListproductTypeModelRequestDto) {
         const { page, limit, name } = request
 
         const skip = (page - 1) * limit
