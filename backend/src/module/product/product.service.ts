@@ -209,13 +209,91 @@ export class ProductService {
         }
     }
 
+    async listWithFilter(request: ListProductRequestDto) {
+        const { name, code, typeIds, deptIds } = request
+
+        const filters = {
+            ...name? { productName: { $regex: name, $options: 'i'} } : {},
+            ...code? { productCode: { $regex: code, $options: 'i'} } : {},
+            ...typeIds && typeIds.length > 0 ? { typeId: { $in: typeIds } } : {},
+            ...deptIds && deptIds.length > 0 ? { deptId: { $in: deptIds } } : {},
+            status: 1
+        }
+
+        const lists = await await this.productModel.aggregate([
+            {
+                $match: filters
+            },
+            {
+                $lookup: {
+                    from: 'departments', // Ensure correct collection name
+                    let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                    as: 'department'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'producttypes', // Ensure correct collection name
+                    let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
+                    as: 'producttype'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'vendors', // Ensure correct collection name
+                    let: { vendorIdStr: { $toObjectId: '$vendorId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$vendorIdStr'] } } }],
+                    as: 'vendor'
+                }
+            },
+            { 
+                $addFields: { 
+                    productCodeInt: { $toInt: "$productCode" } 
+                } 
+            },
+            { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$producttype', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$vendor', preserveNullAndEmptyArrays: true } },
+            { $sort: { productCodeInt: 1 } } 
+        ]).exec()
+
+        const newLists = lists.map((item: any) => {
+            const { department, producttype, vendor, ..._item } = item
+
+            return {
+                ..._item,
+                deptCode: department?.deptCode || '',
+                deptName: department?.deptName || '',
+                typeCode: producttype?.typeCode || '',
+                typeName: producttype?.typeName || '',
+                vendorCode: vendor?.vendorCode || '',
+                vendorName: vendor?.vendorName || '',
+                vendorOtherName: vendor?.vendorOtherName || '',
+                vendorType: vendor?.type || '',
+                vendorEmail: vendor?.email || '',
+                vendorPhone: vendor?.phone || '',
+                vendorFax: vendor?.fax || '',
+                vendorAddress: vendor?.address || '',
+                vendorContactPerson: vendor?.contactPerson || '',
+                vendorRemark: vendor?.remark || ''
+            }
+        })
+
+        return newLists
+    }
+
     async listPage(request: ListProductRequestDto) {
-        const { page, limit, name } = request
+        const { page, limit, name, code, typeIds, deptIds } = request
 
         const skip = (page - 1) * limit
 
         const filters = {
             ...name? { productName: { $regex: name, $options: 'i'} } : {},
+            ...code? { productCode: { $regex: code, $options: 'i'} } : {},
+            ...typeIds && typeIds.length > 0 ? { typeId: { $in: typeIds } } : {},
+            ...deptIds && deptIds.length > 0 ? { deptId: { $in: deptIds } } : {},
             status: 1
         }
 

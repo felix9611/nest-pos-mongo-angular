@@ -68,6 +68,15 @@ export class ProductController {
         return this.productService.findAll()
     }
 
+    @ApiOperation({ summary: 'List with filter' })
+    @ApiBody({ type: ListPageProductRequestBody })
+    @ApiResponse({ description: 'If successful', status: 201, type: ListPageProductResponse })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() req: ListProductRequestDto) {
+        return this.productService.listWithFilter(req)
+    }
+
     @ApiOperation({ summary: 'Page and list for Product' })
     @ApiBody({ type: ListPageProductRequestBody })
     @ApiResponse({ description: 'If successful', status: 201, type: ListPageProductResponse })

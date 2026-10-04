@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs'
 import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
 import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { DownloadExcelDataComponent } from '../../../components/download-excel-component/download-excel-data-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -36,7 +37,8 @@ import { NzMessageService } from 'ng-zorro-antd/message'
         QRcodeComponent,
         NzDatePickerModule,
         DownloadExcelTemplateComponent,
-        UploadDialogComponent
+        UploadDialogComponent,
+        DownloadExcelDataComponent
     ],
     templateUrl: './product-list.component.html',
     styleUrl: './product-list.component.css',
@@ -60,7 +62,7 @@ export class ProductListComponent {
                  // keep default value
             }
             this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
-         //   this.preLoadExcelSetting()
+            this.preLoadExcelSetting()
         })
     }
 
