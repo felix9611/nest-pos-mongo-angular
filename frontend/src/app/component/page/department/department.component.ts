@@ -17,6 +17,7 @@ import { findMenuItem } from '../../tool-function'
 import { Subscription } from 'rxjs'
 import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
 import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
+import { DownloadExcelDataComponent } from '../../components/download-excel-component/download-excel-data-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -31,7 +32,8 @@ import { UploadDialogComponent } from '../../components/upload-dialog-component/
         NzInputModule, 
         NzPaginationModule,
         DownloadExcelTemplateComponent,
-        UploadDialogComponent
+        UploadDialogComponent,
+        DownloadExcelDataComponent
     ],
     templateUrl: './department.component.html',
     styleUrl: './department.component.css',
