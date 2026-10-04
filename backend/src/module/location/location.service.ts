@@ -159,7 +159,55 @@ export class LocationService {
         }
     }
 
-    async listPageRole(request: ListLocationRequestDto) {
+    async listWithFilter(request: ListLocationRequestDto) {
+        const { name, place, contact } = request
+
+        const filters = {
+            ...name? {
+                $or: [
+                    {
+                        placeName: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        placeCode: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        placeOtherName: { $regex: name, $options: 'i' }
+                    }
+                ],
+            } : {},
+            ...place ? {
+                $or: [
+                    {
+                        country: { $regex: place, $options: 'i' }
+                    },
+                    {
+                        address: { $regex: place, $options: 'i' }
+                    },
+                    {
+                        zipCode: { $regex: place, $options: 'i' }
+                    },
+                ]
+            } : {},
+            ...contact ? {
+                $or: [
+                    {
+                        phone: { $regex: contact, $options: 'i' }
+                    },
+                    {
+                        fax: { $regex: contact, $options: 'i' }
+                    }
+                ]
+            } : {},
+            status: 1
+        }
+
+        const lists = await this.locationModel.find(filters).exec()
+
+        return lists
+    }
+
+    async listPage(request: ListLocationRequestDto) {
         const { page, limit, name, place, contact } = request
 
         const skip = (page - 1) * limit
