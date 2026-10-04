@@ -43,13 +43,22 @@ export class TaxInformationController {
     return this.taxInformationService.findAll()
   }
 
+  @ApiOperation({ summary: 'List with filter'})
+  @ApiBody({ type: TaxInformationListQuery })
+  @ApiResponse({ description: 'If successful', status: 201, type: TaxInformationListQueryRes })
+  @Post('filter/list')
+  @UseGuards(AuthGuard)
+  async listWithFilter(@Body() req: TaxInformationListSearchDto) {
+    return this.taxInformationService.listWithFilter(req)
+  }
+
   @ApiOperation({ summary: 'Page and list'})
   @ApiBody({ type: TaxInformationListQuery })
   @ApiResponse({ description: 'If successful', status: 201, type: TaxInformationListQueryRes })
   @Post('list')
   @UseGuards(AuthGuard)
   async listAndPage(@Body() req: TaxInformationListSearchDto) {
-    return this.taxInformationService.listAssetTypeBySearch(req)
+    return this.taxInformationService.listPage(req)
   }
 
   @ApiOperation({ summary: 'Void one by ID' })
