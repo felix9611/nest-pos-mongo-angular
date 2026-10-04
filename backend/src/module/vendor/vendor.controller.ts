@@ -52,6 +52,15 @@ export class VendorController {
     async getAll() {
         return this.vendorService.findAll()
     }
+
+    @ApiOperation({ summary: 'List with filter'})
+    @ApiBody({ type: ListVendorQuery })
+    @ApiResponse({ description: 'If successful', status: 201, type: ListVendorQueryRes })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() req: ListVendorRequestDto) {
+        return this.vendorService.listWithFilter(req)
+    }
     
     @ApiOperation({ summary: 'Page and list'})
     @ApiBody({ type: ListVendorQuery })
@@ -59,7 +68,7 @@ export class VendorController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListVendorRequestDto) {
-        return this.vendorService.listPageRole(req)
+        return this.vendorService.listPage(req)
     }
 
     @ApiOperation({ summary: 'Batch to Create Vendor' })
