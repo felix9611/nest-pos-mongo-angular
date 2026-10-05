@@ -124,6 +124,60 @@ export class ReturnInvoiceService {
 
     }
 
+    async listWithFilter(req: InvoiceListRequestDto) {
+        const { caseNumber, invoiceNumber, dateRange } = req
+
+        const filter = {
+            ...caseNumber? { returnCaseNumber: { $regex: caseNumber, $options: 'i' } } : {},
+            ...invoiceNumber? { invoiceNumber: { $regex: invoiceNumber, $options: 'i' } } : {},
+            ...dateRange? { returnDate: { $gte: dateRange[0], $lte: dateRange[1] } } : {}
+        }
+
+        const lists = await this.returnInvoiceModel.aggregate([
+            { $match: filter },
+            {
+                $lookup: {
+                    from: 'invoices', // Ensure correct collection name
+                    let: { invoiceNumberStr: '$invoiceNumber' }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$number', '$$invoiceNumberStr'] } } }],
+                    as: 'invoice'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'locations', // Ensure correct collection name
+                    let: { locationIdStr: { $toObjectId: '$returnLocationId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$locationIdStr'] } } }],
+                    as: 'location'
+                }
+            },
+            { $unwind: { path: '$invoice', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+            {
+                $sort: {
+                    returnDate:-1 // 1 for ascending, -1 for descending
+                }
+            }
+        ]).exec()
+
+        const newLists = lists.map((item) => {
+            return {
+                ...item,
+                refund: item.refund ? 'Yes' : 'No',
+                returnToVendor: item.refund ? 'Yes' : 'No',
+                taxRefNo: item.invoice?.taxRefNo ?? '',
+                paidAmount: item.invoice?.totalAmount ?? 0,
+                paidAmountWithTax: item.invoice?.taxTotal ?? 0,
+                invoiceRemark: item.invoice?.remark ?? '',
+                invoiceCreatedAt: item.invoice?.createdAt ?? '',
+                placeName: item.location?.placeName ?? '',
+                placeCode: item.location?.placeCode ?? '',
+            }
+        })
+
+        return newLists
+    }
+
     async listPage(req: InvoiceListRequestDto) {
         const { page, limit, caseNumber, invoiceNumber, dateRange } = req
 
@@ -140,12 +194,21 @@ export class ReturnInvoiceService {
             { $match: filter },
             {
                 $lookup: {
+                    from: 'invoices', // Ensure correct collection name
+                    let: { invoiceNumberStr: '$invoiceNumber' }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$number', '$$invoiceNumberStr'] } } }],
+                    as: 'invoice'
+                }
+            },
+            {
+                $lookup: {
                     from: 'locations', // Ensure correct collection name
                     let: { locationIdStr: { $toObjectId: '$returnLocationId' } }, // Convert deptId to ObjectId
                     pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$locationIdStr'] } } }],
                     as: 'location'
                 }
             },
+            { $unwind: { path: '$invoice', preserveNullAndEmptyArrays: true } },
             { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
             {
                 $sort: {
