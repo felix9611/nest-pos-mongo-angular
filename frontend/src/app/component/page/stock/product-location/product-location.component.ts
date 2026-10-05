@@ -36,20 +36,10 @@ export class ProductLocationListComponent {
     private rightSubscription: Subscription
 
     constructor(
-        private routeTo: Router,
         private userStoreService: UserStoreService,
-        private message: NzMessageService,
     ) {
         this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Product Location', 'product-location-lists')
-            this.userRightInside = {
-                read: answer?.read ?? false,
-                write: answer.write ?? false,
-                update: answer.update ?? false,
-                delete: answer.delete ?? false,
-                upload: answer.upload ?? false
-                         // keep default value
-            }
             this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
             this.preLoadExcelSetting()
         })
@@ -70,13 +60,6 @@ export class ProductLocationListComponent {
         code: ''
     }
     
-    userRightInside: any = {
-        read: false,
-        write: false,
-        update: false,
-        delete: false
-    }
-
     searchForm: ListProductLocationtRequestDto = {
         page: 1,
         limit: 10
