@@ -48,8 +48,8 @@
 <h2>⚙️ Tech Stack</h2>
 <h3>Frontend:</h3>
 <ul>
-  <li>Angular 22</li>
-  <li>Node.js 22</li>
+  <li>Angular 21</li>
+  <li>Node.js 24</li>
   <li>Typescript</li>
   <li>Tailwind CSS</li>
   <li>Canvas.js 3.12.5</li>
