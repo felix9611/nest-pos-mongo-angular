@@ -282,12 +282,67 @@ export class ProductLocationService {
         }
     }
 
+    async listWithFilter(req: ListProductLocationtRequestDto) {
+        const { locationIds, assetCode } = req
+
+        const filters = {
+            ...locationIds && locationIds.length > 0 ? { locationId: { $in: locationIds} } : {},
+            ...assetCode ? { assetCode } : {}
+        }
+
+        const lists = await await this.productLocationModel.aggregate([
+            {
+                $match: filters
+            },
+            {
+                $lookup: {
+                    from: 'products', // Ensure correct collection name
+                    let: { productIdStr: { $toObjectId: '$productId' } }, // Convert deptId to ObjectId
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$productIdStr'] } } },
+                        ...assetCode ? [{ $match: { assetCode }}] : []
+                    ],
+                    as: 'product'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'locations', // Ensure correct collection name
+                    let: { locationIdStr: { $toObjectId: '$locationId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$locationIdStr'] } } }],
+                    as: 'location'
+                }
+            },
+            { $unwind: { path: '$product', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+        ]).exec()
+
+        const newLists = lists.map((item: any) => {
+            return {
+                ...item,
+                productCode: item.product?.productCode,
+                productName: item.product?.productName,
+                itemCode: item.product?.itemCode,
+                brandCode: item.product?.brandCode,
+                brandName: item.product?.brandName,
+                costPrice: item.product?.costPrice,
+                retailPrice: item.product?.retailPrice,
+                unit: item.product?.unit,
+                placeCode: item.location?.placeCode,
+                placeName: item.location?.placeName,
+            }
+        })
+
+        return newLists
+    }
+
     async listPage(req: ListProductLocationtRequestDto) {
         const { page, limit, locationIds, assetCode } = req
 
         const skip = (page - 1) * limit
 
         const filters = {
+            ...assetCode ? { assetCode } : {},
             ...locationIds && locationIds.length > 0 ? { locationId: { $in: locationIds} } : {}
         }
 

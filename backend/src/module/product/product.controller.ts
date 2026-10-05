@@ -123,6 +123,15 @@ export class ProductController {
         return await this.productLocationService.stockMove(data)
     }
 
+    @ApiOperation({ summary: 'Page with filter for Product Location' })
+    @ApiBody({ type: ListPageProductLocationRequest })
+    @ApiResponse({ description: 'If successful', status: 201, type: ListPageProductLocationResponse })
+    @Post('filter/location-list')
+    @UseGuards(AuthGuard)
+    async locationListWithFilter(@Body() data: ListProductLocationtRequestDto) {
+        return await this.productLocationService.listWithFilter(data)
+    }
+
     @ApiOperation({ summary: 'Page and list for Product Location' })
     @ApiBody({ type: ListPageProductLocationRequest })
     @ApiResponse({ description: 'If successful', status: 201, type: ListPageProductLocationResponse })
