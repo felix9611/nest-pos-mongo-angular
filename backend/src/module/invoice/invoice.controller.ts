@@ -41,6 +41,15 @@ export class InvoiceController {
         return await this.invoiceService.getOneByNumber(number)
     }
 
+    @ApiOperation({ summary: 'List Invoice with filter' })
+    @ApiBody({ type: ListInvoiceQueryReq })
+    @ApiResponse({ description: 'Result', status: 201, type: ListInvoiceQueryRes })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() req: InvoiceListRequestDto) {
+        return this.invoiceService.listWithFilter(req)
+    }
+
     @ApiOperation({ summary: 'List Invoice' })
     @ApiBody({ type: ListInvoiceQueryReq })
     @ApiResponse({ description: 'Result', status: 201, type: ListInvoiceQueryRes })

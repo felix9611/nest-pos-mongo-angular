@@ -247,6 +247,57 @@ export class InvoiceService {
         }
     }
 
+    async listWithFilter(req: InvoiceListRequestDto) {
+        const { number, dateRange } = req
+
+        const filter = {
+            ...(number ? { number: { $regex: number, $options: 'i' } } : {}),
+            ...(dateRange && dateRange.length > 0 ? {  createdAt: { $gte: new Date(dateRange[0]), $lte: new Date(dateRange[1]) } } : {})
+        }
+
+        const lists = await this.invoiceModel.aggregate([
+             {
+                $match: filter
+            },
+            {
+                $lookup: {
+                    from: 'locations', // Ensure correct collection name
+                    let: { locationIdStr: { $toObjectId: '$locationId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$locationIdStr'] } } }],
+                    as: 'location'
+                }
+            },
+            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+            {
+                $addFields: {
+                  invoiceNum: {
+                    $toInt: {
+                      $arrayElemAt: [
+                        { $split: ['$number', 'INV-'] },
+                        1
+                      ]
+                    }
+                  }
+                }
+            },
+            {
+                $sort: {
+                    invoiceNum: -1 // 1 for ascending, -1 for descending
+                }
+            },
+        ]).exec()
+
+        const newLists = lists.map((item) => {
+            return {
+                ...item,
+                locationCode: item.location?.placeCode ?? '',
+                locationName: item.location?.placeName ?? ''
+            }
+        })
+
+        return newLists
+    }
+
     async listPage(req: InvoiceListRequestDto) {
         const { page, limit, number, dateRange } = req
         const skip = (page - 1) * limit
