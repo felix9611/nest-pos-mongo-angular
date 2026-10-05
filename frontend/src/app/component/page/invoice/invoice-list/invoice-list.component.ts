@@ -17,6 +17,7 @@ import { findMenuItem } from '../../../tool-function'
 import { Subscription } from 'rxjs'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { InvoiceListRequestDto } from './interface'
+import { DownloadExcelDataComponent } from '../../../components/download-excel-component/download-excel-data-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -31,7 +32,8 @@ import { InvoiceListRequestDto } from './interface'
         NzTableModule, 
         NzInputModule, 
         NzPaginationModule,
-        NzDatePickerModule
+        NzDatePickerModule,
+        DownloadExcelDataComponent
     ],
     templateUrl: './invoice-list.component.html',
     styleUrl: './invoice-list.component.css',
@@ -54,8 +56,17 @@ export class InvoiceListComponent {
                 upload: answer.upload ?? false
                  // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
     }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
 
     ngOnDestroy() {
         if (this.userStoreService.menuRole$) {
@@ -117,5 +128,11 @@ export class InvoiceListComponent {
             this.loadInvoiceLists()
             this.removeDialog = true
         }
+    }
+
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
 }

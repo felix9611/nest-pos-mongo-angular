@@ -53,6 +53,16 @@ export class CodeTypeController {
     async getAll() {
         return this.codeTypeService.findAll()
     }
+
+    @ApiOperation({ summary: 'List with filter'})
+    @ApiBody({ type: ListCodeTypeQuery })
+    @ApiResponse({ description: 'If successful', status: 201, type: ListCodeTypeQueryRes })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() req: ListCodeTypeRequestDto) {
+        return this.codeTypeService.listWithFilter(req)
+    }
+
     
     @ApiOperation({ summary: 'Page and list'})
     @ApiBody({ type: ListCodeTypeQuery })
@@ -60,7 +70,7 @@ export class CodeTypeController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListCodeTypeRequestDto) {
-        return this.codeTypeService.listPageRole(req)
+        return this.codeTypeService.listPage(req)
     }
 
     @ApiOperation({ summary: 'Get data by type'})

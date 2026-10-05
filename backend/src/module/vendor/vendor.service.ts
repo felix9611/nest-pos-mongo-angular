@@ -153,7 +153,48 @@ export class VendorService {
         }
     }
 
-    async listPageRole(request: ListVendorRequestDto) {
+    async listWithFilter(req: ListVendorRequestDto) {
+        const { name, place, contact } = req
+
+        const filters = {
+                ...name ? {
+                    $or: [
+                        {
+                            vendorName: { $regex: name, $options: 'i' }
+                        },
+                        {
+                            vendorCode: { $regex: name, $options: 'i' }
+                        },
+                        {
+                            contactPerson: { $regex: name, $options: 'i' }
+                        }
+                    ]
+                } : {},
+                ...place ? {
+                    address: { $regex: place, $options: 'i' }
+                } : {},
+                ...contact ? {
+                    $or: [
+                        {
+                            email: { $regex: contact, $options: 'i' }
+                        },
+                        {
+                            phone: { $regex: contact, $options: 'i' }
+                        },
+                        {
+                            fax: { $regex: contact, $options: 'i' }
+                        }
+                    ]
+                } : {},
+                status: 1
+            }
+    
+        const lists = await this.vendorModel.find(filters).exec()
+
+        return lists
+    }
+
+    async listPage(request: ListVendorRequestDto) {
             const { page, limit, name, place, contact } = request
     
             const skip = (page - 1) * limit

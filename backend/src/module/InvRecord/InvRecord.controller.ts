@@ -17,8 +17,17 @@ export class InventoryRecordController {
     @ApiResponse({ description: 'Return', status: 201, type: ListInvRecordRes })
     @Post('list')
     @UseGuards(AuthGuard)
-    async create(@Body() dto: ListInvRecordDto) {
+    async listPage(@Body() dto: ListInvRecordDto) {
         return await this.invRecordService.listPage(dto)
+    }
+
+    @ApiOperation({ summary: 'List with filter' })
+    @ApiBody({ type: ListInvRecordReq })
+    @ApiResponse({ description: 'Return', status: 201, type: ListInvRecordRes })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() dto: ListInvRecordDto) {
+        return await this.invRecordService.listWithFilter(dto)
     }
 
     @ApiOperation({ summary: 'For dashboard query' })

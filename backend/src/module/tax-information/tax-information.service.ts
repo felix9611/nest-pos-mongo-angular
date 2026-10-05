@@ -201,7 +201,45 @@ export class TaxInformationService {
         }).exec()
     }
 
-    async listAssetTypeBySearch(req: TaxInformationListSearchDto) {
+    async listWithFilter(req: TaxInformationListSearchDto) {
+        const { nameCode, tax } = req
+
+        const filters: any = {
+            ...nameCode? {
+                $or: [
+                    {
+                        nationCode: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        nationName: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        countryCode: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        countryName: { $regex: name, $options: 'i' }
+                    }
+                ]
+            } : {},
+            ...tax ? {
+                $or: [
+                    {
+                        taxCode: { $regex: name, $options: 'i' }        
+                    },
+                    {
+                        taxName: { $regex: name, $options: 'i' }
+                    }
+                ]
+            } : {},
+            status: 1
+        }
+
+        const lists: TaxInformation[] = await this.taxInformationModel.find(filters).exec()
+
+        return lists
+    }
+
+    async listPage(req: TaxInformationListSearchDto) {
         const { nameCode, tax, page, limit } = req
         const skip = (page - 1) * limit
 

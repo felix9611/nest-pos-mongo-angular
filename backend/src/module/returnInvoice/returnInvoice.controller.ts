@@ -30,6 +30,15 @@ export class ReturnInvoiceController {
         return await this.returnInvoiceService.getOneById(id)
     }
 
+    @ApiOperation({ summary: 'List with filter' })
+    @ApiBody({ type: ReturnInvoiceListRequestBody })
+    @ApiResponse({ description: 'If successful', status: 201, type: ReturnInvoiceListResponseBody })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() req: InvoiceListRequestDto) {
+        return this.returnInvoiceService.listWithFilter(req)
+    }
+
     @ApiOperation({ summary: 'Page and list' })
     @ApiBody({ type: ReturnInvoiceListRequestBody })
     @ApiResponse({ description: 'If successful', status: 201, type: ReturnInvoiceListResponseBody })

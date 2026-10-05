@@ -59,7 +59,15 @@ export class ProductTypeController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListproductTypeModelRequestDto) {
-        return this.productTypeService.listPageRole(req)
+        return this.productTypeService.listPage(req)
+    }
+
+    @ApiOperation({ summary: 'List with filters'})
+    @ApiResponse({ description: 'If successful', status: 201, type: ProductTypeBody, isArray: true })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilters(@Body() req: ListproductTypeModelRequestDto) {
+        return this.productTypeService.listWithFilters(req)
     }
 
     @ApiOperation({ summary: 'Import List of Asset Type' })

@@ -19,6 +19,7 @@ import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../..
 import { NzUploadModule } from 'ng-zorro-antd/upload'
 import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
+import { DownloadExcelDataComponent } from '../../../components/download-excel-component/download-excel-data-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -34,7 +35,8 @@ import { UploadDialogComponent } from '../../../components/upload-dialog-compone
         NzPaginationModule, 
         NzUploadModule,
         DownloadExcelTemplateComponent,
-        UploadDialogComponent
+        UploadDialogComponent,
+        DownloadExcelDataComponent
     ],
     templateUrl: './product-type.component.html',
     styleUrl: './product-type.component.css',
@@ -56,7 +58,7 @@ export class ProductTypeComponent {
                 // keep default value
             }
             this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
-           // this.preLoadExcelSetting()
+            this.preLoadExcelSetting()
         })
                     
     }

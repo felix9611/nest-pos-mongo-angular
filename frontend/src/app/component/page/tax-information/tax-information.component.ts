@@ -21,6 +21,7 @@ import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../to
 import { NzUploadModule } from 'ng-zorro-antd/upload'
 import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
 import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
+import { DownloadExcelDataComponent } from '../../components/download-excel-component/download-excel-data-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -39,7 +40,8 @@ import { DownloadExcelTemplateComponent } from '../../components/download-templa
         NzInputNumberModule, 
         NzUploadModule,
         DownloadExcelTemplateComponent,
-        UploadDialogComponent
+        UploadDialogComponent,
+        DownloadExcelDataComponent
     ],
     templateUrl: './tax-information.component.html',
     styleUrl: './tax-information.component.css',

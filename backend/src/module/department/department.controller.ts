@@ -52,6 +52,15 @@ export class DepartmentController {
     async getAll() {
         return this.deptService.findAll()
     }
+
+    @ApiOperation({ summary: 'Lsit with filter' })
+    @ApiBody({ type: ListDepartmentQuery })
+    @ApiResponse({ status: 200,  type: ListDepartmentQueryRes })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilters(@Body() req: ListDeptRequestDto) {
+        return this.deptService.listWithFilters(req)
+    }
     
     @ApiOperation({ summary: 'Lsit and page' })
     @ApiBody({ type: ListDepartmentQuery })
@@ -59,7 +68,7 @@ export class DepartmentController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListDeptRequestDto) {
-        return this.deptService.listPageRole(req)
+        return this.deptService.listPage(req)
     }
 
     @ApiOperation({ summary: 'Batch Create Department' })

@@ -53,13 +53,22 @@ export class LocationController {
         return this.locationService.findAll()
     }
 
+    @ApiOperation({ summary: 'List with filter'})
+    @ApiBody({ type: ListLocationQuery })
+    @ApiResponse({ description: 'If successful', status: 201, type: ListLocationQueryRes })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() req: ListLocationRequestDto) {
+        return this.locationService.listWithFilter(req)
+    }
+
     @ApiOperation({ summary: 'Page and list'})
     @ApiBody({ type: ListLocationQuery })
     @ApiResponse({ description: 'If successful', status: 201, type: ListLocationQueryRes })
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListLocationRequestDto) {
-        return this.locationService.listPageRole(req)
+        return this.locationService.listPage(req)
     }
 
     @ApiOperation({ summary: 'Batch Create' })

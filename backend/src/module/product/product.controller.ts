@@ -68,6 +68,15 @@ export class ProductController {
         return this.productService.findAll()
     }
 
+    @ApiOperation({ summary: 'List with filter' })
+    @ApiBody({ type: ListPageProductRequestBody })
+    @ApiResponse({ description: 'If successful', status: 201, type: ListPageProductResponse })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() req: ListProductRequestDto) {
+        return this.productService.listWithFilter(req)
+    }
+
     @ApiOperation({ summary: 'Page and list for Product' })
     @ApiBody({ type: ListPageProductRequestBody })
     @ApiResponse({ description: 'If successful', status: 201, type: ListPageProductResponse })
@@ -112,6 +121,15 @@ export class ProductController {
     @UseGuards(AuthGuard)
     async stockMove(@Body() data: StockMoveProductLocationDto) {
         return await this.productLocationService.stockMove(data)
+    }
+
+    @ApiOperation({ summary: 'Page with filter for Product Location' })
+    @ApiBody({ type: ListPageProductLocationRequest })
+    @ApiResponse({ description: 'If successful', status: 201, type: ListPageProductLocationResponse })
+    @Post('filter/location-list')
+    @UseGuards(AuthGuard)
+    async locationListWithFilter(@Body() data: ListProductLocationtRequestDto) {
+        return await this.productLocationService.listWithFilter(data)
     }
 
     @ApiOperation({ summary: 'Page and list for Product Location' })
