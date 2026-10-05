@@ -116,7 +116,7 @@ http://localhost:4200
 <ul>
   <li><strong>Database:</strong> <del>Mongodb Atlas</del><strong>New experiment!</strong> Self-hosted in My Raspberry Pi5 server</li>
   <li><strong>Backend:</strong> <del>AWS runing in Linux & Nginx</del> <strong>New experiment!</strong> Fullset self-hosted server power by my Raspberry Pi5 server</li>
-  <li><strong>Frontend:</strong> Koyeb OR Cloudflare Tunnel DNS + Raspberry Pi5 runing in Angualr SSR</li>
+  <li><strong>Frontend:</strong> Cloudflare Tunnel DNS + Raspberry Pi5 runing in Angualr SSR</li>
 </ul>
 
 <h2>📈 Business Impact</h2>
