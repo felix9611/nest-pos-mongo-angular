@@ -95,7 +95,6 @@ export class ProductListComponent {
         this.loadProductLists()
         this.loadTypeList()
         this.loadDeptList()
-        this.loadLocationList()
     }
 
     typeLists: any[] = []
@@ -106,11 +105,6 @@ export class ProductListComponent {
     deptLists: any[] = []
     async loadDeptList() {
         this.deptLists = await getApiWithAuth('/sys/department/getAll')
-    }
-
-    placeLists: any[] = []
-    async loadLocationList() {
-        this.placeLists = await getApiWithAuth('/base/location/getAll')
     }
 
     async loadProductLists() {
