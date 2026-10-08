@@ -25,19 +25,6 @@
                 <nz-select
                     nzSize="large"
                     class="w-full h-full" 
-                    name="placeId" 
-                    [(ngModel)]="searchForm.placeIds"  
-                    nzMode="multiple" nzAllowClear   nzShowArrow
-                     nzPlaceHolder="Location">
-                    @for (option of placeLists; track option) {
-                      <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
-                    }
-                </nz-select>
-            </div>
-            <div class="w-[150px] h-full">
-                <nz-select
-                    nzSize="large"
-                    class="w-full h-full" 
                     name="deptId" 
                     [(ngModel)]="searchForm.deptIds"  
                     nzMode="multiple" nzAllowClear  nzShowArrow
