@@ -60,7 +60,6 @@ export class LocationComponent {
             this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
             this.preLoadExcelSetting()
         })
-                    
     }
     
     ngOnDestroy() {
@@ -68,8 +67,6 @@ export class LocationComponent {
             this.rightSubscription.unsubscribe()
         }
     }
-    
-    
 
     userRightInside: any = {
         read: false,
@@ -114,14 +111,13 @@ export class LocationComponent {
         const url = this.editForm._id === '' ? '/base/location/create' : `/base/location/update`
 
         const res = await postApiWithAuth(url, {
-            
             ...this.editForm,
             ...this.editForm._id ? { _id: this.editForm._id} : {},
         })
 
-        if (res.msg) {
-            this.message.error(res.msg)
-        } else if (res.matchedCount === 1 || !res.msg) {
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (res.matchedCount === 1 || !res.error) {
             this.message.success('Save successful!')
             this.closeDialog()
             this.loadLocationLists()
@@ -167,13 +163,15 @@ export class LocationComponent {
 
     async handleRemove() {
         const url = `/base/location/remove/${this.handleRemoveId}`
-
         const res: any = await getApiWithAuth(url)
 
-        this.message.info(res.msg)
-
-        this.closeRemoveDialog()
-        this.loadLocationLists()
+        if (res.message) {
+            this.message.info(res.message)
+            this.loadLocationLists()
+            this.closeRemoveDialog()
+        } else {
+            this.message.error(res.error)
+        }
     }
 
 
@@ -183,9 +181,13 @@ export class LocationComponent {
 
     async getOneData(id:string) {
         const res = await getApiWithAuth(`/base/location/one/${id}`)
-        this.editForm = res
-        this.okText = 'Update'
-        this.showDialog()
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (!res.error) {
+            this.editForm = res
+            this.okText = 'Update'
+            this.showDialog()
+        }
     }
 
     excelFileSetting: any = {
@@ -199,5 +201,4 @@ export class LocationComponent {
         this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
         this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
-
 }
