@@ -20,7 +20,7 @@ export class ExcelFieldMatchService {
             return data
         } else {
             return {
-                msg: 'This setting may be invalidated! Please contact admin!'
+                error: 'This setting may be voided! Please contact admin!'
             }
         }
     }
@@ -32,7 +32,7 @@ export class ExcelFieldMatchService {
             return data
         } else {
             return {
-                msg: 'This setting may be invalidated! Please contact admin!'
+                error: 'This setting may be voided! Please contact admin!'
             }
         }
     }
@@ -53,7 +53,7 @@ export class ExcelFieldMatchService {
             })
 
             return {
-                msg: 'This RECORD has been invalidated! Please contact admin!'
+                error: 'This RECORD has been voided! Please contact admin!'
             }
         } else {
                 await this.excelFieldMatchModel.updateOne({ _id}, {
@@ -75,7 +75,7 @@ export class ExcelFieldMatchService {
                 })
 
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Invalidate successfully!'
                 }
 
         }
@@ -97,7 +97,7 @@ export class ExcelFieldMatchService {
             })
 
             return {
-                msg: 'This record already exist!'
+                error: 'This record already exist!'
             }
         } else {
 
@@ -160,10 +160,9 @@ export class ExcelFieldMatchService {
             })
 
             return {
-                msg: 'This record has been invalidated! Please contact admin!'
+               error: 'This record has been voided! Please contact admin!'
             }
         }
-
     }
 
     async listAndPage(req: ExcelFieldMatchListRequestDto) {
