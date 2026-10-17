@@ -104,9 +104,9 @@ export class CodeTypeComponent {
 
         const res = await postApiWithAuth(url, this.editForm)
 
-        if (res.msg) {
-            this.message.error(res.msg)
-        } else if (res.matchedCount === 1 || !res.msg) {
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (res.matchedCount === 1 || !res.error) {
             this.message.success('Save successful!')
             this.closeDialog()
             this.loadCodeTypeLists()
@@ -148,10 +148,13 @@ export class CodeTypeComponent {
 
         const res: any = await getApiWithAuth(url)
 
-        this.message.info(res.msg)
-
-        this.closeRemoveDialog()
-        this.loadCodeTypeLists()
+        if (res.message) {
+            this.message.info(res.message)
+            this.loadCodeTypeLists()
+            this.closeRemoveDialog()
+        } else {
+            this.message.error(res.error)
+        }
     }
 
 
@@ -161,9 +164,13 @@ export class CodeTypeComponent {
 
     async getOneData(id:string) {
         const res = await getApiWithAuth(`/base/code-type/one/${id}`)
-        this.editForm = res
-        this.okText = 'Update'
-        this.showDialog()
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (!res.error) {
+            this.editForm = res
+            this.okText = 'Update'
+            this.showDialog()
+        }
     }
 
     excelFileSetting: any = {
