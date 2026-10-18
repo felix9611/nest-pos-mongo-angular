@@ -130,11 +130,10 @@ export class StockInComponent implements OnInit {
     async submitForm() {
         this.reloadProductLocation = false
         const res = await postApiWithAuth('/product/product-list/stock-in', this.stockInForm)
-        if (res) {
-            this.message.success('Insert success!')
-            this.reloadProductLocation = true
+        if (res.error) {
+            this.message.error(res.error)
         } else {
-            this.message.error('Something error! Please try again!')
+            this.message.success('Insert success!')
             this.reloadProductLocation = true
         }
     }

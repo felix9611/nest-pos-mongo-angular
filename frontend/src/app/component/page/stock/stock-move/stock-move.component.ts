@@ -134,11 +134,10 @@ export class StockMoveComponent implements OnInit {
     async submitForm() {
         this.reloadProductLocation = false
         const res = await postApiWithAuth('/product/product-list/stock-move', this.stockInForm)
-        if (res) {
-            this.message.success('Stock out success!')
-            this.reloadProductLocation = true
+        if (res.error) {
+            this.message.error(res.error)
         } else {
-            this.message.error('Something error! Please try again!')
+            this.message.success('Stock out success!')
             this.reloadProductLocation = true
         }
     }
