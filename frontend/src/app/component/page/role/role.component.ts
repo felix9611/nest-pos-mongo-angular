@@ -131,6 +131,8 @@ export class RoleComponent implements OnInit{
             this.message.success('Save successful!')
             this.closeDialog()
             this.loadSysRoleLists()
+            
+            this.okText = 'Create'
         }
     }
 
