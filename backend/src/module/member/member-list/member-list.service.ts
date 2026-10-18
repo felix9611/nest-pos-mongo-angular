@@ -23,7 +23,7 @@ export class MemberService {
             
             if (!data) {
                 return {
-                    msg: 'This member has been invalidated! Please contact admin!'
+                    message: 'This member has been voided! Please contact admin!'
                 }
             }
     
@@ -36,8 +36,9 @@ export class MemberService {
                 memberSpecialDays: specialDays // Fallback to empty array if null
             }
         } catch (error) {
-            console.error('Error in getOneById:', error)
-            throw error // Or handle the error as needed
+            return {
+                error: 'Ooops! Something went wrong or this member has been voided! Please try again!'
+            }
         }
     }
 
@@ -94,9 +95,7 @@ export class MemberService {
                     await this.memberSpecialDayModel.insertMany(invoiceItemsData)
                 }
 
-                return {
-                    msg: 'Finish add member information!'
-                }
+                return res
             }
         }
     }
@@ -117,7 +116,7 @@ export class MemberService {
             })
 
             return {
-                msg: 'This member has been invalidated! Please contact admin!'
+                error: 'This member has been voided! Please contact admin!'
             }
         } else {
 
@@ -163,13 +162,11 @@ export class MemberService {
                     }
                 }
 
-                return {
-                    msg: 'Finish updatedc member information!'
-                }
+                return res
 
             } else {
                 return {
-                    msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
 
@@ -193,7 +190,7 @@ export class MemberService {
             })
 
             return {
-                msg: 'This Member Class has been invalidated! Please contact admin!'
+                error: 'This Member Class has been voided! Please contact admin!'
             }
         } else {
             const res = await this.memberModel.updateOne({ _id}, {
@@ -217,11 +214,11 @@ export class MemberService {
 
 
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Invalidate successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }
@@ -312,11 +309,11 @@ export class MemberService {
 
             if (res.modifiedCount === 1) {
                 return {
-                    msg: 'Invalidate successfully!'
+                    message: 'Invalidate successfully!'
                 }
             } else {
                 return {
-                    msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }

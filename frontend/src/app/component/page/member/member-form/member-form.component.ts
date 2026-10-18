@@ -94,7 +94,12 @@ export class MemberFormComponent implements OnInit {
     }
 
     async getOne() {
-        this.editForm = await getApiWithAuth(`/member/member-list/one/${this.theId}`)
+        const res = await getApiWithAuth(`/member/member-list/one/${this.theId}`)
+        if (res.error) {
+            this.message.error(res.error)
+        } else {
+            this.editForm = res
+        }
     }
 
     dateFormat(data: string) {
@@ -113,12 +118,14 @@ export class MemberFormComponent implements OnInit {
     async removeRowSpecialDay(index: number, id?: string) {
         if (id) {
             const res = await getApiWithAuth(`/member/member-list/special-day/remove/${id}`)
-            if (res) {
-                this.message.info(res.msg)
+            if (res.error) {
+                this.message.error(res.error)
+            } else {
+                this.editForm.memberSpecialDays.splice(index, 1)
             }
-            this.editForm.memberSpecialDays.splice(index, 1)
+            
         } else {
-            this.editForm.memberSpecialDays.splice(index, 1)
+            this.message.error('Can not remove')
         }
     }
 
@@ -128,8 +135,10 @@ export class MemberFormComponent implements OnInit {
             this.editForm
         )
 
-        if (res) {
-            this.message.info(res.msg)
+        if (res.error) {
+            this.message.info(res.error)
+        } else if (res.matchedCount === 1 || !res.error) {
+            this.message.success('Save successful!')
         }
     }
 
