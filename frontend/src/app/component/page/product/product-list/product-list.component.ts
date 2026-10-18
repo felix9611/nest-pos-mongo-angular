@@ -137,9 +137,11 @@ export class ProductListComponent {
 
     async goToVoid() {
         const res = await await getApiWithAuth(`/product/product-list/remove/${this.handleId}`)
-        if (res) {
-            this.message.info(res.msg)
+        if (res.message) {
+            this.message.info(res.message)
             this.loadProductLists()
+        } else {
+            this.message.error(res.error)
         }
     }
 

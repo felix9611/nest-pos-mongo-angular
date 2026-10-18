@@ -177,8 +177,13 @@ export class ProductFormComponent implements OnInit {
     }
 
     async getOne() {
-        this.editForm = await getApiWithAuth(`/product/product-list/one/${ this.theId}`)
-        console.log(this.editForm, 'k')
+        const res = await getApiWithAuth(`/product/product-list/one/${ this.theId}`)
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (!res.error) {
+            this.editForm = res
+            this.editForm.productListFiles = await getApiWithAuth(`/product/product-list/load-file/${this.theId}`)
+        }
     }
 
     typeLists: any[] = []
@@ -202,7 +207,9 @@ export class ProductFormComponent implements OnInit {
 
         const res = await postApiWithAuth(url, this.editForm)
 
-        if (!res.msg) {
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (!res.error) {
             this.message.info('Data save successfully!')
             timer(2500).subscribe(() => {
                 this.routeTo.navigate(['/product-list'])
