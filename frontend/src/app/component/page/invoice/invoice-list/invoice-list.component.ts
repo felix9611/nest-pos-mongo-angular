@@ -123,10 +123,12 @@ export class InvoiceListComponent {
 
     async goToVoid() {
         const res = await await getApiWithAuth(`/invoice/void/${this.handleId}`)
-        if (res) {
-            this.message.info(res.msg)
+        if (!res.error) {
+            this.message.info(res.message)
             this.loadInvoiceLists()
             this.removeDialog = true
+        } else {
+            this.message.error(res.error)
         }
     }
 

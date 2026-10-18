@@ -112,10 +112,16 @@ export class InvoiceService {
 
         const paymentData = await this.invoicePaymentModel.find({ invoiceId: new Types.ObjectId(_id) }).exec()
 
-        return {
-            ...invoiceData,
-            invoiceItems: itemData,
-            invoicePayments: paymentData
+        if (!invoiceData) {
+            return {
+                error: 'Invoice not found'
+            }
+        } else {
+            return {
+                ...invoiceData,
+                invoiceItems: itemData,
+                invoicePayments: paymentData
+            }
         }
     }
 
@@ -198,7 +204,7 @@ export class InvoiceService {
             })
 
             return {
-                msg: 'Ooops! Something went wrong! Please try again!'
+                error: 'Ooops! Something went wrong! Please try again!'
             }
         }
     }
@@ -219,7 +225,7 @@ export class InvoiceService {
             })
 
             return {
-                msg: 'This invoice has been void! Please contact admin!'
+                error: 'This invoice has been void! Please contact admin!'
             }
         } else { 
             await this.invoiceModel.updateOne({ _id}, {
@@ -241,7 +247,7 @@ export class InvoiceService {
             })
 
             return {
-              msg: 'Void successfully!'
+                message: 'Void successfully!'
             }
 
         }

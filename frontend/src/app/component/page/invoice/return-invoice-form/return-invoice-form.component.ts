@@ -193,9 +193,9 @@ export class ReturnInvoiceFormComponent implements OnInit {
 
             timer(2500).subscribe(() => {
                 this.routeTo.navigate([`/return-invoice-detail`], { queryParams: { id: data._id } })
-             //   this.routeTo.navigate([`/return-invoice-list`])
             })
+        } else {
+            this.message.error(data.error)
         }
     }
-
 }

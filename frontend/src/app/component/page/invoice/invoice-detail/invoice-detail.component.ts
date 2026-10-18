@@ -11,6 +11,7 @@ import { NzTableModule } from 'ng-zorro-antd/table'
 import { MatIconModule } from '@angular/material/icon'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import moment from 'moment'
+import { NzMessageService } from 'ng-zorro-antd/message'
 
 
 @Component({
@@ -30,7 +31,8 @@ import moment from 'moment'
 export class InvoiceDetailComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
-        private routeTo: Router
+        private routeTo: Router,
+        private message: NzMessageService,
     ) {}
     ngOnInit(): void {
         this.loadLocationList()
@@ -43,8 +45,12 @@ export class InvoiceDetailComponent implements OnInit {
 
     async getDetail(id: string) {
         const data = await getApiWithAuth(`/invoice/one/${id}`)
-        this.invoiceDetail = data
-        this.invoiceDetail.discount = this.invoiceDetail.discountType === '%' ? this.invoiceDetail.discount * 100 : this.invoiceDetail.discount
+        if (data.error) {
+            this.message.error(data.error)
+        } else if (!data.error) {
+            this.invoiceDetail = data
+            this.invoiceDetail.discount = this.invoiceDetail.discountType === '%' ? this.invoiceDetail.discount * 100 : this.invoiceDetail.discount
+        }
     }
 
     locationList: any[] = []
