@@ -29,7 +29,7 @@ export class SysUserService {
 
       if (checkData) {
         return {
-          msg: 'The user already exist! Please check again!'
+          error: 'The user already exist! Please check again!'
         }
       } else {
         const newPasswordString = hashPassword('888888', salt)
@@ -50,7 +50,7 @@ export class SysUserService {
 
     } else {
       return {
-        msg: 'Key not match! Please contact admin!'
+        error: 'Key not match! Please contact admin!'
       }
     }
 
@@ -61,7 +61,7 @@ export class SysUserService {
 
     if (checkData?.status === 0) {
       return {
-        msg: 'This user has been invalidated! Please contact admin!'
+        error: 'This user has been voided! Please contact admin!'
       }
     } else {
       return await this.sysUserModel.updateOne({ _id: userData._id }, {
@@ -76,7 +76,7 @@ export class SysUserService {
 
     if (checkData?.status === 0) {
       return {
-        msg: 'This user has been invalidated! Please contact admin!'
+        error: 'This user has been voided! Please contact admin!'
       }
     } else {
       const res = await this.sysUserModel.updateOne({ _id}, {
@@ -86,11 +86,11 @@ export class SysUserService {
 
       if (res.modifiedCount === 1) {
         return {
-          msg: 'Invalidate successfully!'
+          message: 'Invalidate successfully!'
         }
       } else {
         return {
-          msg: 'Ooops! Something went wrong! Please try again!'
+          error: 'Ooops! Something went wrong! Please try again!'
         }
       }
     }
@@ -107,18 +107,18 @@ export class SysUserService {
       if (res.modifiedCount === 1) {
         return {
           renew: true,
-          msg: 'Renew password successfully!'
+          message: 'Renew password successfully!'
         }
       } else {
         return {
           renew: false,
-          msg: 'Ooops! Something went wrong! Please try again!'
+          error: 'Ooops! Something went wrong! Please try again!'
         }
       }
     } else {
       return {
         renew: false,
-        msg: 'This user has been invalidated or does not exist! Please contact admin!'
+        error: 'This user has been voided or does not exist! Please contact admin!'
       }
     }
   }
@@ -173,12 +173,19 @@ export class SysUserService {
 
     const loginRecords = await this.loginRecordModel.find({ username }).sort({ loginTime: -1 }).limit(15).exec()
   
-    return {
-      ...answer[0],
-      loginRecords
+    if (!answer) {
+      return {
+        error: 'This user has been voided or does not exist! Please contact admin!'
+      }
+    } else {
+      return {
+        ...answer[0],
+        loginRecords
+      }
     }
   }
 
+  // login handler
   async findOneUserAllData(username: string) {
     return await this.sysUserModel.findOne({ username }).exec()
   }
