@@ -25,7 +25,7 @@ export class MemberClassService {
             return data
         } else {
             return {
-                msg: 'This member class has been invalidated! Please contact admin!'
+                error: 'This member class has been invalidated! Please contact admin!'
             }
         }
     }
@@ -46,7 +46,7 @@ export class MemberClassService {
             })
 
             return {
-                msg: 'This member class already exist!'
+                error: 'This member class already exist!'
             }
         } else {
             const finalData = {
@@ -87,7 +87,7 @@ export class MemberClassService {
             })
 
             return {
-                msg: 'This member class has been invalidated! Please contact admin!'
+                error: 'This member class has been voided! Please contact admin!'
             }
         } else {
             const finalData = {
@@ -125,7 +125,7 @@ export class MemberClassService {
             })
 
             return {
-                msg: 'This Member Class has been invalidated! Please contact admin!'
+                error: 'This Member Class has been voided! Please contact admin!'
             }
         } else {
             const res = await this.memberClassModel.updateOne({ _id}, {
@@ -149,11 +149,11 @@ export class MemberClassService {
 
 
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Void successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }
