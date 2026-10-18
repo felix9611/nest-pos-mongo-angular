@@ -120,6 +120,7 @@ export class MemberClassesComponent {
                 className: '',
                 remark:  ''
             }
+            this.okText = 'Create'
         }
     }
 
