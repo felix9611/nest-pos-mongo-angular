@@ -39,7 +39,7 @@ export class ProductService {
             })
 
             return {
-                msg: 'This product already exist!'
+                error: 'This product already exist!'
             }
         } else {
             if (!productCode) {
@@ -76,7 +76,7 @@ export class ProductService {
                 return res
             } else {
                 return {
-                    msg: 'Oooops! Something wrong, please try again!'
+                    error: 'Oooops! Something wrong, please try again!'
                 }
             }
         }
@@ -98,7 +98,7 @@ export class ProductService {
             })
 
             return {
-                msg: 'This product has been invalidated! Please contact admin!'
+                error: 'This product has been voided! Please contact admin!'
             }
         } else {
             const finalData = {
@@ -123,11 +123,10 @@ export class ProductService {
                     await this.uploadFile(uploaProductFiles, _id)
                 }
 
-
                 return res
             } else {
                 return {
-                    msg: 'Oooops! Something wrong, please try again!'
+                    error: 'Oooops! Something wrong, please try again!'
                 }
             }
         }
@@ -153,7 +152,7 @@ export class ProductService {
             return data
         } else {
             return {
-                msg: 'This Product has been invalidated! Please contact admin!'
+                error: 'This Product has been voided! Please contact admin!'
             }
         }
     }
@@ -175,7 +174,7 @@ export class ProductService {
             })
 
             return {
-                msg: 'This Product has been invalidated! Please contact admin!'
+                error: 'This Product has been voided! Please contact admin!'
             }
         } else {
             const res = await this.productModel.updateOne({ _id}, {
@@ -199,11 +198,11 @@ export class ProductService {
 
 
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Voided successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }
@@ -443,7 +442,7 @@ export class ProductService {
     
                 return {
                     finished: true,
-                    msg: 'Void successfully!'
+                    message: 'Void successfully!'
                 }
             }
         } else {
@@ -459,7 +458,7 @@ export class ProductService {
             })
 
             return {
-                msg: 'This file has been void! Please contact admin!'
+                error: 'This file has been void! Please contact admin!'
             }
         }
     }

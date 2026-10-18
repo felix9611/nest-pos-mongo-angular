@@ -64,10 +64,10 @@ export class UserInfoComponent implements OnInit {
             const res = await postApiWithAuth('/sys/user/user-self/update-password', {  password: this.resetPwForm.newPassword })
 
             if (res.renew === true) {
-                this.message.info(res.msg)
+                this.message.info(res.message)
                 this.closeResetPWDialog()
             } else {
-                this.message.error(res.msg)
+                this.message.error(res.error)
             }
             
         } else {

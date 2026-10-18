@@ -80,7 +80,11 @@ export class ReturnInvoiceDetailComponent implements OnInit {
 
     async getDetail(id: string) {
         const data = await getApiWithAuth(`/return-invoice/one/${id}`)
-        this.returnInvoiceForm = data
+        if (data.error) {
+            this.message.error(data.error) 
+        } else if (!data.error) {
+            this.returnInvoiceForm = data
+        }
     }
 
     goBackList() {

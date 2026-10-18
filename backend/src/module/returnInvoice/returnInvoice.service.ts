@@ -67,9 +67,15 @@ export class ReturnInvoiceService {
 
         const mainData = baseData[0]
 
-        return {
-            ...mainData,
-            returnItems: itemData
+        if (!mainData) {
+            return {
+                error: 'Data not found'
+            }
+        } else {
+            return {
+                ...mainData,
+                returnItems: itemData
+            }
         }
 
     }
@@ -80,13 +86,17 @@ export class ReturnInvoiceService {
         const invoiceData = await this.invoiceModel.findOne({ number: returnInvoiceNo }).exec()
 
         if (!invoiceData) {
-            throw new Error('Invoice not found')
+            return {
+                error: 'Invoice not found'
+            }
         }
 
         const checkLocationData = await this.locationModel.findOne({ _id: returnLocationId }).exec()
 
         if (!checkLocationData) {
-            throw new Error('Location not found')
+            return {
+                error: 'Location not found'
+            }
         }
 
         const returnCaseNumber = this.randomNumber()

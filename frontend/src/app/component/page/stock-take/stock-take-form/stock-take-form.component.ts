@@ -118,7 +118,12 @@ await: any
     }
 
     async getOne() {
-        this.editForm = await getApiWithAuth(`/product/stock-take/one/${ this.theId}`)    
+        const res = await getApiWithAuth(`/product/stock-take/one/${ this.theId}`)    
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (!res.error) {
+            this.editForm = res
+        }
     }
 
     placeLists: any[] = []
@@ -129,9 +134,9 @@ await: any
     async updateForm() {
         const res = await postApiWithAuth('/product/stock-take/update-form', this.editForm)
         if (res.finished) {
-            this.message.success(res.msg)
+            this.message.success(res.message)
         } else {
-            this.message.error(res.msg)
+            this.message.error(res.error)
         }
     }
 

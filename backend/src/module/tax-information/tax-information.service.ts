@@ -45,7 +45,7 @@ export class TaxInformationService {
             })
 
             return {
-                msg: 'This tax information is updated old data!'
+                error: 'This tax information is updated old data!'
             }
         } else {
             const finalData = {
@@ -106,7 +106,7 @@ export class TaxInformationService {
             })
 
             return {
-                msg: 'This tax information not exist!'
+                error: 'This tax information not exist!'
             }
             
         }
@@ -119,7 +119,7 @@ export class TaxInformationService {
             return data
         } else {
             return {
-                msg: 'This tax information has been invalidated! Please contact admin!'
+                error: 'This tax information has been voided! Please contact admin!'
             }
         }
     }
@@ -141,7 +141,7 @@ export class TaxInformationService {
 
 
             return {
-                msg: 'This tax information has been invalidated! Please contact admin!'
+                error: 'This tax information has been voided! Please contact admin!'
             }
         } else {
             const res = await this.taxInformationModel.updateOne({ _id}, {
@@ -165,11 +165,11 @@ export class TaxInformationService {
 
 
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Void tax information successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }

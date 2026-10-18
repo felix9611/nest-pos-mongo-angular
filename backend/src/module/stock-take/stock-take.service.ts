@@ -40,7 +40,7 @@ export class StockTakeService {
             })
 
             return {
-                msg: 'This action name already used! Please cehck again!'
+                error: 'This action name already used! Please cehck again!'
             }
 
         } else {
@@ -88,7 +88,7 @@ export class StockTakeService {
 
         } else {
             return {
-                msg: 'This form has been invalidated! Please check again!'
+                error: 'This form has been voided! Please check again!'
             }
         }
     }
@@ -110,7 +110,7 @@ export class StockTakeService {
             })
 
             return {
-                msg: 'Ooooops! This stock take form no longer active! Please create a new form!'
+                error: 'Ooooops! This stock take form no longer active! Please create a new form!'
             }
         }  else if (checkForm?.status === 2){
 
@@ -124,7 +124,7 @@ export class StockTakeService {
             })
 
             return {
-                msg: 'Ooooops! This stock take form has been completed! Please create a new form!'
+                error: 'Ooooops! This stock take form has been completed! Please create a new form!'
             }
         } else {
 
@@ -147,7 +147,7 @@ export class StockTakeService {
 
             return {
                 finished: true,
-                msg: 'Updated successfully!'
+                message: 'Updated successfully!'
             }
 
         }
@@ -171,7 +171,7 @@ export class StockTakeService {
             })
 
             return {
-                msg: 'Ooooops! This stock take form no longer active! Please create a new form!'
+                error: 'Ooooops! This stock take form no longer active! Please create a new form!'
             }
         }  else if (checkForm?.status === 2){
 
@@ -187,7 +187,7 @@ export class StockTakeService {
             })
 
             return {
-                msg: 'Ooooops! This stock take form already completed! Please check again!'
+                error: 'Ooooops! This stock take form already completed! Please check again!'
             }
         } else {
 
@@ -211,7 +211,7 @@ export class StockTakeService {
 
             return {
                 finished: true,
-                msg: 'Updated successfully!'
+                message: 'Updated successfully!'
             }
 
         }

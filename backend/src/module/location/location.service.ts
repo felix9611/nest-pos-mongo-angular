@@ -34,7 +34,7 @@ export class LocationService {
             })
 
             return {
-                msg: 'This location already exist!'
+                error: 'This location already exist!'
             }
         } else {
             const finalData = {
@@ -75,7 +75,7 @@ export class LocationService {
             })
 
             return {
-                msg: 'This location has been invalidated! Please contact admin!'
+                error: 'This location has been voided! Please contact admin!'
             }
         } else {
             const finalData = {
@@ -103,7 +103,7 @@ export class LocationService {
             return data
         } else {
             return {
-                msg: 'This location has been invalidated! Please contact admin!'
+                error: 'This location has been voided! Please contact admin!'
             }
         }
     }
@@ -125,7 +125,7 @@ export class LocationService {
             })
 
             return {
-                msg: 'This location has been invalidated! Please contact admin!'
+                error: 'This location has been voided! Please contact admin!'
             }
         } else {
             const res = await this.locationModel.updateOne({ _id}, {
@@ -149,11 +149,11 @@ export class LocationService {
 
 
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Invalidate successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }

@@ -111,9 +111,9 @@ export class ProductTypeComponent {
             ...this.editForm._id ? { _id: this.editForm._id} : {},
         })
 
-        if (res.msg) {
-            this.message.error(res.msg)
-        } else if (res.matchedCount === 1 || !res.msg) {
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (res.matchedCount === 1 || !res.error) {
             this.message.success('Save successful!')
             this.closeDialog()
             this.loadLocationLists()
@@ -156,10 +156,13 @@ export class ProductTypeComponent {
 
         const res: any = await getApiWithAuth(url)
 
-        this.message.info(res.msg)
-
-        this.closeRemoveDialog()
-        this.loadLocationLists()
+        if (res.message) {
+            this.message.info(res.message)
+            this.loadLocationLists()
+            this.closeRemoveDialog()
+        } else {
+            this.message.error(res.error)
+        }
     }
 
 
@@ -169,9 +172,13 @@ export class ProductTypeComponent {
 
     async getOneData(id:string) {
         const res = await getApiWithAuth(`/product/product-type/one/${id}`)
-        this.editForm = res
-        this.okText = 'Update'
-        this.showDialog()
+        if (res.error) {
+            this.message.error(res.error)
+        } else {
+            this.editForm = res
+            this.okText = 'Update'
+            this.showDialog()
+        }
     }
 
     excelFileSetting: any = {

@@ -33,9 +33,8 @@ export class VendorService {
                 createdAt: new Date()
             })
 
-
             return {
-                msg: 'This vendor already exist!'
+                error: 'This vendor already exist!'
             }
         } else {
             const finalData = {
@@ -68,7 +67,7 @@ export class VendorService {
             })
 
             return {
-                msg: 'This vendor has been invalidated! Please contact admin!'
+                error: 'This vendor has been voided! Please contact admin!'
             }
         } else {
             const finalData = {
@@ -96,7 +95,7 @@ export class VendorService {
             return data
         } else {
             return {
-                msg: 'This vendor has been invalidated! Please contact admin!'
+                error: 'This vendor has been voided! Please contact admin!'
             }
         }
     }
@@ -118,7 +117,7 @@ export class VendorService {
             })
 
             return {
-                msg: 'This vendor has been invalidated! Please contact admin!'
+                error: 'This vendor has been voided! Please contact admin!'
             }
         } else {
             const res = await this.vendorModel.updateOne({ _id}, {
@@ -143,11 +142,11 @@ export class VendorService {
                 })
 
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Vendor void successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }

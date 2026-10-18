@@ -50,11 +50,23 @@ export class ProductLocationService {
             status: 1
         })
 
-        if (!checkProduct) throw new Error('No any product data record!')
+        if (!checkProduct) {
+            return {
+                error: 'No any product data record!'
+            }
+        }
 
-        if (!checkFormLocation) throw new Error('No any this location record!')
+        if (!checkFormLocation) {
+            return {
+                error: 'No any this location record!'
+            }
+        }
 
-        if (!checkToLocation) throw new Error('No any this location record!')
+        if (!checkToLocation) {
+            return {
+                error: 'No any this location record!'
+            }
+        }
 
         const fromData: any = await this.productLocationModel.findOne({
             productId: checkProduct._id,
@@ -190,7 +202,9 @@ export class ProductLocationService {
 
 
         } else {
-            throw new error('No any data record can be change!')
+            return {
+                error: 'No any product data record!'
+            }
         }
     }
 
@@ -209,9 +223,17 @@ export class ProductLocationService {
             status: 1
         })
 
-        if (!checkProduct) throw new Error('No any product data record!')
+        if (!checkProduct) {
+            return {
+                error: 'No any product data record!'
+            }
+        }
 
-        if (!checLocation) throw new Error('No any this location record!')
+        if (!checLocation) {
+            return {
+                error: 'No any this location record!'
+            }
+        }
 
         const findOldData: any = await this.productLocationModel.findOne({ 
             productId: checkProduct._id, 

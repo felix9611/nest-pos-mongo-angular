@@ -97,14 +97,13 @@ export class ExcelFieldMatchComponent {
         const url = this.editForm._id === '' ? '/sys/excel-field-match/create' : `/sys/excel-field-match/update`
 
         const res = await postApiWithAuth(url, {
-            
             ...this.editForm,
             ...this.editForm._id ? { _id: this.editForm._id} : {},
         })
 
-        if (res.msg) {
-            this.message.error(res.msg)
-        } else if (res.matchedCount === 1 || !res.msg) {
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (res.matchedCount === 1 || !res.error) {
             this.message.success('Save successful!')
             this.closeDialog()
             this.loadRecordLists()
@@ -147,10 +146,13 @@ export class ExcelFieldMatchComponent {
 
         const res: any = await getApiWithAuth(url)
 
-        this.message.info(res.msg)
-
-        this.closeRemoveDialog()
-        this.loadRecordLists()
+        if (res.message) {
+            this.message.info(res.message)
+            this.loadRecordLists()
+            this.closeRemoveDialog()
+        } else {
+            this.message.error(res.error)
+        }
     }
 
 
@@ -160,9 +162,13 @@ export class ExcelFieldMatchComponent {
 
     async getOneData(id:string) {
         const res = await getApiWithAuth(`/sys/excel-field-match/one/${id}`)
-        this.editForm = res
-        this.okText = 'Update'
-        this.showDialog()
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (!res.error) {
+            this.editForm = res
+            this.okText = 'Update'
+            this.showDialog()
+        }
     }
 
     codeTypeLists: any[] = []

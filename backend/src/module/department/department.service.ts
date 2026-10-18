@@ -34,7 +34,7 @@ export class DepartmentService {
             })
 
             return {
-                msg: 'This department already exist!'
+                error: 'This department already exist!'
             }
         } else {
             const finalData = {
@@ -76,7 +76,7 @@ export class DepartmentService {
             })
 
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                error: 'This department has been voided! Please contact admin!'
             }
         } else {
             const finalData = {
@@ -104,7 +104,7 @@ export class DepartmentService {
             return data
         } else {
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                error: 'This department has been voided! Please contact admin!'
             }
         }
     }
@@ -126,7 +126,7 @@ export class DepartmentService {
             })
 
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                error: 'This department has been voided! Please contact admin!'
             }
         } else {
             const res = await this.departmentModel.updateOne({ _id}, {
@@ -150,11 +150,11 @@ export class DepartmentService {
 
 
                 return {
-                  msg: 'Invalidate successfully!'
+                  message: 'Invalidate successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                  error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }

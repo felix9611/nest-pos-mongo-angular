@@ -107,9 +107,9 @@ export class MemberClassesComponent {
             ...this.editForm._id ? { _id: this.editForm._id} : {},
         })
 
-        if (res.msg) {
-            this.message.error(res.msg)
-        } else if (res.matchedCount === 1 || !res.msg) {
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (res.matchedCount === 1 || !res.error) {
             this.message.success('Save successful!')
             this.closeDialog()
             this.loadMemberClassesLists()
@@ -151,10 +151,13 @@ export class MemberClassesComponent {
 
         const res: any = await getApiWithAuth(url)
 
-        this.message.info(res.msg)
-
-        this.closeRemoveDialog()
-        this.loadMemberClassesLists()
+        if (res.message) {
+            this.message.info(res.message)
+            this.loadMemberClassesLists()
+            this.closeRemoveDialog()
+        } else {
+            this.message.error(res.error)
+        }
     }
 
 
@@ -164,9 +167,13 @@ export class MemberClassesComponent {
 
     async getOneData(id:string) {
         const res = await getApiWithAuth(`/member/member-class/one/${id}`)
-        this.editForm = res
-        this.okText = 'Update'
-        this.showDialog()
+        if (res.error) {
+            this.message.error(res.error)
+        } else {
+            this.editForm = res
+            this.showDialog()
+            this.okText = 'Update'
+        }
     }
 
     excelFileSetting: any = {
