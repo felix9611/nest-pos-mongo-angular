@@ -20,11 +20,14 @@ export class UserStoreService {
         username: '',
         accessToken: '',
         avatarBase64: '',
-        deptId: 0,
         roles: [],
         roleLists: [],
-        email: '', 
-        loginRecords: []
+        email: '',
+        loginRecords: [],
+        placeIds: [],
+        locations: [],
+        deptIds: [],
+        department: [],
     }
     private userMenu: any[] = []
     private userMenuRole: any[] = []
@@ -84,11 +87,14 @@ export class UserStoreService {
             username: '',
             accessToken: '',
             avatarBase64: '',
-            deptId: 0,
             roles: [],
             roleLists: [],
             email: '',
-            loginRecords: []
+            loginRecords: [],
+            placeIds: [],
+            locations: [],
+            deptIds: [],
+            department: [],
 
         })
         this.menuSubject.next([])
@@ -135,5 +141,4 @@ export class UserStoreService {
             this.setMenuRole(data)
         })
     }
-
 }
