@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { DepartmentService } from './department.service';
 import { CreateDeptBody, DepartmentBody, ListDepartmentQuery, ListDepartmentQueryRes, ListDeptRequestDto, UpdateDeptBody, UpdateDeptDto } from './department.dto';
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from '../../tool/open-api-body'
+import { JwtPayload } from '../auth/auth.dto';
 
 @Controller('sys/department')
 export class DepartmentController {
@@ -15,8 +16,12 @@ export class DepartmentController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: UpdateDeptDto) {
-        return await this.deptService.create(createData)
+    async create(@Body() createData: UpdateDeptDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.deptService.create(createData)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Update Department' })
@@ -24,8 +29,12 @@ export class DepartmentController {
     @ApiResponse({ description: 'If not save successful',status: 200,type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
-    async update(@Body() updateDto: UpdateDeptDto) {
-        return await this.deptService.update(updateDto)
+    async update(@Body() updateDto: UpdateDeptDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.deptService.update(updateDto)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Get One by Id' })
@@ -33,42 +42,62 @@ export class DepartmentController {
     @ApiResponse({ description: 'If no data', status: 200, type: ReturnMsg })
     @Get('one/:id')
     @UseGuards(AuthGuard)
-    async getOneById(@Param('id') id: string) {
-        return await this.deptService.getOneById(id)
+    async getOneById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.deptService.getOneById(id)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Void One by Id' })
     @ApiResponse({  description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
-    async removeById(@Param('id') id: string) {
-        return await this.deptService.invalidateDepartment(id)
+    async removeById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.deptService.invalidateDepartment(id)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Get all data' })
     @ApiResponse({ status: 201, type: [DepartmentBody] })
     @Get('getAll')
     @UseGuards(AuthGuard)
-    async getAll() {
-        return this.deptService.findAll()
+    async getAll(@Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return this.deptService.findAll()
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
-    @ApiOperation({ summary: 'Lsit with filter' })
+    @ApiOperation({ summary: 'List with filter' })
     @ApiBody({ type: ListDepartmentQuery })
-    @ApiResponse({ status: 200,  type: ListDepartmentQueryRes })
+    @ApiResponse({ status: 200,  type: [DepartmentBody] })
     @Post('filter/list')
     @UseGuards(AuthGuard)
-    async listWithFilters(@Body() req: ListDeptRequestDto) {
-        return this.deptService.listWithFilters(req)
+    async listWithFilters(@Body() req: ListDeptRequestDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return this.deptService.listWithFilters(req)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
     
-    @ApiOperation({ summary: 'Lsit and page' })
+    @ApiOperation({ summary: 'List and page' })
     @ApiBody({ type: ListDepartmentQuery })
     @ApiResponse({ status: 200,  type: ListDepartmentQueryRes })
     @Post('list')
     @UseGuards(AuthGuard)
-    async listAndPage(@Body() req: ListDeptRequestDto) {
-        return this.deptService.listPage(req)
+    async listAndPage(@Body() req: ListDeptRequestDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return this.deptService.listPage(req)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Batch Create Department' })
@@ -77,8 +106,12 @@ export class DepartmentController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('batch-create')
     @UseGuards(AuthGuard)
-    async importData(@Body() createDatas: UpdateDeptBody[]) {
-        return await this.deptService.importData(createDatas)
+    async importData(@Body() createDatas: UpdateDeptBody[], @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.deptService.importData(createDatas)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
     
 }
