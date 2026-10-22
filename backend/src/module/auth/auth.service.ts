@@ -3,6 +3,7 @@ import { SysUserService } from '../sys-user/sysUser.service'
 import { JwtService } from '@nestjs/jwt'
 import { hashPassword, salt } from '../../tool/password-tools'
 import { jwtConstants } from './constants'
+import { JwtPayload } from './auth.dto'
 
 @Injectable()
 export class AuthService {
@@ -35,7 +36,7 @@ export class AuthService {
         msg: 'Password not match!'
       }
     } else {
-      const payload = { sub: user._id, username: user.username, departmentId: user.deptIds }
+      const payload = { sub: user._id, username: user.username, departmentIds: user.deptIds, placeIds: user.placeIds, roles: user.roles, superAdmin: user.superAdmin }
       await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
       return {
         accessToken: await this.jwtService.signAsync(payload),
@@ -48,19 +49,25 @@ export class AuthService {
     const [type, tokenString] = token.split(' ') ?? []
     if (type === 'Bearer') {
       try {
-        const decoded = this.jwtService.verify(tokenString)
+        const decoded = await this.jwtService.verifyAsync<JwtPayload>(tokenString)
         return {
-          status: true
+          status: true,
+              user: {
+              userId: decoded.sub,
+              username: decoded.username,
+              departmentIds: decoded.departmentIds,
+              placeIds: decoded.placeIds,
+              roles: decoded.roles,
+              superAdmin: decoded.superAdmin,
+          },
         }
       } catch (error) {
-        throw new Error('Invalid or expired token')
+        throw new UnauthorizedException('Invalid or expired token')
       }
     } else {
       return {
         msg: 'Invalid token!'
       }
     }
-    
   }
-  
 }
