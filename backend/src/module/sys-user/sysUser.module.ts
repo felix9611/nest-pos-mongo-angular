@@ -18,7 +18,7 @@ import { DepartmentService } from '../department/department.service'
             { name: SysRole.name, schema: SysRoleSchema },
             { name: ActionRecord.name, schema: ActionRecordSchema },
             { name: Department.name, schema: DepartmentSchema },
-            { name: LoginRecord.name, schema: LoginRecordSchema }
+            { name: LoginRecord.name, schema: LoginRecordSchema },
         ]),
         SysUser
     ],
