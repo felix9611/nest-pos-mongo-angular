@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '../auth/AuthGuard'
 import { SysMenuService } from './sys-menu.service'
-import { ListTreeMenuBody, MainMenuBody, MenuQueryBody, SysMenuBody, SysMenuDto, SysMenuList, TreeMenuBody, UpdateSysMenuDto } from './sys-menu.dto'
+import { CreateSysMenuBody, ListTreeMenuBody, MainMenuBody, MenuQueryBody, SysMenuBody, SysMenuDto, SysMenuList, TreeMenuBody, UpdateSysMenuDto } from './sys-menu.dto'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from 'src/tool/open-api-body'
 import { UpdateSysRole } from '../sys-role/role.dto'
+import { JwtPayload } from '../auth/auth.dto'
 
 @Controller('sys/menu')
 export class SysMenuController {
@@ -16,8 +17,12 @@ export class SysMenuController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: UpdateSysMenuDto) {
-        return await this.menuService.create(createData)
+    async create(@Body() createData: UpdateSysMenuDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.menuService.create(createData)
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Update Menu' })
@@ -26,8 +31,12 @@ export class SysMenuController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
-    async update(@Body() updateDto: UpdateSysMenuDto) {
-        return await this.menuService.update(updateDto)
+    async update(@Body() updateDto: UpdateSysMenuDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.menuService.update(updateDto)
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Get Menu by id' })
@@ -35,16 +44,24 @@ export class SysMenuController {
     @ApiResponse({ description: 'If no data', status: 200, type: ReturnMsg })
     @Get('one/:id')
     @UseGuards(AuthGuard)
-    async getOneById(@Param('id') id: string) {
-        return await this.menuService.getOneById(id)
+    async getOneById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.menuService.getOneById(id)
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Void One by Id' })
     @ApiResponse({  description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
-    async removeById(@Param('id') id: string) {
-        return await this.menuService.invalidate(id)
+    async removeById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.menuService.invalidate(id)
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'List menu' })
@@ -52,8 +69,12 @@ export class SysMenuController {
     @ApiResponse({ description: 'If successful', status: 201, type: TreeMenuBody, isArray: true })
     @Post('list')
     @UseGuards(AuthGuard)
-    async list(@Body() req: SysMenuList) {
-        return this.menuService.listAllMenu(req)
+    async list(@Body() req: SysMenuList, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return this.menuService.listAllMenu(req)
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'All menu items' })
@@ -77,7 +98,11 @@ export class SysMenuController {
     @ApiResponse({  description: 'Return', status: 200, type: MainMenuBody, isArray: true })
     @Get('main-item')
     @UseGuards(AuthGuard)
-    async listAllMainIdMenu() {
-        return this.menuService.listAllMainIdMenu()
+    async listAllMainIdMenu(@Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return this.menuService.listAllMainIdMenu()
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        }
     }
 }
