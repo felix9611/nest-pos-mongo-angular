@@ -10,6 +10,7 @@ import { SysRole } from '../sys-role/role.schame'
 import { SysRoleService } from '../sys-role/role.service'
 import { Department } from '../department/department.schame'
 import { LoginRecord } from './login-reocrd.schame'
+import { Location } from '../location/location.schame'
 
 export type User = any
 
@@ -18,6 +19,8 @@ export class SysUserService {
   constructor(
     @InjectModel(SysUser.name) private sysUserModel: Model<SysUser>,
     @InjectModel(LoginRecord.name) private loginRecordModel: Model<LoginRecord>,
+    @InjectModel(Department.name) private departmentModel: Model<Department>,
+    @InjectModel(Location.name) private locationModel: Model<Location>,
     private sysRoleService: SysRoleService
   ) {}
 
@@ -29,7 +32,7 @@ export class SysUserService {
 
       if (checkData) {
         return {
-          error: 'The user already exist! Please check again!'
+          msg: 'The user already exist! Please check again!'
         }
       } else {
         const newPasswordString = hashPassword('888888', salt)
@@ -39,10 +42,13 @@ export class SysUserService {
           password: newPasswordString,
           avatarBase64: userData.avatarBase64,
           email: userData.email,
-          deptId: userData.deptId,
+          deptIds: userData.deptIds,
+          placeIds: userData.placeIds,
           roles: userData.roles,
           status: 1,
-          createdAt: new Date()
+          createdAt: new Date(),
+          updateAt: new Date(),
+          superAdmin: userData.superAdmin
         }
 
         return await this.sysUserModel.create(finalData)
@@ -61,7 +67,7 @@ export class SysUserService {
 
     if (checkData?.status === 0) {
       return {
-        error: 'This user has been voided! Please contact admin!'
+        msg: 'This user has been invalidated! Please contact admin!'
       }
     } else {
       return await this.sysUserModel.updateOne({ _id: userData._id }, {
@@ -86,11 +92,11 @@ export class SysUserService {
 
       if (res.modifiedCount === 1) {
         return {
-          message: 'Invalidate successfully!'
+          message: 'Voided successfully!'
         }
       } else {
         return {
-          error: 'Ooops! Something went wrong! Please try again!'
+          message: 'Ooops! Something went wrong! Please try again!'
         }
       }
     }
@@ -118,7 +124,7 @@ export class SysUserService {
     } else {
       return {
         renew: false,
-        error: 'This user has been voided or does not exist! Please contact admin!'
+        error: 'This user has been invalidated or does not exist! Please contact admin!'
       }
     }
   }
@@ -127,6 +133,13 @@ export class SysUserService {
     const answer: any = await this.sysUserModel.findOne({ _id}).exec()
 
     const roleLists = await this.sysRoleService.getRolelistsByIds(answer.roles)
+
+    let departments: any[] = []
+    let locations: any[] = []
+
+    departments = await this.departmentModel.find({ _id: { $in: answer.deptIds }, status: 1 }).exec()
+    locations = await this.locationModel.find({ _id: { $in: answer.placeIds }, status: 1 }).exec()
+
     return {
       _id: answer?._id,
       username: answer?.username,
@@ -134,9 +147,12 @@ export class SysUserService {
       avatarBase64: answer?.avatarBase64,
       lastLogin: answer?.lastLogin,
       roles: answer?.roles,
-      deptId: answer?.deptId,
-      department: answer?.department,
-      roleLists
+      roleLists,
+      deptIds: answer?.deptIds,
+      departments: departments,
+      placeIds: answer?.placeIds,
+      locations:locations,
+      superAdmin: answer?.superAdmin
     }
 
   }
@@ -151,17 +167,29 @@ export class SysUserService {
         }
       },
       {
-          $lookup: {
-            from: 'departments', // Ensure correct collection name
-            let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
-            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
-            as: 'department'
-          }
+        $lookup: {
+          from: 'departments', // Make sure this matches your DB collection name
+          let: { deptIds: { $map: { input: '$deptIds', as: 'deptIds', in: { $toObjectId: '$$deptIds' } } } }, // Convert strings to ObjectIds
+          pipeline: [
+            { $match: { $expr: { $in: ['$_id', '$$deptIds'] } } }
+          ],
+          as: 'departments'
+        }
+      },
+      {
+        $lookup: {
+          from: 'locations', // Make sure this matches your DB collection name
+          let: { placeIds: { $map: { input: '$placeIds', as: 'placeIds', in: { $toObjectId: '$$placeIds' } } } }, // Convert strings to ObjectIds
+          pipeline: [
+            { $match: { $expr: { $in: ['$_id', '$$placeIds'] } } }
+          ],
+          as: 'locations'
+        }
       },
       {
         $lookup: {
           from: 'sysroles', // Make sure this matches your DB collection name
-          let: { roleIds: { $map: { input: '$roles', as: 'roleId', in: { $toObjectId: '$$roleId' } } } }, // Convert strings to ObjectIds
+          let: { roleIds: { $map: { input: '$roles', as: 'roleIds', in: { $toObjectId: '$$roleIds' } } } }, // Convert strings to ObjectIds
           pipeline: [
             { $match: { $expr: { $in: ['$_id', '$$roleIds'] } } }
           ],
@@ -173,21 +201,38 @@ export class SysUserService {
 
     const loginRecords = await this.loginRecordModel.find({ username }).sort({ loginTime: -1 }).limit(15).exec()
   
-    if (!answer) {
-      return {
-        error: 'This user has been voided or does not exist! Please contact admin!'
-      }
-    } else {
-      return {
-        ...answer[0],
-        loginRecords
-      }
+    return {
+      ...answer[0],
+      loginRecords
     }
   }
 
-  // login handler
   async findOneUserAllData(username: string) {
-    return await this.sysUserModel.findOne({ username }).exec()
+    const answer: any = await this.sysUserModel.findOne({ username }).exec()
+
+    const roleLists = await this.sysRoleService.getRolelistsByIds(answer.roles)
+
+    let departments: any[] = []
+    let locations: any[] = []
+
+    departments = await this.departmentModel.find({ _id: { $in: answer.deptIds }, status: 1 }).exec()
+    locations = await this.locationModel.find({ _id: { $in: answer.placeIds }, status: 1 }).exec()
+
+    return {
+      _id: answer?._id,
+      username: answer?.username,
+      email: answer?.email,
+      avatarBase64: answer?.avatarBase64,
+      lastLogin: answer?.lastLogin,
+      roles: answer?.roles,
+      roleLists,
+      deptIds: answer?.deptIds,
+      departments: departments,
+      placeIds: answer?.placeIds,
+      locations:locations,
+      superAdmin: answer?.superAdmin,
+      password: answer?.password
+    }
   }
 
   async listUser(request: ListUserRequestDto) {
@@ -220,7 +265,7 @@ export class SysUserService {
     ])
     .exec()
 
-    const total = await this.sysUserModel.countDocuments().exec()
+    const total = await this.sysUserModel.find(filters).countDocuments().exec()
 
     return {
       total,
@@ -257,5 +302,4 @@ export class SysUserService {
     const create = new this.loginRecordModel(finalData)
     return await create.save()
   }
-
 }

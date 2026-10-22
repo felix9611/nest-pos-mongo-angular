@@ -1,16 +1,18 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { CommonPageAndList, CommonPageAndListResponse } from "src/tool/open-api-body"
-import { SysRoleBody } from "../sys-role/role.dto"
-import { DepartmentBody } from "../department/department.dto"
 import { IsOptional } from "@nestjs/class-validator"
+import { ApiProperty } from "@nestjs/swagger"
+import { DepartmentBody } from "../department/department.dto"
+import { SysRoleBody } from "../sys-role/role.dto"
+import { CommonPageAndList, CommonPageAndListResponse } from "src/tool/open-api-body"
 
 export interface CreateUserDto {
     username: string
     password?: string
     avatarBase64?: string
-    deptId?: number
+    deptIds?: string[]
     email: string
-    roles?: number[]
+    roles?: string[],
+    placeIds?: string[]
+    superAdmin?: boolean
 }
 
 export interface CreateUserRequestDto {
@@ -25,8 +27,8 @@ export interface UpdateUserDto extends CreateUserDto{
 export interface ListUserRequestDto {
     page: number,
     limit: number,
-    deptIds?: number[],
-    roleIds?: number[],
+    deptIds?: string[],
+    roleIds?: string[],
     username?: string
 }
 
@@ -143,4 +145,3 @@ export class SysRoleQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: UserDataWithDepartment, isArray: true, description: 'Data List' })
     lists?: UserDataWithDepartment[]
 }
-
