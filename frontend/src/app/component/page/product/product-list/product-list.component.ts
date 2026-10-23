@@ -45,6 +45,7 @@ import { DownloadExcelDataComponent } from '../../../components/download-excel-c
 })
 export class ProductListComponent {
     private rightSubscription: Subscription
+    private userRightSubscription: Subscription
     constructor(
         private routeTo: Router,
         private userStoreService: UserStoreService,
@@ -64,13 +65,26 @@ export class ProductListComponent {
             this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
             this.preLoadExcelSetting()
         })
+
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            this.superAdmin = data.superAdmin
+            if (data.superAdmin !== true) {
+                this.deptLists = data.departments
+                this.searchForm.deptIds = data.deptIds
+            }
+        })
     }
 
     ngOnDestroy() {
         if (this.userStoreService.menuRole$) {
             this.rightSubscription.unsubscribe()
         }
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
+        }
     }
+
+    superAdmin: boolean = false
 
     searchForm: any = {
         page: 1,
@@ -104,7 +118,9 @@ export class ProductListComponent {
 
     deptLists: any[] = []
     async loadDeptList() {
-        this.deptLists = await getApiWithAuth('/sys/department/getAll')
+        if (this.superAdmin === true) {
+            this.deptLists = await getApiWithAuth('/sys/department/getAll')
+        }
     }
 
     async loadProductLists() {
