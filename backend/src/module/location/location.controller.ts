@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { LocationService } from './location.service'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
+import { CreateLocationBody, CreateLocationDto, ListLocationQuery, ListLocationQueryRes, ListLocationRequestDto, LocationBody, UpdateLocationBody, UpdateLocationDto } from './location.dto'
 import { AuthGuard } from '../auth/AuthGuard'
+import { LocationService } from './location.service'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from '../../tool/open-api-body'
-import { CreateLocationBody, CreateLocationDto, ListLocationQuery, ListLocationQueryRes, ListLocationRequestDto, LocationBody, UpdateLocationBody, UpdateLocationDto } from './location.dto'
+import { JwtPayload } from '../auth/auth.dto'
 
 @Controller('base/location')
 export class LocationController {
@@ -15,17 +16,25 @@ export class LocationController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: UpdateLocationDto) {
-        return await this.locationService.create(createData)
+    async create(@Body() createData: UpdateLocationDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.locationService.create(createData)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
-   
+
     @ApiOperation({ summary: 'Update Location' })
     @ApiBody({ type: UpdateLocationBody })
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
-    async update(@Body() updateDto: UpdateLocationDto) {
-        return await this.locationService.update(updateDto)
+    async update(@Body() updateDto: UpdateLocationDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.locationService.update(updateDto)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Get one by ID' })
@@ -33,42 +42,62 @@ export class LocationController {
     @ApiResponse({ description: 'If no data', status: 200, type: ReturnMsg })
     @Get('one/:id')
     @UseGuards(AuthGuard)
-    async getOneById(@Param('id') id: string) {
-        return await this.locationService.getOneById(id)
+    async getOneById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.locationService.getOneById(id)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Void one by ID' })
     @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
-    async removeById(@Param('id') id: string) {
-        return await this.locationService.invalidate(id)
+    async removeById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.locationService.invalidate(id)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Get all Data' })
     @ApiResponse({ description: 'If successful', status: 201, type: [LocationBody] })
     @Get('getAll')
     @UseGuards(AuthGuard)
-    async getAll() {
-        return this.locationService.findAll()
+    async getAll(@Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.locationService.findAll()
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
-
-    @ApiOperation({ summary: 'List with filter'})
-    @ApiBody({ type: ListLocationQuery })
-    @ApiResponse({ description: 'If successful', status: 201, type: ListLocationQueryRes })
-    @Post('filter/list')
-    @UseGuards(AuthGuard)
-    async listWithFilter(@Body() req: ListLocationRequestDto) {
-        return this.locationService.listWithFilter(req)
-    }
-
+    
     @ApiOperation({ summary: 'Page and list'})
     @ApiBody({ type: ListLocationQuery })
     @ApiResponse({ description: 'If successful', status: 201, type: ListLocationQueryRes })
     @Post('list')
     @UseGuards(AuthGuard)
-    async listAndPage(@Body() req: ListLocationRequestDto) {
-        return this.locationService.listPage(req)
+    async listAndPage(@Body() req: ListLocationRequestDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.locationService.listPage(req)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
+    }
+
+    @ApiOperation({ summary: 'List with filter'})
+    @ApiBody({ type: ListLocationQuery })
+    @ApiResponse({ description: 'If successful', status: 201, type: [LocationBody] })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() req: ListLocationRequestDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.locationService.listWithFilter(req)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Batch Create' })
@@ -77,7 +106,11 @@ export class LocationController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('batch-create')
     @UseGuards(AuthGuard)
-    async importData(@Body() createDatas: CreateLocationDto[]) {
-        return await this.locationService.importData(createDatas)
+    async importData(@Body() createDatas: CreateLocationBody[], @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.locationService.importData(createDatas as CreateLocationDto[])
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 }
