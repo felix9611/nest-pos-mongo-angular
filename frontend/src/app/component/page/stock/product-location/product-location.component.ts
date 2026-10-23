@@ -37,6 +37,7 @@ export class ProductLocationListComponent {
     private userRightSubscription: Subscription
     constructor(
         private userStoreService: UserStoreService,
+        private message: NzMessageService,
     ) {
         this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Product Location', 'product-location-lists')
@@ -86,9 +87,19 @@ export class ProductLocationListComponent {
     dataLists: any[] = []
 
     async loadProductLocationLists() {
-        const res = await postApiWithAuth('/product/product-list/location-list', this.searchForm)
-        this.dataLists = res.lists
-        this.totals = res.total
+        if (this.superAdmin === true) {
+            const res = await postApiWithAuth('/product/product-list/location-list', this.searchForm)
+            this.dataLists = res.lists
+            this.totals = res.total
+        } else {
+            if (this.searchForm.locationIds.length === 0) {
+                this.message.error('Please select least one location')
+            } else {
+                const res = await postApiWithAuth('/product/product-list/location-list', this.searchForm)
+                this.dataLists = res.lists
+                this.totals = res.total
+            }
+        }
     }
 
     locationList: any[] = []
