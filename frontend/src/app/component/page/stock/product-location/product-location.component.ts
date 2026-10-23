@@ -34,7 +34,7 @@ import { findMenuItem } from '../../../tool-function'
 })
 export class ProductLocationListComponent {
     private rightSubscription: Subscription
-
+    private userRightSubscription: Subscription
     constructor(
         private userStoreService: UserStoreService,
     ) {
@@ -43,18 +43,32 @@ export class ProductLocationListComponent {
             this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
             this.preLoadExcelSetting()
         })
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            this.superAdmin = data.superAdmin
+            if (data.superAdmin !== true) {
+                this.locationList = data.locations
+                this.searchForm.locationIds = data.placeIds
+
+                
+                this.loadProductLocationLists()
+            }
+        })
     }
 
     ngOnDestroy() {
         if (this.userStoreService.menuRole$) {
             this.rightSubscription.unsubscribe()
         }
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
+        }
     }
 
     ngOnInit() {
         this.loadLocationList()
-        this.loadProductLocationLists()
     }
+
+    superAdmin: boolean = false
 
     excelFileSetting: any = {
         code: ''
@@ -62,7 +76,9 @@ export class ProductLocationListComponent {
     
     searchForm: ListProductLocationtRequestDto = {
         page: 1,
-        limit: 10
+        limit: 10,
+        locationIds: [],
+        assetCode: ''
     }
 
     totals: number = 0
@@ -77,8 +93,9 @@ export class ProductLocationListComponent {
 
     locationList: any[] = []
     async loadLocationList() {
-        const data = await getApiWithAuth('/base/location/getAll')
-        this.locationList = data
+        if (this.superAdmin === true) {
+            this.loadLocationList = await getApiWithAuth('/base/location/getAll')
+        }
     }
 
     dbFieldList: string[] = []
