@@ -1,9 +1,10 @@
-import { Controller, Body, Post, UseGuards } from '@nestjs/common'
+import { Controller, Body, Post, UseGuards, HttpException, HttpStatus, Req } from '@nestjs/common'
 import { InvRecordService } from './InvRecord.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { DashboardReqBody, DashboardReqDto, DashboardResBody, ListInvRecordDto, ListInvRecordReq, ListInvRecordRes } from './InvRecord.dto'
 import { InvRecordQueryService } from './InvRecord-query.service'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { JwtPayload } from '../auth/auth.dto'
 
 @Controller('inventory-record')
 export class InventoryRecordController {
@@ -17,8 +18,12 @@ export class InventoryRecordController {
     @ApiResponse({ description: 'Return', status: 201, type: ListInvRecordRes })
     @Post('list')
     @UseGuards(AuthGuard)
-    async listPage(@Body() dto: ListInvRecordDto) {
-        return await this.invRecordService.listPage(dto)
+    async listPage(@Body() dto: ListInvRecordDto, @Req() { user }: { user: JwtPayload }) {  
+        if (user.superAdmin === true) {
+           return await this.invRecordService.listPage(dto)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'List with filter' })
@@ -26,8 +31,12 @@ export class InventoryRecordController {
     @ApiResponse({ description: 'Return', status: 201, type: ListInvRecordRes })
     @Post('filter/list')
     @UseGuards(AuthGuard)
-    async listWithFilter(@Body() dto: ListInvRecordDto) {
-        return await this.invRecordService.listWithFilter(dto)
+    async listWithFilter(@Body() dto: ListInvRecordDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+           return await this.invRecordService.listWithFilter(dto)
+        } else {
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'For dashboard query' })
