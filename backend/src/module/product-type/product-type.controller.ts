@@ -21,7 +21,7 @@ export class ProductTypeController {
         if (user.superAdmin === true) {
             return await this.productTypeService.create(createData)
         } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
    
@@ -34,7 +34,7 @@ export class ProductTypeController {
         if (user.superAdmin === true) {
             return await this.productTypeService.update(updateDto)
         } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -47,7 +47,7 @@ export class ProductTypeController {
         if (user.superAdmin === true) {
             return await this.productTypeService.getOneById(id)
         } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -59,7 +59,7 @@ export class ProductTypeController {
         if (user.superAdmin === true) {
             return await this.productTypeService.invalidate(id)
         } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -80,7 +80,7 @@ export class ProductTypeController {
         if (user.superAdmin === true) {
             return this.productTypeService.listPage(req)
         } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -92,7 +92,7 @@ export class ProductTypeController {
         if (user.superAdmin === true) {
             return this.productTypeService.listWithFilters(req)
         } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -106,7 +106,7 @@ export class ProductTypeController {
         if (user.superAdmin === true) {
             return await this.productTypeService.importData(createDatas)
         } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 }
