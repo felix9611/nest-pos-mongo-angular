@@ -50,6 +50,12 @@ export class SalePointComponent implements OnInit {
         })
     }
 
+    ngOnDestroy(): void {
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
+        }
+    }
+
     ngOnInit(): void {
         this.loadLocationList()
         this.orgTotal = 0
