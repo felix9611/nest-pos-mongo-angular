@@ -118,8 +118,16 @@ export class ProductController {
     @ApiResponse({ description: 'If successful', status: 201 })
     @Post('stock-out')
     @UseGuards(AuthGuard)
-    async stockOut(@Body() data: StockInOutProductLocationDto) {
-        return await this.productLocationService.stockOut(data)
+    async stockOut(@Body() data: StockInOutProductLocationDto, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productLocationService.stockOut(data)
+        } else {
+            if (!user.placeIds.includes(data.locationId)) {
+                throw new HttpException({error: 'Location access denied'}, HttpStatus.FORBIDDEN)
+            } else {
+                return await this.productLocationService.stockOut(data)
+            }
+        }
     }
 
     @ApiOperation({ summary: 'Stock In' })
@@ -127,8 +135,16 @@ export class ProductController {
     @ApiResponse({ description: 'If successful', status: 201 })
     @Post('stock-in')
     @UseGuards(AuthGuard)
-    async stockIn(@Body() data: StockInOutProductLocationDto) {
-        return await this.productLocationService.stockIn(data)
+    async stockIn(@Body() data: StockInOutProductLocationDto, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productLocationService.stockIn(data)
+        } else {
+            if (!user.placeIds.includes(data.locationId)) {
+                throw new HttpException({error: 'Location access denied'}, HttpStatus.FORBIDDEN)
+            } else {
+                return await this.productLocationService.stockIn(data)
+            }
+        }
     }
 
     @ApiOperation({ summary: 'Stock Move' })
@@ -136,8 +152,18 @@ export class ProductController {
     @ApiResponse({ description: 'If successful', status: 201 })
     @Post('stock-move')
     @UseGuards(AuthGuard)
-    async stockMove(@Body() data: StockMoveProductLocationDto) {
-        return await this.productLocationService.stockMove(data)
+    async stockMove(@Body() data: StockMoveProductLocationDto, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productLocationService.stockMove(data)
+        } else {
+            if (!user.placeIds.includes(data.fromLocationId)) {
+                throw new HttpException({error: 'Location access denied'}, HttpStatus.FORBIDDEN)
+            } else if (!user.placeIds.includes(data.toLocationId)) {
+                throw new HttpException({error: 'Location access denied'}, HttpStatus.FORBIDDEN)
+            } else {
+                return await this.productLocationService.stockMove(data)
+            }
+        }
     }
 
     @ApiOperation({ summary: 'Page with filter for Product Location' })
