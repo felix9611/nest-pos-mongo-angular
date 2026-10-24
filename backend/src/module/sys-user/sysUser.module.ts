@@ -10,6 +10,7 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
 import { Department, DepartmentSchema } from '../department/department.schame'
 import { LoginRecord, LoginRecordSchema } from './login-reocrd.schame'
 import { DepartmentService } from '../department/department.service'
+import { LocationSchema, Location } from '../location/location.schame'
 
 @Module({
     imports: [
@@ -18,7 +19,8 @@ import { DepartmentService } from '../department/department.service'
             { name: SysRole.name, schema: SysRoleSchema },
             { name: ActionRecord.name, schema: ActionRecordSchema },
             { name: Department.name, schema: DepartmentSchema },
-            { name: LoginRecord.name, schema: LoginRecordSchema }
+            { name: LoginRecord.name, schema: LoginRecordSchema },
+            { name: Location.name, schema: LocationSchema },
         ]),
         SysUser
     ],

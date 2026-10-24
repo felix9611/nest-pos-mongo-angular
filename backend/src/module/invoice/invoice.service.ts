@@ -305,12 +305,13 @@ export class InvoiceService {
     }
 
     async listPage(req: InvoiceListRequestDto) {
-        const { page, limit, number, dateRange } = req
+        const { page, limit, number, dateRange, locationIds } = req
         const skip = (page - 1) * limit
 
         const filter = {
             ...(number ? { number: { $regex: number, $options: 'i' } } : {}),
-            ...(dateRange && dateRange.length > 0 ? {  createdAt: { $gte: new Date(dateRange[0]), $lte: new Date(dateRange[1]) } } : {})
+            ...(dateRange && dateRange.length > 0 ? {  createdAt: { $gte: new Date(dateRange[0]), $lte: new Date(dateRange[1]) } } : {}),
+            ...(locationIds && locationIds.length > 0 ? { locationId: { $in: locationIds } } : {})
         }
 
         const lists = await this.invoiceModel.aggregate([

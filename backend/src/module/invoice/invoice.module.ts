@@ -14,6 +14,7 @@ import { ProductLocationService } from '../product/productLocation.service'
 import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schame'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
 import { InvoiceQueryService } from './invoice-query.service'
+import { InvoiceReserveItem, InvoiceReserveItemSchema } from './invoice-reserve-item.schema'
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { InvoiceQueryService } from './invoice-query.service'
             { name: Invoice.name, schema: InvoiceSchema },
             { name: InvoiceItem.name, schema: InvoiceItemSchema },
             { name: InvoicePayment.name, schema: InvoicePaymentSchema },
+            { name: InvoiceReserveItem.name, schema: InvoiceReserveItemSchema },
             { name: Product.name, schema: ProductSchema },
             { name: Location.name, schema: LocationSchema },
             { name: ProductLocation.name, schema: ProductLocationSchema },

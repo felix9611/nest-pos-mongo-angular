@@ -12,12 +12,12 @@ import { CodeTypeMoudule } from './module/code-type/codeType.module'
 import { TaxInformationMoudule } from './module/tax-information/tax-information.module'
 import { AuthGuard } from './module/auth/AuthGuard'
 import { APP_GUARD } from '@nestjs/core'
-import { SysRoleSchema } from './module/sys-role/role.schame'
-import { DepartmentSchema } from './module/department/department.schame'
+import { SysRole, SysRoleSchema } from './module/sys-role/role.schame'
+import { Department, DepartmentSchema } from './module/department/department.schame'
 import { LoggerMiddleware } from './tool/request-logger.middleware'
 import { SysMenuMoudule } from './module/sys-menu/sys-menu.module'
 import { ExcelFieldMatchModule } from './module/excelFieldMatch/excelFieldMatch.module'
-import { SysUserSchema } from './module/sys-user/sysUser.schame'
+import { SysUser, SysUserSchema } from './module/sys-user/sysUser.schame'
 import { LocationMoudule } from './module/location/location.module'
 import { ProductTypeMoudule } from './module/product-type/product-type.module'
 import { ProductMoudule } from './module/product/product.module'
@@ -51,9 +51,9 @@ import { ReturnInvoiceMoudule } from './module/returnInvoice/returnInvoice.modul
     ReturnInvoiceMoudule,
     MongooseModule.forRoot('mongodb://localhost/pos'),
     MongooseModule.forFeature([
-      { name: 'SysRoles', schema: SysRoleSchema },
-      { name: 'Department', schema: DepartmentSchema },
-      { name: 'SysUser', schema: SysUserSchema }
+      { name: SysRole.name, schema: SysRoleSchema },
+      { name: Department.name, schema: DepartmentSchema },
+      { name: SysUser.name, schema: SysUserSchema }
     ])
   ],
   controllers: [AppController],

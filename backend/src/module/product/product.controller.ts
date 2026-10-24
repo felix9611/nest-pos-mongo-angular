@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Move, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Move, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { ProductService } from './product.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
@@ -6,6 +6,7 @@ import { ReturnMsg } from '../../tool/open-api-body'
 import { BaseProductBody, CheckProductAndLocationDto, CheckProductAndLocationRequestBody, CheckProductAndLocationResponseBody, CreateProductDto, DashboardReqDto, GetByDeptAndQtyRequestBody, ListPageProductLocationRequest, ListPageProductLocationResponse, ListPageProductRequestBody, ListPageProductResponse, ListProductLocationtRequestDto, ListProductRequestDto, ProductBodyWithFiles, ProductLocationQueryResponse, PureProductBody, StockInOutProductLocationDto, StockInRequestBody, StockMoveProductLocationDto, StockMoveRequestBody, StockOutRequestBody, UpdateProductBody, UpdateProductDto } from './product.dto'
 import { ProductLocationService } from './productLocation.service'
 import { ProductLocationQueryService } from './productLocation-query.service'
+import { JwtPayload } from '../auth/auth.dto'
 
 @Controller('product/product-list')
 export class ProductController {
@@ -21,8 +22,12 @@ export class ProductController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: UpdateProductDto) {
-        return await this.productService.create(createData)
+    async create(@Body() createData: UpdateProductDto, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productService.create(createData)
+        } else {
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
    
     @ApiOperation({ summary: 'Update Product' })
@@ -30,8 +35,12 @@ export class ProductController {
     @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
-    async update(@Body() updateDto: UpdateProductDto) {
-        return await this.productService.update(updateDto)
+    async update(@Body() updateDto: UpdateProductDto, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productService.update(updateDto)
+        } else {
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Get one by id' })
@@ -56,8 +65,12 @@ export class ProductController {
     @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
-    async removeById(@Param('id') id: string) {
-        return await this.productService.invalidate(id)
+    async removeById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productService.invalidate(id)
+        } else {
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Get All Product' })
@@ -92,8 +105,12 @@ export class ProductController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('batch-create')
     @UseGuards(AuthGuard)
-    async importData(@Body() createDatas: CreateProductDto[]) {
-        return await this.productService.importData(createDatas)
+    async importData(@Body() createDatas: CreateProductDto[], @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productService.importData(createDatas)
+        } else {
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Stock Out' })
@@ -101,8 +118,16 @@ export class ProductController {
     @ApiResponse({ description: 'If successful', status: 201 })
     @Post('stock-out')
     @UseGuards(AuthGuard)
-    async stockOut(@Body() data: StockInOutProductLocationDto) {
-        return await this.productLocationService.stockOut(data)
+    async stockOut(@Body() data: StockInOutProductLocationDto, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productLocationService.stockOut(data)
+        } else {
+            if (!user.placeIds.includes(data.locationId)) {
+                throw new HttpException({error: 'Location access denied'}, HttpStatus.FORBIDDEN)
+            } else {
+                return await this.productLocationService.stockOut(data)
+            }
+        }
     }
 
     @ApiOperation({ summary: 'Stock In' })
@@ -110,8 +135,16 @@ export class ProductController {
     @ApiResponse({ description: 'If successful', status: 201 })
     @Post('stock-in')
     @UseGuards(AuthGuard)
-    async stockIn(@Body() data: StockInOutProductLocationDto) {
-        return await this.productLocationService.stockIn(data)
+    async stockIn(@Body() data: StockInOutProductLocationDto, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productLocationService.stockIn(data)
+        } else {
+            if (!user.placeIds.includes(data.locationId)) {
+                throw new HttpException({error: 'Location access denied'}, HttpStatus.FORBIDDEN)
+            } else {
+                return await this.productLocationService.stockIn(data)
+            }
+        }
     }
 
     @ApiOperation({ summary: 'Stock Move' })
@@ -119,8 +152,18 @@ export class ProductController {
     @ApiResponse({ description: 'If successful', status: 201 })
     @Post('stock-move')
     @UseGuards(AuthGuard)
-    async stockMove(@Body() data: StockMoveProductLocationDto) {
-        return await this.productLocationService.stockMove(data)
+    async stockMove(@Body() data: StockMoveProductLocationDto, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productLocationService.stockMove(data)
+        } else {
+            if (!user.placeIds.includes(data.fromLocationId)) {
+                throw new HttpException({error: 'Location access denied'}, HttpStatus.FORBIDDEN)
+            } else if (!user.placeIds.includes(data.toLocationId)) {
+                throw new HttpException({error: 'Location access denied'}, HttpStatus.FORBIDDEN)
+            } else {
+                return await this.productLocationService.stockMove(data)
+            }
+        }
     }
 
     @ApiOperation({ summary: 'Page with filter for Product Location' })
@@ -145,8 +188,12 @@ export class ProductController {
     @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('file-remove/:id')
     @UseGuards(AuthGuard)
-    async removeFile(@Param('id') id: string) {
-        return await this.productService.voidFileById(id)
+    async removeFile(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productService.voidFileById(id)
+        } else {
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Query for dashboard datas' })

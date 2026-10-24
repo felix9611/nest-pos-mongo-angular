@@ -60,3 +60,12 @@ export class UserDetailDto {
     @ApiProperty({ description: 'Role Lists', type: SysRoleBody, isArray: true})
     roleLists!: SysRoleBody[]
 }
+
+export interface JwtPayload {
+  sub: string
+  username: string
+  departmentIds: string[]
+  placeIds: string[]
+  roles: string[]
+  superAdmin: boolean
+}

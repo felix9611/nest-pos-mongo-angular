@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { MemberService } from './member-list.service'
 import { AuthGuard } from 'src/module/auth/AuthGuard'
 import { AllMemberListQuery, CreateMemberDto, ListMemberDto, ListMemberRequestDto, MemberBody, MemberListQuery, MemberListResponseBody, UpdateMemberBody, UpdateMemberDto } from './member-list.dto'
 import { ReturnMsg } from 'src/tool/open-api-body'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { JwtPayload } from 'src/module/auth/auth.dto'
 
 
 @Controller('member/member-list')
@@ -20,9 +21,9 @@ export class MemberController {
         return await this.memberService.create(createData)
     }
        
-     @ApiOperation({ summary: 'Update Member' })
-        @ApiBody({ type: UpdateMemberBody })
-        @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @ApiOperation({ summary: 'Update Member' })
+    @ApiBody({ type: UpdateMemberBody })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
     async update(@Body() updateDto: UpdateMemberDto) {
@@ -42,8 +43,12 @@ export class MemberController {
     @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
-    async removeById(@Param('id') id: string) {
-        return await this.memberService.invalidate(id)
+    async removeById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === false) {
+            throw new HttpException({ error: 'Access denied' }, HttpStatus.FORBIDDEN)    
+        } else {
+            return await this.memberService.invalidate(id)
+        }
     }
     
     @ApiOperation({ summary: 'Page and list'})
