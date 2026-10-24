@@ -45,7 +45,7 @@ export class MemberController {
     @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
         if (user.superAdmin === false) {
-            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)    
+            throw new HttpException({ error: 'Access denied' }, HttpStatus.FORBIDDEN)    
         } else {
             return await this.memberService.invalidate(id)
         }

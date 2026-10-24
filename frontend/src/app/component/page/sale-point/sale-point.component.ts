@@ -12,8 +12,9 @@ import { NzButtonModule } from 'ng-zorro-antd/button'
 import { MatButtonModule } from '@angular/material/button'
 import { NzModalModule } from 'ng-zorro-antd/modal'
 import { NzMessageService } from 'ng-zorro-antd/message'
-import { timer } from 'rxjs'
+import { Subscription, timer } from 'rxjs'
 import { Router } from '@angular/router'
+import { UserStoreService } from '../../../../state/user.service'
 
 @Component({
     templateUrl: './sale-point.component.html',
@@ -31,15 +32,30 @@ import { Router } from '@angular/router'
     ]
 })
 export class SalePointComponent implements OnInit {
+    private userRightSubscription: Subscription
     constructor(
         private routeTo: Router,
         private message: NzMessageService,
-    ) {}
+        private userStoreService: UserStoreService,
+    ) {
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            this.superAdmin = data.superAdmin
+            if (data.superAdmin !== true) {
+                this.locationList = data.locations
+                if (this.locationList.length === 1) {
+                    this.invoiceForm.locationId = this.locationList[0]._id
+                    this.invoiceForm.locationCode = this.locationList[0].code
+                }
+            }
+        })
+    }
 
     ngOnInit(): void {
         this.loadLocationList()
         this.orgTotal = 0
     }
+
+    superAdmin: boolean = false
 
     locationList: any[] = []
     async loadLocationList() {
