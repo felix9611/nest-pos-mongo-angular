@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { MemberClassService } from './member-class.service'
 import { AuthGuard } from 'src/module/auth/AuthGuard'
 import { CreateMemberClassBody, CreateMemberClassDto, ListMemberClassQuery, ListMemberClassQueryRes, ListMemberClassRequestDto, MemberClassBody, UpdateMemberClassBody, UpdateMemberClassDto } from './member-class.dto'
 import { ReturnMsg } from 'src/tool/open-api-body'
 import { ApiBody, ApiResponse, ApiOperation } from '@nestjs/swagger'
+import { JwtPayload } from 'src/module/auth/auth.dto'
 
 
 @Controller('member/member-class')
@@ -16,8 +17,12 @@ export class MemberClassController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: UpdateMemberClassDto) {
-        return await this.memberClassService.create(createData)
+    async create(@Body() createData: UpdateMemberClassDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.memberClassService.create(createData)
+        } else {
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
        
     @ApiOperation({ summary: 'Update Member Class' })
@@ -25,13 +30,17 @@ export class MemberClassController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
-    async update(@Body() updateDto: UpdateMemberClassDto) {
-        return await this.memberClassService.update(updateDto)
+    async update(@Body() updateDto: UpdateMemberClassDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.memberClassService.update(updateDto)
+        } else {
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
     
     @ApiOperation({ summary: 'Get one by ID' })
-        @ApiResponse({ description: 'If successful', status: 201, type: MemberClassBody })
-        @ApiResponse({ description: 'If no data', status: 200, type: ReturnMsg })
+    @ApiResponse({ description: 'If successful', status: 201, type: MemberClassBody })
+    @ApiResponse({ description: 'If no data', status: 200, type: ReturnMsg })
     @Get('one/:id')
     @UseGuards(AuthGuard)
     async getOneById(@Param('id') id: string) {
@@ -42,8 +51,12 @@ export class MemberClassController {
     @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
-    async removeById(@Param('id') id: string) {
-        return await this.memberClassService.invalidate(id)
+    async removeById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.memberClassService.invalidate(id)
+        } else {
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
     
     @ApiOperation({ summary: 'Get all Data' })
@@ -63,14 +76,18 @@ export class MemberClassController {
         return this.memberClassService.listPage(req)
     }
     
-     @ApiOperation({ summary: 'Batch Create' })
-        @ApiBody({ type: CreateMemberClassBody, isArray: true })
-        @ApiResponse({ description: 'If save successful', status: 201, type: MemberClassBody, isArray: true })
-        @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @ApiOperation({ summary: 'Batch Create' })
+    @ApiBody({ type: CreateMemberClassBody, isArray: true })
+    @ApiResponse({ description: 'If save successful', status: 201, type: MemberClassBody, isArray: true })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('batch-create')
     @UseGuards(AuthGuard)
-    async importData(@Body() createDatas: CreateMemberClassDto[]) {
-        return await this.memberClassService.importData(createDatas)
+    async importData(@Body() createDatas: CreateMemberClassDto[], @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.memberClassService.importData(createDatas)
+        } else {
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
     }
 }
 
