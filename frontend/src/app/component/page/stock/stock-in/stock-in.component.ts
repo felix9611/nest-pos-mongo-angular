@@ -51,6 +51,9 @@ export class StockInComponent implements OnInit {
             this.superAdmin = data.superAdmin
             if (data.superAdmin !== true) {
                 this.locationList = data.locations
+                if (this.locationList.length === 1) {
+                    this.stockInForm.locationId = this.locationList[0]._id
+                }
             }
         })
     }

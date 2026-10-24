@@ -17,6 +17,8 @@ import { NzModalModule } from 'ng-zorro-antd/modal'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { ProductLocationListComponent } from '../product-location/product-location.component'
+import { Subscription } from 'rxjs'
+import { UserStoreService } from '../../../../../state/user.service'
 
 @Component({
     imports: [
@@ -40,13 +42,33 @@ import { ProductLocationListComponent } from '../product-location/product-locati
     templateUrl: './stock-out.component.html'
 })
 export class StockOutComponent implements OnInit {
+    private userRightSubscription: Subscription
     constructor(
         private message: NzMessageService,
-    ) {}
+        private userStoreService: UserStoreService,
+    ) {
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            this.superAdmin = data.superAdmin
+            if (data.superAdmin !== true) {
+                this.locationList = data.locations
+                if (this.locationList.length === 1) {
+                    this.stockInForm.locationId = this.locationList[0]._id
+                }
+            }
+        })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
+        }
+    }
 
     ngOnInit(): void {
         this.loadLocationList()
     }
+
+    superAdmin: boolean = false
 
     reloadProductLocation: boolean = true
 
@@ -79,8 +101,9 @@ export class StockOutComponent implements OnInit {
 
     locationList: any[] = []
     async loadLocationList() {
-        const data = await getApiWithAuth('/base/location/getAll')
-        this.locationList = data
+        if (this.superAdmin === true) {
+            this.locationList = await getApiWithAuth('/base/location/getAll')
+        }
     }
 
     async productCodeChanged(event: any) {
