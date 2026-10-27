@@ -1,3 +1,3 @@
 export const jwtConstants = {
-    secret: 'GOLD CITY UMA MUSUME CANADA',
+    secret: 'CANADIAN UMA MUSUME GOLD CITY',
 }
