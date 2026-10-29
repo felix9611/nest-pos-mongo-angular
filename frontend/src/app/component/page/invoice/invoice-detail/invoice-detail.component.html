@@ -96,7 +96,9 @@
             <nz-form-item >
                 <div class="px-1 w-[105px] flex items-center">After Tax</div>
                 <nz-form-control class="w-full">
-                    <input nz-input type="text" name="taxTotal" [(ngModel)]="invoiceDetail.taxTotal" [disabled]="true" />
+                    <nz-input-number [style.width.%]="100" nz-input type="text" name="taxTotal" [(ngModel)]="invoiceDetail.taxTotal" [disabled]="true">
+                        <span nzInputPrefix>$</span>
+                    </nz-input-number>
                 </nz-form-control>
             </nz-form-item>
 
