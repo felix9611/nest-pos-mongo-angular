@@ -1,5 +1,5 @@
 {
-  "name": "fixedasset-in-mongodb-app",
+  "name": "pos-in-mongodb-app",
   "version": "0.0.0",
  "scripts": {
     "ng": "ng",
