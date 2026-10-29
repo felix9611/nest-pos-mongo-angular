@@ -67,11 +67,7 @@ export class DepartmentController {
     @Get('getAll')
     @UseGuards(AuthGuard)
     async getAll(@Req() { user }: { user: JwtPayload }) {
-        if (user.superAdmin === true) {
-            return this.deptService.findAll()
-        } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
-        }
+        return this.deptService.findAll()
     }
 
     @ApiOperation({ summary: 'List with filter' })

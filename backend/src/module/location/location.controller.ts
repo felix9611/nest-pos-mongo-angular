@@ -67,11 +67,7 @@ export class LocationController {
     @Get('getAll')
     @UseGuards(AuthGuard)
     async getAll(@Req() { user }: { user: JwtPayload }) {
-        if (user.superAdmin === true) {
-            return await this.locationService.findAll()
-        } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
-        }
+        return await this.locationService.findAll()
     }
     
     @ApiOperation({ summary: 'Page and list'})
