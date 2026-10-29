@@ -75,8 +75,10 @@ export class InvoiceDetailComponent implements OnInit {
 
     locationList: any[] = []
     async loadLocationList() {
-        const data = await getApiWithAuth('/base/location/getAll')
-        this.locationList = data
+        if (this.superAdmin === true) {
+            const data = await getApiWithAuth('/base/location/getAll')
+            this.locationList = data
+        }
     }
 
     invoiceDetail: any = {}
