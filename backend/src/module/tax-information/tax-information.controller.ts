@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { TaxInformationService } from './tax-information.service'
-import { UpdateDtoTaxInformation, TaxInformationListSearchDto, TaxInformationImportDto, TaxInformationBody, TaxInformationCreateBody, TaxInformationUpdateBody, TaxInformationListQuery, TaxInformationListQueryRes } from './tax-information.dto'
+import { UpdateDtoTaxInformation, TaxInformationListSearchDto, TaxInformationImportDto, TaxInformationBody, TaxInformationCreateBody, TaxInformationUpdateBody, TaxInformationListQuery, TaxInformationListQueryRes, TaxInfoForSalePoint } from './tax-information.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ReturnMsg } from 'src/tool/open-api-body'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
@@ -95,5 +95,14 @@ export class TaxInformationController {
     } else {
       throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
     }
+  }
+
+  @ApiOperation({ summary: 'Found tax information for sale point' })
+  @ApiResponse({ description: 'If save successful', status: 201, type: TaxInformationBody, isArray: true })
+  @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+  @Post('sales-point')
+  @UseGuards(AuthGuard)
+  async findTaxInfoForSalePoint(@Body() req: TaxInfoForSalePoint) {
+    return this.taxInformationService.findTaxInfoForSalePoint(req)
   }
 }
