@@ -248,9 +248,11 @@ export class SalePointComponent implements OnInit {
 
     totalTypeChnage(event: any) {
         if (event === '%') {
-            this.invoiceForm.totalAmount = parseFloat((this.orgTotalAfterTax * (1 - this.invoiceForm.discount /100)).toFixed(2))
+            this.invoiceForm.totalAmount = parseFloat((this.orgTotal).toFixed(2))
+            this.invoiceForm.taxTotal = parseFloat((this.orgTotalAfterTax * (1 - this.invoiceForm.discount /100)).toFixed(2))
         } else {
-            this.invoiceForm.totalAmount = parseFloat((Number(this.orgTotalAfterTax) - Number(this.invoiceForm.discount)).toFixed(2))
+            this.invoiceForm.totalAmount = parseFloat((this.orgTotal).toFixed(2))
+            this.invoiceForm.taxTotal = parseFloat((Number(this.orgTotalAfterTax) - Number(this.invoiceForm.discount)).toFixed(2))
         }
     }
 
@@ -274,8 +276,6 @@ export class SalePointComponent implements OnInit {
         
         this.paymentForm.findRedemption = (Number(amount) > Number(this.paymentForm.balance) ? Number(amount) - Number(this.paymentForm.balance) : 0).toFixed(2)
         this.paymentForm.balance = (this.invoiceForm.totalAmount - amount).toFixed(2)
-        
-
     }
 
     lastPaymentDialogOpen: boolean = false
