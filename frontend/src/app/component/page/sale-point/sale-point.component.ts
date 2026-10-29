@@ -274,15 +274,15 @@ export class SalePointComponent implements OnInit {
 
         this.inputedPaymentList.push(addToList)
         
-        this.paymentForm.findRedemption = (Number(amount) > Number(this.paymentForm.balance) ? Number(amount) - Number(this.paymentForm.balance) : 0).toFixed(2)
-        this.paymentForm.balance = (this.invoiceForm.totalAmount - amount).toFixed(2)
+        this.paymentForm.findRedemption = (Number(amount) > this.invoiceForm.taxTotal ? Number(amount) - Number(this.invoiceForm.taxTotal) : 0).toFixed(2)
+        this.paymentForm.balance = (this.invoiceForm.taxTotal - amount).toFixed(2)
     }
 
     lastPaymentDialogOpen: boolean = false
 
     openPaymentDialg() {
-        this.invoiceForm.totalAmount = this.invoiceForm.totalAmount ? this.invoiceForm.totalAmount : this.orgTotal
-        this.paymentForm.balance = (this.invoiceForm.totalAmount ? this.invoiceForm.totalAmount : this.orgTotal).toFixed(2)
+         this.invoiceForm.totalAmount = this.invoiceForm.totalAmount ? this.invoiceForm.totalAmount : this.orgTotalAfterTax
+        this.paymentForm.balance = (this.invoiceForm.taxTotal ? this.invoiceForm.taxTotal : this.orgTotalAfterTax).toFixed(2)
         this.lastPaymentDialogOpen = true
     }
 
