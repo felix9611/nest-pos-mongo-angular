@@ -12,6 +12,8 @@ import { MatIconModule } from '@angular/material/icon'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import moment from 'moment'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { Subscription } from 'rxjs'
+import { UserStoreService } from '../../../../../state/user.service'
 
 
 @Component({
@@ -29,11 +31,27 @@ import { NzMessageService } from 'ng-zorro-antd/message'
     templateUrl: './invoice-detail.component.html'
 })
 export class InvoiceDetailComponent implements OnInit {
+    private userRightSubscription: Subscription
     constructor(
         private route: ActivatedRoute,
         private routeTo: Router,
         private message: NzMessageService,
-    ) {}
+        private userStoreService: UserStoreService,
+    ) {
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            this.superAdmin = data.superAdmin
+            if (data.superAdmin !== true) {
+                this.locationList = data.locations
+            }
+        })
+    }
+
+    ngOnDestroy(): void {
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
+        }
+    }
+
     ngOnInit(): void {
         this.loadLocationList()
         this.route.queryParams.subscribe((x: any) => {
@@ -42,6 +60,8 @@ export class InvoiceDetailComponent implements OnInit {
             }
         })
     }
+
+    superAdmin: boolean = false
 
     async getDetail(id: string) {
         const data = await getApiWithAuth(`/invoice/one/${id}`)
@@ -55,8 +75,10 @@ export class InvoiceDetailComponent implements OnInit {
 
     locationList: any[] = []
     async loadLocationList() {
-        const data = await getApiWithAuth('/base/location/getAll')
-        this.locationList = data
+        if (this.superAdmin === true) {
+            const data = await getApiWithAuth('/base/location/getAll')
+            this.locationList = data
+        }
     }
 
     invoiceDetail: any = {}

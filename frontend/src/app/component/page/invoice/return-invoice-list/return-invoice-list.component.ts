@@ -40,7 +40,7 @@ import { DownloadExcelDataComponent } from '../../../components/download-excel-c
 })
 export class ReturnInvoiceListComponent {
     private rightSubscription: Subscription
-    private userRightSubscription: Subscription
+   // private userRightSubscription: Subscription
     constructor(
         private routeTo: Router,
         private userStoreService: UserStoreService,
@@ -78,7 +78,9 @@ export class ReturnInvoiceListComponent {
 
     searchForm: InvoiceListRequestDto = {
         page: 1,
-        limit: 10
+        limit: 10,
+        number: '',
+        dateRange: []
     }
 
     userRightInside: any = {

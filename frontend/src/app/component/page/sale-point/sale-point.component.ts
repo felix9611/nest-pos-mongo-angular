@@ -43,7 +43,7 @@ export class SalePointComponent implements OnInit {
             if (data.superAdmin !== true) {
                 this.locationList = data.locations
                 if (this.locationList.length === 1) {
-                    this.invoiceForm.locationId = this.locationList[0]._id
+                    this.invoiceForm.locationId = this.locationList[0].id
                     this.invoiceForm.locationCode = this.locationList[0].code
                 }
             }
@@ -56,17 +56,20 @@ export class SalePointComponent implements OnInit {
         }
     }
 
-    ngOnInit(): void {
+    ngOnInit(): void { 
         this.loadLocationList()
         this.orgTotal = 0
+        this.orgTotalAfterTax = 0
     }
 
     superAdmin: boolean = false
 
     locationList: any[] = []
     async loadLocationList() {
-        const data = await getApiWithAuth('/base/location/getAll')
-        this.locationList = data
+        if (this.superAdmin === true) {
+            const data = await getApiWithAuth('/base/location/getAll')
+            this.locationList = data
+        }
         this.inputedProductList = []
         this.inputedPaymentList = []
     }
@@ -193,7 +196,8 @@ export class SalePointComponent implements OnInit {
         }
 
         this.inputedProductList.push(addToList)
-        this.orgTotal += Number(taxAmount)
+        this.orgTotalAfterTax += Number(taxAmount)
+        this.orgTotal += Number(allTotalPrice)
 
         this.enterProductForm = {
             productCode: '',
@@ -214,7 +218,7 @@ export class SalePointComponent implements OnInit {
     }
 
     orgTotal: number = 0
-      
+    orgTotalAfterTax: number = 0
 
     // RIGHT
 
@@ -244,9 +248,9 @@ export class SalePointComponent implements OnInit {
 
     totalTypeChnage(event: any) {
         if (event === '%') {
-            this.invoiceForm.totalAmount = parseFloat((this.orgTotal * (1 - this.invoiceForm.discount /100)).toFixed(2))
-        } else if (event === '$') {
-            this.invoiceForm.totalAmount = parseFloat((this.orgTotal - this.enterProductForm.disscount).toFixed(2))
+            this.invoiceForm.totalAmount = parseFloat((this.orgTotalAfterTax * (1 - this.invoiceForm.discount /100)).toFixed(2))
+        } else {
+            this.invoiceForm.totalAmount = parseFloat((Number(this.orgTotalAfterTax) - Number(this.invoiceForm.discount)).toFixed(2))
         }
     }
 
@@ -254,8 +258,8 @@ export class SalePointComponent implements OnInit {
     paymentForm: InvoicePaymentDto = {
         method: '',
         amount: 0,
-        balance: 0,
-        findRedemption: 0
+        balance: '',
+        findRedemption: ''
     }
 
     addPaymentList() {
@@ -268,8 +272,8 @@ export class SalePointComponent implements OnInit {
 
         this.inputedPaymentList.push(addToList)
         
-        this.paymentForm.findRedemption = amount > this.paymentForm.balance ? amount - this.paymentForm.balance : 0
-        this.paymentForm.balance = this.invoiceForm.totalAmount - amount
+        this.paymentForm.findRedemption = (Number(amount) > Number(this.paymentForm.balance) ? Number(amount) - Number(this.paymentForm.balance) : 0).toFixed(2)
+        this.paymentForm.balance = (this.invoiceForm.totalAmount - amount).toFixed(2)
         
 
     }
@@ -278,7 +282,7 @@ export class SalePointComponent implements OnInit {
 
     openPaymentDialg() {
         this.invoiceForm.totalAmount = this.invoiceForm.totalAmount ? this.invoiceForm.totalAmount : this.orgTotal
-        this.paymentForm.balance = this.invoiceForm.totalAmount ? this.invoiceForm.totalAmount : this.orgTotal
+        this.paymentForm.balance = (this.invoiceForm.totalAmount ? this.invoiceForm.totalAmount : this.orgTotal).toFixed(2)
         this.lastPaymentDialogOpen = true
     }
 
@@ -288,7 +292,7 @@ export class SalePointComponent implements OnInit {
 
     removePayItem(index: number, amount: any) {
         this.paymentForm.balance = this.paymentForm.balance + amount.amount
-        this.paymentForm.findRedemption = this.paymentForm.findRedemption - amount.amount
+        this.paymentForm.findRedemption = (Number(this.paymentForm.findRedemption) - Number(amount.amount)).toFixed(2)
         this.inputedPaymentList.splice(index, 1)
     }
 
@@ -296,7 +300,7 @@ export class SalePointComponent implements OnInit {
 
         const finalDataSubmit = {
             ...this.invoiceForm,
-            discount: this.invoiceForm.discount ? this.invoiceForm.discount / 100 : 0,
+            discount: this.invoiceForm.discount ? (this.invoiceForm.discountType === '%' ? this.invoiceForm.discount / 100 : this.invoiceForm.discount) : 0,
             invoiceItems: this.inputedProductList,
             invoicePayments: this.inputedPaymentList
         }
@@ -312,8 +316,6 @@ export class SalePointComponent implements OnInit {
         }
     }
 
-    
-
     async findTaxInfoForSalePoint() {
         const res = await postApiWithAuth('/base/tax-information/sales-point', this.taxInfoFilter)
         this.enterProductForm.taxRate = res.taxRate
@@ -321,5 +323,4 @@ export class SalePointComponent implements OnInit {
         this.enterProductForm.taxCode = res.taxCode
         this.enterProductForm.taxType = res.taxType
     }
-    
 }
