@@ -152,6 +152,10 @@ export class SalePointComponent implements OnInit {
             this.enterProductForm.retailPrice = data.retailPrice
             this.productForm = data
 
+            if (data._id) {
+                this.qtyChanged(1)
+            }
+            
             this.taxInfoFilter.taxType = data.taxType
             if (this.locationList.length === 1) {
                 this.taxInfoFilter.countryCode = this.invoiceForm.locationCode
