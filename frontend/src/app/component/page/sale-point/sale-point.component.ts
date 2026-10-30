@@ -43,7 +43,7 @@ export class SalePointComponent implements OnInit {
             if (data.superAdmin !== true) {
                 this.locationList = data.locations
                 if (this.locationList.length === 1) {
-                    this.invoiceForm.locationId = this.locationList[0].id
+                    this.invoiceForm.locationId = this.locationList[0]._id
                     this.invoiceForm.locationCode = this.locationList[0].code
                 }
             }
@@ -153,6 +153,10 @@ export class SalePointComponent implements OnInit {
             this.productForm = data
 
             this.taxInfoFilter.taxType = data.taxType
+            if (this.locationList.length === 1) {
+                this.taxInfoFilter.countryCode = this.invoiceForm.locationCode
+                this.findTaxInfoForSalePoint()
+            }
         }
     }
 
