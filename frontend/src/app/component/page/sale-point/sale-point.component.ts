@@ -43,7 +43,7 @@ export class SalePointComponent implements OnInit {
             if (data.superAdmin !== true) {
                 this.locationList = data.locations
                 if (this.locationList.length === 1) {
-                    this.invoiceForm.locationId = this.locationList[0].id
+                    this.invoiceForm.locationId = this.locationList[0]._id
                     this.invoiceForm.locationCode = this.locationList[0].code
                 }
             }
@@ -152,7 +152,15 @@ export class SalePointComponent implements OnInit {
             this.enterProductForm.retailPrice = data.retailPrice
             this.productForm = data
 
+            if (data._id) {
+                this.qtyChanged(1)
+            }
+            
             this.taxInfoFilter.taxType = data.taxType
+            if (this.locationList.length === 1) {
+                this.taxInfoFilter.countryCode = this.invoiceForm.locationCode
+                this.findTaxInfoForSalePoint()
+            }
         }
     }
 
@@ -223,8 +231,14 @@ export class SalePointComponent implements OnInit {
     // RIGHT
 
     removeItem(index: number) {
-        this.orgTotal -= Number(this.inputedProductList[index].taxAmount)
+        this.orgTotal -= Number(this.inputedProductList[index].price)
+        this.orgTotalAfterTax -= Number(this.inputedProductList[index].taxAmount)
         this.inputedProductList.splice(index, 1)
+
+        if (this.inputedProductList.length === 0) {
+            this.orgTotal = 0
+            this.orgTotalAfterTax = 0
+        }
     }
 
     memberLists: any[] = []
