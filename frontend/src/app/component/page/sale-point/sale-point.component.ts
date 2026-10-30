@@ -231,7 +231,7 @@ export class SalePointComponent implements OnInit {
     // RIGHT
 
     removeItem(index: number) {
-        this.orgTotal -= Number(this.inputedProductList[index].allTotalPrice)
+        this.orgTotal -= Number(this.inputedProductList[index].price)
         this.orgTotalAfterTax -= Number(this.inputedProductList[index].taxAmount)
         this.inputedProductList.splice(index, 1)
 
