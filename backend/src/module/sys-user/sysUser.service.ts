@@ -200,9 +200,11 @@ export class SysUserService {
     ]).exec()
 
     const loginRecords = await this.loginRecordModel.find({ username }).sort({ loginTime: -1 }).limit(15).exec()
-  
+    const finalUserData = answer[0]
+    delete finalUserData.password
+
     return {
-      ...answer[0],
+      ...finalUserData,
       loginRecords
     }
   }
@@ -260,6 +262,11 @@ export class SysUserService {
           }
       },
       { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+      { 
+        $project: { 
+          password: 0
+        } 
+      },
       { $skip: skip },
       { $limit: limit },
     ])
