@@ -345,7 +345,7 @@ export class JobBoardsComponent  {
 
       this.placeOptions = this.places.map((a: any) => ({
         value: a.placeCode,
-        label: `${a.placeCode} - ${a.placeName}`,
+        label: `${a.placeName} - ${a.address} - ${a.country} ${a.zipCode}`,
       }));
 
       return this.placeOptions;

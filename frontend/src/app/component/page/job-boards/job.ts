@@ -9,7 +9,7 @@ export interface Job {
   jobTimeRemain: string
   tags: string[]
   labels: string[]
-  locationId: string[]
+  locationIds: string[]
   attachments: {
     fileName: string;
     fileType: string;
@@ -73,7 +73,7 @@ export const newJob = (status = 1): Job => ({
   status,
   users: [],
   sortOrder: 0,
-  locationId: [],
+  locationIds: [],
 });
 export function demoJobs(): Job[] {
   const rows: [string, string, number, string, string, string][] = [

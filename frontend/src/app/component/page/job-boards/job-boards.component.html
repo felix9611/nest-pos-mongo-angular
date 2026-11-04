@@ -313,6 +313,18 @@
           </div>
           <label>Tags (comma-separated)<input [(ngModel)]="tagText" placeholder="Q4, 內部" /></label>
           <div class="lookup-field">
+              <span class="field-label">Location</span>
+              <app-filter-list-api
+                  label="Location"
+                  [apiUrl]="'/base/location/list'"
+                  [requestBody]="placeSearchForm"
+                  [postApi]="loadPlaceLists"
+                  [multiple]="true"
+                  [searchDataKey]="['query']"
+                  [(value)]="job.locationIds"
+              />
+            </div>
+          <div class="lookup-field">
             <span class="field-label">Users</span>
             <app-filter-list-api
                 label="Members"
@@ -423,6 +435,47 @@
           <h3>Task Relations Data</h3>
           <div class="form-grid">
             <div class="lookup-field">
+              <span class="field-label">Department</span>
+              <app-filter-list-api
+                  label="Department"
+                  [apiUrl]="'/sys/department/list'"
+                  [requestBody]="deptSearchForm"
+                  [postApi]="loadDeptLists"
+                  [multiple]="false"
+                  [searchDataKey]="['deptCode', 'deptName']"
+                  [(singleValue)]="job.jobRelationData.deptCode"
+                  (singleValueChange)="job.jobRelationData.deptCode"
+              />
+            </div>
+            @if (job.locationIds.length === 0) {
+              <div class="lookup-field">
+                <span class="field-label">Location</span>
+                <app-filter-list-api
+                    label="Location"
+                    [apiUrl]="'/base/location/list'"
+                    [requestBody]="placeSearchForm"
+                    [postApi]="loadPlaceLists"
+                    [multiple]="false"
+                    [searchDataKey]="['query']"
+                    [(singleValue)]="job.jobRelationData.placeCode"
+                    (singleValueChange)="job.jobRelationData.placeCode"
+                />
+              </div>
+            }
+            <div class="lookup-field">
+              <span class="field-label">Vendor</span>
+              <app-filter-list-api
+                  label="Vendor"
+                  [apiUrl]="'/base/vendor/list'"
+                  [requestBody]="vendorSearchForm"
+                  [postApi]="loadVendorLists"
+                  [multiple]="false"
+                  [searchDataKey]="['name', 'place', 'contact']"
+                  [(singleValue)]="job.jobRelationData.vendorCode"
+                  (singleValueChange)="job.jobRelationData.vendorCode"
+              />
+            </div>
+            <div class="lookup-field">
               <span class="field-label">Asset</span>
               <app-filter-list-api
                   label="Asset"
@@ -448,45 +501,8 @@
                   (singleValueChange)="job.jobRelationData.typeCode"
               />
             </div>
-            <div class="lookup-field">
-              <span class="field-label">Department</span>
-              <app-filter-list-api
-                  label="Department"
-                  [apiUrl]="'/sys/department/list'"
-                  [requestBody]="deptSearchForm"
-                  [postApi]="loadDeptLists"
-                  [multiple]="false"
-                  [searchDataKey]="['deptCode', 'deptName']"
-                  [(singleValue)]="job.jobRelationData.deptCode"
-                  (singleValueChange)="job.jobRelationData.deptCode"
-              />
-            </div>
-            <div class="lookup-field">
-              <span class="field-label">Location</span>
-              <app-filter-list-api
-                  label="Location"
-                  [apiUrl]="'/base/location/list'"
-                  [requestBody]="placeSearchForm"
-                  [postApi]="loadPlaceLists"
-                  [multiple]="false"
-                  [searchDataKey]="['placeCode', 'placeName']"
-                  [(singleValue)]="job.jobRelationData.placeCode"
-                  (singleValueChange)="job.jobRelationData.placeCode"
-              />
-            </div>
-            <div class="lookup-field">
-              <span class="field-label">Vendor</span>
-              <app-filter-list-api
-                  label="Vendor"
-                  [apiUrl]="'/base/vendor/list'"
-                  [requestBody]="vendorSearchForm"
-                  [postApi]="loadVendorLists"
-                  [multiple]="false"
-                  [searchDataKey]="['name', 'place', 'contact']"
-                  [(singleValue)]="job.jobRelationData.vendorCode"
-                  (singleValueChange)="job.jobRelationData.vendorCode"
-              />
-            </div>
+          
+            
             <div class="lookup-field">
               <span class="field-label">Stock Take</span>
               <app-filter-list-api
