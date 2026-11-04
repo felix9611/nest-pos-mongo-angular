@@ -28,6 +28,9 @@ export class JobDashboard extends BaseSchema {
     jobTimeRemain?: string
 
     @Prop({ type: SchemaTypes.Array, required: false, default: [] })
+    locationId?: string[]
+
+    @Prop({ type: SchemaTypes.Array, required: false, default: [] })
     tags?: string[]
 
     @Prop({ type: SchemaTypes.Array, required: false, default: [] })
