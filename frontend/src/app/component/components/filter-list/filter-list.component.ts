@@ -74,7 +74,7 @@ export interface ListOption {
                 <span
                   ><b>{{ option.label }}</b
                   ><small>{{ option.value }}</small></span
-                ><span>{{ selectedIds.includes(option.value) ? '✓' : '＋' }}</span>
+                ><span>{{ selectedItem(option.value) }}</span>
               </button>
             } @empty {
               @if (!loading() && !error()) {
@@ -318,5 +318,17 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
     clearTimeout(this.searchTimer);
     this.timers.forEach((timer) => clearTimeout(timer));
     this.timers.clear();
+  }
+
+  selectedItem(id: string) {
+    if (this.selectedIds.includes(id)) {
+      return '✓'
+    } else {
+      if (this.multiple === true) {
+        return '＋'
+      } else {
+        return ''
+      }
+    }
   }
 }
