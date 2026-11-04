@@ -30,6 +30,7 @@ export interface ListUserRequestDto {
     deptIds?: string[],
     roleIds?: string[],
     username?: string
+    email?: string
 }
 
 export class SysUserBody {
