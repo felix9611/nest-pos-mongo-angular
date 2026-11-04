@@ -322,8 +322,7 @@ export class JobBoardsComponent  {
   places: any = []
   placeOptions: ListOption[] = [];
   placeSearchForm: any = {
-    placeCode: '',
-    placeName: '',
+    query: '',
     page: 1,
     limit: 10
   }
