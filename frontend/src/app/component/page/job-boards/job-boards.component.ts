@@ -353,6 +353,79 @@ export class JobBoardsComponent  {
     }
   }
 
+  // Invoice data
+  invoiceTotal: number = 0
+  invoices: any = []
+  invoiceOptions: ListOption[] = [];
+  invoiceSearchForm: any = {
+    number: '',
+    page: 1,
+    limit: 10
+  }
+  loadInvoiceLists = async (
+    url: string,
+    body: Record<string, unknown>,
+  ): Promise<ListOption[]> => {
+    const payload = {
+      ...this.invoiceSearchForm,
+      ...body,
+    }
+
+    try {
+      const res = await postApiWithAuth(url, payload);
+
+      this.invoices = res.lists ?? []
+      this.invoiceTotal = res.total ?? 0
+
+      this.invoiceOptions = this.invoices.map((a: any) => ({
+        value: a.number,
+        label: `${a.number} (${a.location.placeName})`,
+      }));
+
+      return this.invoiceOptions
+    } catch (error) {
+      console.error('API request failed', error)
+      throw error
+    }
+  }
+
+  // Invoice data
+  returnInvoiceTotal: number = 0
+  returnInvoices: any = []
+  returnInvoiceOptions: ListOption[] = [];
+  returnInvoiceSearchForm: any = {
+    caseNumber: '',
+    invoiceNumber: '',
+    page: 1,
+    limit: 10
+  }
+  loadReturnInvoiceLists = async (
+    url: string,
+    body: Record<string, unknown>,
+  ): Promise<ListOption[]> => {
+    const payload = {
+      ...this.returnInvoiceSearchForm,
+      ...body,
+    }
+
+    try {
+      const res = await postApiWithAuth(url, payload);
+
+      this.returnInvoices = res.lists ?? []
+      this.returnInvoiceTotal = res.total ?? 0
+
+      this.returnInvoiceOptions = this.returnInvoices.map((a: any) => ({
+        value: a.returnCaseNumber,
+        label: `${a.returnCaseNumber} (${a.invoiceNumber}$ - ${a.location.placeName})`,
+      }));
+
+      return this.returnInvoiceOptions
+    } catch (error) {
+      console.error('API request failed', error)
+      throw error
+    }
+  }
+
   visible(): Job[] {
     return this.jobs.filter(
       (j: any) =>

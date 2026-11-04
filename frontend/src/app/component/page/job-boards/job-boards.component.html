@@ -514,6 +514,32 @@
                   (singleValueChange)="job.jobRelationData.stockTakeName"
               />
             </div>
+            <div class="lookup-field">
+              <span class="field-label">Invoice</span>
+              <app-filter-list-api
+                  label="Invoice"
+                  [apiUrl]="'/invoice/list'"
+                  [requestBody]="invoiceSearchForm"
+                  [postApi]="loadInvoiceLists"
+                  [multiple]="false"
+                  [searchDataKey]="['number']"
+                  [(singleValue)]="job.jobRelationData.invoiceNumber"
+                  (singleValueChange)="job.jobRelationData.invoiceNumber"
+              />
+            </div>
+            <div class="lookup-field">
+              <span class="field-label">Return Invoice</span>
+              <app-filter-list-api
+                  label="Return Invoice"
+                  [apiUrl]="'/return-invoice/list'"
+                  [requestBody]="returnInvoiceSearchForm"
+                  [postApi]="loadReturnInvoiceLists"
+                  [multiple]="false"
+                  [searchDataKey]="['caseNumber', 'invoiceNumber']"
+                  [(singleValue)]="job.jobRelationData.returnInvoiceCaseNumber"
+                  (singleValueChange)="job.jobRelationData.returnInvoiceCaseNumber"
+              />
+            </div>
           </div>
         }
         @if (error) {
