@@ -133,40 +133,39 @@ export class JobBoardsComponent  {
     }
   }
 
-  // ASSET data
-  assetTotal: number = 0
-  assets: any = []
-  assetOptions: ListOption[] = [];
-  assetSearchForm: any = {
-    assetCode: '',
-    assetName: '',
+  // Product data
+  productTotal: number = 0
+  products: any = []
+  productOptions: ListOption[] = [];
+  productSearchForm: any = {
+    query: '',
     page: 1,
     limit: 10
   }
-  loadAssetLists = async (
+  loadProductLists = async (
     url: string,
     body: Record<string, unknown>,
   ): Promise<ListOption[]> => {
     const payload = {
-      ...this.assetSearchForm,
+      ...this.productSearchForm,
       ...body,
     }
 
     try {
       const res = await postApiWithAuth(url, payload);
 
-      this.assets = res.lists ?? [];
-      this.assetTotal = res.total ?? 0;
+      this.products = res.lists ?? []
+      this.productTotal = res.total ?? 0
 
-      this.assetOptions = this.assets.map((a: any) => ({
-        value: a.assetCode,
-        label: `${a.assetCode} - ${a.assetName}`,
-      }));
+      this.productOptions = this.products.map((a: any) => ({
+        value: a.productCode,
+        label: `${a.productCode} - ${a.productName} (${a.brandName})`,
+      }))
 
-      return this.assetOptions;
+      return this.productOptions
     } catch (error) {
-      console.error('API request failed', error);
-      throw error;
+      console.error('API request failed', error)
+      throw error
     }
   }
 

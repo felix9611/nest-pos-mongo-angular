@@ -37,6 +37,7 @@ export interface ListProductRequestDto {
     typeIds?: string[]
     deptIds?: string[]
     vendorIds?: string[]
+    query?: string
 }
 
 export interface StockInOutProductLocationDto {

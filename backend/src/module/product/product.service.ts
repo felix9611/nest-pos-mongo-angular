@@ -284,11 +284,12 @@ export class ProductService {
     }
 
     async listPage(request: ListProductRequestDto) {
-        const { page, limit, name, code, typeIds, deptIds } = request
+        const { page, limit, name, code, typeIds, deptIds, query } = request
 
         const skip = (page - 1) * limit
 
         const filters = {
+            ...query? { $text: { $search: query } } : {},
             ...name? { productName: { $regex: name, $options: 'i'} } : {},
             ...code? { productCode: { $regex: code, $options: 'i'} } : {},
             ...typeIds && typeIds.length > 0 ? { typeId: { $in: typeIds } } : {},

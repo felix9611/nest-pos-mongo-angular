@@ -489,14 +489,14 @@
               />
             </div>
             <div class="lookup-field">
-              <span class="field-label">Asset</span>
+              <span class="field-label">Product</span>
               <app-filter-list-api
-                  label="Asset"
-                  [apiUrl]="'/asset/asset-list/list'"
-                  [requestBody]="assetSearchForm"
-                  [postApi]="loadAssetLists"
+                  label="Product"
+                  [apiUrl]="'/product/product-list/list'"
+                  [requestBody]="productSearchForm"
+                  [postApi]="loadProductLists"
                   [multiple]="false"
-                  [searchDataKey]="['assetCode', 'assetName']"
+                  [searchDataKey]="['query']"
                   [(singleValue)]="job.jobRelationData.productCode"
                   (singleValueChange)="job.jobRelationData.productCode"
               />
@@ -505,7 +505,7 @@
               <span class="field-label">Stock Take</span>
               <app-filter-list-api
                   label="Stock Take"
-                  [apiUrl]="'/asset/stock-take/list'"
+                  [apiUrl]="'/product/stock-take/list'"
                   [requestBody]="stockTakeSearchForm"
                   [postApi]="loadStockTakeLists"
                   [multiple]="false"
