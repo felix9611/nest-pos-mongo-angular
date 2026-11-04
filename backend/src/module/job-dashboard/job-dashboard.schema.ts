@@ -84,12 +84,12 @@ export interface AttachmentLists {
 }
 
 export interface JobRelationData {
-    ProductCode?: string
-    TypeCode?: string
-    DeptCode?: string
-    PlaceCode?: string
-    VendorCode?: string
-    StockTakeName?: string
-    InvoiceNumber?: string
-    ReturnInvoiceCaseNumber?: string
+    productCode?: string
+    typeCode?: string
+    deptCode?: string
+    placeCode?: string
+    vendorCode?: string
+    stockTakeName?: string
+    invoiceNumber?: string
+    returnInvoiceCaseNumber?: string
 }
