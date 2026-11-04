@@ -15,13 +15,15 @@ export class JobDashboardService {
     async listJobDashboard(req: ListJobDashboardRequestDto) {
         const toDoList = await this.getJobDashboardListQuery(req, 1)
         const inProgressList = await this.getJobDashboardListQuery(req, 2)
-        const reviewList = await this.getJobDashboardListQuery(req, 3)
-        const completedList = await this.getJobDashboardListQuery(req, 4)
+        const pendingReviewList = await this.getJobDashboardListQuery(req, 3)
+        const inReviewList = await this.getJobDashboardListQuery(req, 4)
+        const completedList = await this.getJobDashboardListQuery(req, 5)
 
         return {
             toDoList: toDoList || [],
             inProgressList: inProgressList || [],
-            inReviewList: reviewList || [],
+            pendingReviewList: pendingReviewList || [],
+            inReviewList: inReviewList || [],
             completedList: completedList || []
         }
     }
