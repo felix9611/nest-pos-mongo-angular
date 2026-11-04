@@ -208,11 +208,33 @@ export class LocationService {
     }
 
     async listPage(request: ListLocationRequestDto) {
-        const { page, limit, name, place, contact } = request
+        const { page, limit, name, place, contact, query } = request
 
         const skip = (page - 1) * limit
 
         const filters = {
+            ...query ? {
+                $or: [
+                    {
+                        placeName: { $regex: query, $options: 'i' }
+                    },
+                    {
+                        placeCode: { $regex: query, $options: 'i' }
+                    },
+                    {
+                        placeOtherName: { $regex: query, $options: 'i' }
+                    },
+                    {
+                        country: { $regex: query, $options: 'i' }
+                    },
+                    {
+                        address: { $regex: query, $options: 'i' }
+                    },
+                    {
+                        zipCode: { $regex: query, $options: 'i' }
+                    },
+                ]                
+            } : {},
             ...name? {
                 $or: [
                     {
