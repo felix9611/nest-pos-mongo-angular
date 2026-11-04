@@ -1,14 +1,15 @@
 export interface Job {
-  _id: string;
-  number: string;
-  category: string;
-  title: string;
-  description: string;
-  jobStartDate: string;
-  jobEndDate: string;
-  jobTimeRemain: string;
-  tags: string[];
-  labels: string[];
+  _id: string
+  number: string
+  category: string
+  title: string
+  description: string
+  jobStartDate: string
+  jobEndDate: string
+  jobTimeRemain: string
+  tags: string[]
+  labels: string[]
+  locationId: string[]
   attachments: {
     fileName: string;
     fileType: string;
@@ -71,7 +72,8 @@ export const newJob = (status = 1): Job => ({
   jobValid: '有效',
   status,
   users: [],
-  sortOrder: 0
+  sortOrder: 0,
+  locationId: [],
 });
 export function demoJobs(): Job[] {
   const rows: [string, string, number, string, string, string][] = [
