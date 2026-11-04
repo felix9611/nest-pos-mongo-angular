@@ -32,11 +32,13 @@ export interface ListOption {
         ><span>⌄</span>
       </button>
       @if (selectedIds.length) {
-        <div class="selected-options" aria-live="polite" aria-label="已選項目">
+        <div class="selected-options" aria-live="polite" aria-label="Selected">
           @for (id of selectedIds; track id) {
-            <button type="button" (click)="remove(id)" [attr.aria-label]="'移除 ' + name(id)">
-              {{ name(id) }} ×
-            </button>
+             @if (multiple === true) {
+              <button type="button" (click)="remove(id)" [attr.aria-label]="'Remove ' + name(id)">
+                {{ name(id) }} ×
+              </button>
+            }
           }
         </div>
       }
@@ -48,20 +50,20 @@ export interface ListOption {
             [value]="query"
             (input)="onInput($event)"
             (keydown.enter)="submitSearch($event)"
-            [attr.aria-label]="'搜尋' + label"
-            [placeholder]="'搜尋' + label + '...'"
+            [attr.aria-label]="'Search ' + label"
+            [placeholder]="'Search ' + label + '...'"
             (keydown.escape)="$event.stopPropagation(); expanded = false"
           />
           <div class="api-state" aria-live="polite">
             @if (loading()) {
-              <p>載入中...</p>
+              <p>Locading...</p>
             }
             @if (error()) {
               <p role="alert">{{ error() }}</p>
-              <button type="button" (click)="loadPage(failedPage)">重新載入</button>
+              <button type="button" (click)="loadPage(failedPage)">Reload</button>
             }
           </div>
-          <div class="filter-options" [attr.aria-label]="label + '選項'">
+          <div class="filter-options" [attr.aria-label]="label + 'Options'">
             @for (option of filtered(); track option.value) {
               <button
                 type="button"
@@ -76,7 +78,7 @@ export interface ListOption {
               </button>
             } @empty {
               @if (!loading() && !error()) {
-                <p class="filter-empty">搵唔到符合條件嘅選項</p>
+                <p class="filter-empty">Nothing any matches data</p>
               }
             }
           </div>
@@ -87,12 +89,12 @@ export interface ListOption {
               [disabled]="loading()"
               (click)="loadPage(page + 1)"
             >
-              載入更多
+              Load More
             </button>
           }
           <div class="filter-menu-footer">
-            <small>{{ filtered().length }} 個選項</small
-            ><button type="button" (click)="clear()">清除選擇</button>
+            <small>{{ filtered().length }} options</small
+            ><button type="button" (click)="clear()">Clear All</button>
           </div>
         </div>
       }
@@ -221,12 +223,12 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
       const result = await Promise.race([
         request,
         new Promise<never>((_, reject) => {
-          timer = setTimeout(() => reject(new Error('API 請求逾時，請重試。')), 15000);
+          timer = setTimeout(() => reject(new Error('API timeout, please retry again.')), 15000);
           this.timers.add(timer);
         }),
       ]);
       if (version !== this.version || this.destroyed) return;
-      if (result === undefined) throw new Error('父元件函數必須 return 選項陣列或 API 回應。');
+      if (result === undefined) throw new Error('Father Component must setyp return array options or API response');
       let rows: ListOption[];
       try {
         rows = this.mapResponse(result);
@@ -237,7 +239,7 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
           throw new Error('Invalid options');
         }
       } catch {
-        throw new Error('選項格式錯誤：請回傳 { value, label }[]，或設定 mapResponse。');
+        throw new Error('Format error：Please set return { value, label }[]，or set mapResponse。');
       }
       rows.forEach((row) => this.names.set(row.value, row.label));
       this.options.set(
@@ -251,7 +253,7 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
       this.hasMore.set(rows.length >= limit);
     } catch (error) {
       if (version === this.version && !this.destroyed) {
-        this.error.set(error instanceof Error ? error.message : '選項載入失敗，請重試。');
+        this.error.set(error instanceof Error ? error.message : 'Options Loading failure');
       }
     } finally {
       if (timer) {
