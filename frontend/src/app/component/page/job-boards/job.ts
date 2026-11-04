@@ -11,33 +11,35 @@ export interface Job {
   labels: string[]
   locationIds: string[]
   attachments: {
-    fileName: string;
-    fileType: string;
-    base64: string;
-    updatedAt: string;
+    fileName: string
+    fileType: string
+    base64: string
+    updatedAt: string
     status: number
-  }[];
+  }[]
   comments: {
     userId: string
     comment: string
     status: number
     username: string
     avatar: string
-  }[];
+  }[]
   checkLists: {
     name: string;
-    checked: boolean;
-    status: number;
-  }[];
+    checked: boolean
+    status: number
+  }[]
   userIds: string[]
   jobRelationData: {
-    assetCode: string
+    productCode: string
     typeCode: string
     deptCode: string
     placeCode: string
     vendorCode: string
     stockTakeName: string
-  };
+    invoiceNumber: string
+    returnInvoiceCaseNumber: string
+  }
   jobValid: string
   status: number
   users: {
@@ -62,12 +64,14 @@ export const newJob = (status = 1): Job => ({
   checkLists: [],
   userIds: [],
   jobRelationData: {
-    assetCode: '',
+    productCode: '',
     typeCode: '',
     deptCode: '',
     placeCode: '',
     vendorCode: '',
     stockTakeName: '',
+    invoiceNumber: '',
+    returnInvoiceCaseNumber: '',
   },
   jobValid: '有效',
   status,

@@ -306,7 +306,7 @@
             ><label>Start Date<input type="date" [(ngModel)]="job.jobStartDate" /></label
             ><label>End Date<input type="date" [(ngModel)]="job.jobEndDate" /></label
             ><label
-              >Remaining Hours<input [(ngModel)]="job.jobTimeRemain" placeholder="例如：4 小時" /></label
+              >Remaining Hours<input [(ngModel)]="job.jobTimeRemain" placeholder="For example：4 hours" /></label
             ><label
               >Labels (comma-separated)<input [(ngModel)]="labelText" placeholder="High Priority, Development"
             /></label>
@@ -476,6 +476,19 @@
               />
             </div>
             <div class="lookup-field">
+              <span class="field-label">Product Type</span>
+              <app-filter-list-api
+                  label="Asset Type"
+                  [apiUrl]="'/product/product-type/list'"
+                  [requestBody]="assetTypeSearchForm"
+                  [postApi]="loadAssetTypeLists"
+                  [multiple]="false"
+                  [searchDataKey]="['name']"
+                  [(singleValue)]="job.jobRelationData.typeCode"
+                  (singleValueChange)="job.jobRelationData.typeCode"
+              />
+            </div>
+            <div class="lookup-field">
               <span class="field-label">Asset</span>
               <app-filter-list-api
                   label="Asset"
@@ -484,25 +497,10 @@
                   [postApi]="loadAssetLists"
                   [multiple]="false"
                   [searchDataKey]="['assetCode', 'assetName']"
-                  [(singleValue)]="job.jobRelationData.assetCode"
-                  (singleValueChange)="job.jobRelationData.assetCode"
+                  [(singleValue)]="job.jobRelationData.productCode"
+                  (singleValueChange)="job.jobRelationData.productCode"
               />
             </div>
-            <div class="lookup-field">
-              <span class="field-label">Asset Type</span>
-              <app-filter-list-api
-                  label="Asset Type"
-                  [apiUrl]="'/asset/type/list'"
-                  [requestBody]="assetTypeSearchForm"
-                  [postApi]="loadAssetTypeLists"
-                  [multiple]="false"
-                  [searchDataKey]="['typeCode', 'typeName']"
-                  [(singleValue)]="job.jobRelationData.typeCode"
-                  (singleValueChange)="job.jobRelationData.typeCode"
-              />
-            </div>
-          
-            
             <div class="lookup-field">
               <span class="field-label">Stock Take</span>
               <app-filter-list-api
