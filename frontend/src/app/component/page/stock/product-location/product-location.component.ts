@@ -49,9 +49,6 @@ export class ProductLocationListComponent {
             if (data.superAdmin !== true) {
                 this.locationList = data.locations
                 this.searchForm.locationIds = data.placeIds
-
-                
-                this.loadProductLocationLists()
             }
         })
     }
@@ -67,6 +64,7 @@ export class ProductLocationListComponent {
 
     ngOnInit() {
         this.loadLocationList()
+        this.loadProductLocationLists()
     }
 
     superAdmin: boolean = false
@@ -87,26 +85,14 @@ export class ProductLocationListComponent {
     dataLists: any[] = []
 
     async loadProductLocationLists() {
-        if (this.superAdmin === true) {
-            const res = await postApiWithAuth('/product/product-list/location-list', this.searchForm)
-            this.dataLists = res.lists
-            this.totals = res.total
-        } else {
-            if (this.searchForm.locationIds.length === 0) {
-                this.message.error('Please select least one location')
-            } else {
-                const res = await postApiWithAuth('/product/product-list/location-list', this.searchForm)
-                this.dataLists = res.lists
-                this.totals = res.total
-            }
-        }
+        const res = await postApiWithAuth('/product/product-list/location-list', this.searchForm)
+        this.dataLists = res.lists
+        this.totals = res.total
     }
 
     locationList: any[] = []
     async loadLocationList() {
-        if (this.superAdmin === true) {
-            this.loadLocationList = await getApiWithAuth('/base/location/getAll')
-        }
+        this.loadLocationList = await getApiWithAuth('/base/location/getAll')
     }
 
     dbFieldList: string[] = []
