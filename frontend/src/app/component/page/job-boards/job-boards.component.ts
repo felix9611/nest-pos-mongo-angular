@@ -33,6 +33,8 @@ export class JobBoardsComponent  {
     if (this.userStoreService.user$) {
       this.userSubscription.unsubscribe()
     }
+    this.destroyed = true
+    clearInterval(this.reloadTimer)
   }
 
   yourUserData: any = {
@@ -58,34 +60,54 @@ export class JobBoardsComponent  {
       if (!options.some((o) => o.value === id)) options.push({ value: id, label: id });
     return options;
   }
-  selected: Job | null = null;
-  tab = 'details';
-  tagText = '';
-  labelText = '';
-  comment = '';
-  checklist = '';
-  error = '';
-  toast = signal('');
+  selected: Job | null = null
+  tab = 'details'
+  tagText = ''
+  labelText = ''
+  comment = ''
+  checklist = ''
+  error = ''
+  toast = signal('')
+
+  private reloadTimer?: ReturnType<typeof setInterval>
+  private loadingJobs = false
+  private destroyed = false
+
   ngOnInit() {
     void this.loadJobLists()
     this.loadSomeUser()
+
+    this.reloadTimer = setInterval(() => {
+      // When user in edit task, this will stopped reloading
+      if (!this.selected) {
+        void this.loadJobLists()
+      }
+    }, 60_000);
   }
 
   dataSearchForm: any = {
   }
 
   async loadJobLists(): Promise<void> {
-    const data = await postApiWithAuth('/tasks/list', this.dataSearchForm)
-    this.jobs = [
-      ...(data.toDoList ?? []),
-      ...(data.inProgressList ?? []),
-      ...(data.inReviewList ?? []),
-      ...(data.completedList ?? []),
-    ]
-    // Replace these demo lines with your real API call:
-    // const res = await postApiWithAuth('/job/list', this.searchForm);
-    // this.jobs = res.lists;
-    // this.jobs = demoJobs();
+    if (this.loadingJobs || this.destroyed) return
+    this.loadingJobs = true
+
+     try {
+      const data = await postApiWithAuth('/tasks/list', this.dataSearchForm)
+
+      if (this.destroyed) return
+
+      this.jobs = [
+        ...(data.toDoList ?? []),
+        ...(data.inProgressList ?? []),
+        ...(data.inReviewList ?? []),
+        ...(data.completedList ?? []),
+      ]
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.loadingJobs = false
+    }
   }
 
   userLists: any[] = []
