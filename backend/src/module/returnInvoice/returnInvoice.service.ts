@@ -138,9 +138,9 @@ export class ReturnInvoiceService {
         const { caseNumber, invoiceNumber, dateRange } = req
 
         const filter = {
-            ...caseNumber? { returnCaseNumber: { $regex: caseNumber, $options: 'i' } } : {},
-            ...invoiceNumber? { invoiceNumber: { $regex: invoiceNumber, $options: 'i' } } : {},
-            ...dateRange? { returnDate: { $gte: dateRange[0], $lte: dateRange[1] } } : {}
+            ...caseNumber && caseNumber !== ''? { returnCaseNumber: { $regex: caseNumber, $options: 'i' } } : {},
+            ...invoiceNumber && invoiceNumber !== ''? { invoiceNumber: { $regex: invoiceNumber, $options: 'i' } } : {},
+            ...dateRange && dateRange.length !== 0 ? { returnDate: { $gte: dateRange[0], $lte: dateRange[1] } } : {}
         }
 
         const lists = await this.returnInvoiceModel.aggregate([
@@ -194,9 +194,9 @@ export class ReturnInvoiceService {
         const skip = (page - 1) * limit
 
         const filter = {
-            ...caseNumber? { returnCaseNumber: { $regex: caseNumber, $options: 'i' } } : {},
-            ...invoiceNumber? { invoiceNumber: { $regex: invoiceNumber, $options: 'i' } } : {},
-            ...dateRange? { returnDate: { $gte: dateRange[0], $lte: dateRange[1] } } : {}
+            ...caseNumber && caseNumber !== ''? { returnCaseNumber: { $regex: caseNumber, $options: 'i' } } : {},
+            ...invoiceNumber && invoiceNumber !== ''? { invoiceNumber: { $regex: invoiceNumber, $options: 'i' } } : {},
+            ...dateRange && dateRange.length > 0 ? { returnDate: { $gte: dateRange[0], $lte: dateRange[1] } } : {}
         }
 
         const total = await this.returnInvoiceModel.countDocuments(filter).exec()

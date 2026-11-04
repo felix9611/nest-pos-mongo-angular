@@ -98,6 +98,8 @@ export class ReturnInvoiceListComponent {
     handleId: string = ''
 
     ngOnInit() {
+        this.searchForm.page = 1
+        this.searchForm.limit = 10
         this.loadInvoiceLists()
     }
 

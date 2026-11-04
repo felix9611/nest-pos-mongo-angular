@@ -66,8 +66,6 @@ export class InvoiceListComponent {
             if (data.superAdmin !== true) {
                 this.placeLists = data.locations
                 this.searchForm.locationIds = data.placeIds
-
-                this.loadInvoiceLists()
             }
         })
     }
@@ -113,6 +111,9 @@ export class InvoiceListComponent {
     handleId: string = ''
 
     ngOnInit() {
+        this.searchForm.page = 1
+        this.searchForm.limit = 10
+        this.loadInvoiceLists()
         this.loadLocationList()
     }
 

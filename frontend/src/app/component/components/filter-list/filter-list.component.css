@@ -1,0 +1,144 @@
+:host {
+  display: block;
+}
+* {
+  box-sizing: border-box;
+}
+button,
+input {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+.filter-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid #e5dfec;
+  border-radius: 6px;
+  padding: 11px 12px;
+  background: #fff;
+  text-align: left;
+  font-size: 13px;
+  color: #756780;
+}
+.filter-trigger > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.filter-menu {
+  margin-top: 6px;
+  border: 1px solid #e5dfec;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+}
+.filter-menu input {
+  display: block;
+  width: 100%;
+  margin: 0 0 8px;
+  border: 1px solid #e5dfec;
+  border-radius: 6px;
+  padding: 10px;
+  background: #faf8fd;
+  font-size: 13px;
+}
+.filter-options {
+  max-height: 220px;
+  overflow-y: auto;
+}
+.filter-options > button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+  border: 0;
+  border-radius: 5px;
+  padding: 10px;
+  background: #fff;
+  text-align: left;
+  color: #8f819e;
+}
+.filter-options > button:hover,
+.filter-options > button.is-selected {
+  background: #f3edfb;
+  color: #8664bc;
+}
+.filter-options b {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+}
+.filter-options small {
+  display: block;
+  font-size: 11px;
+  margin-top: 4px;
+}
+.filter-menu-footer {
+  border-top: 1px solid #f0ebf5;
+  margin-top: 6px;
+  padding-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.filter-menu-footer small,
+.filter-empty,
+.api-state {
+  font-size: 12px;
+  color: #887397;
+}
+.filter-menu-footer button,
+.api-state button {
+  border: 0;
+  background: #f6f1fb;
+  border-radius: 5px;
+  padding: 8px;
+  color: #8664bc;
+}
+.selected-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.selected-options button {
+  border: 1px solid #e8dff2;
+  background: #f6f1fb;
+  padding: 6px 9px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #9575b1;
+}
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #b09bd7;
+  outline-offset: 2px;
+}
+@media (max-width: 760px) {
+  .filter-trigger,
+  .filter-menu input {
+    min-height: 46px;
+    font-size: 16px;
+  }
+  .filter-options > button {
+    min-height: 56px;
+  }
+  .filter-options b {
+    font-size: 14px;
+  }
+  .filter-options small {
+    font-size: 12px;
+  }
+  .filter-menu-footer button,
+  .selected-options button,
+  .api-state button {
+    min-height: 44px;
+    font-size: 13px;
+  }
+}

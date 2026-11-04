@@ -27,6 +27,7 @@ import { MemberMoudule } from './module/member/member-list/member-list.module'
 import { InvoiceMoudule } from './module/invoice/invoice.module'
 import { StockTakeMoudule } from './module/stock-take/stock-take.module'
 import { ReturnInvoiceMoudule } from './module/returnInvoice/returnInvoice.module'
+import { JobDashboardModule } from './module/job-dashboard/job-dashboard.module'
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { ReturnInvoiceMoudule } from './module/returnInvoice/returnInvoice.modul
     InvoiceMoudule,
     StockTakeMoudule,
     ReturnInvoiceMoudule,
+    JobDashboardModule,
     MongooseModule.forRoot('mongodb://localhost/pos'),
     MongooseModule.forFeature([
       { name: SysRole.name, schema: SysRoleSchema },

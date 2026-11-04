@@ -238,12 +238,12 @@ export class SysUserService {
   }
 
   async listUser(request: ListUserRequestDto) {
-    const { page, limit, username, roleIds, deptIds } = request
+    const { page, limit, username, roleIds, deptIds, email } = request
 
     const skip = (page - 1) * limit
 
     const filters = {
-      ...username ? { name: { $regex: username, $options: 'i' } } : {},
+      ...username || email ? { $or: [{ username: { $regex: username, $options: 'i' } }, { email: { $regex: email, $options: 'i' } }] } : {},
       ...roleIds && roleIds.length > 0 ? { roles: { $in: roleIds} } : {},
       ...deptIds && deptIds.length > 0  ? { deptId: { $in: deptIds} } : {},
       status: 1

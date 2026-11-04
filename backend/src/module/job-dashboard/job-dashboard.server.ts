@@ -1,0 +1,306 @@
+import { Injectable } from '@nestjs/common'
+import { JobDashboard } from './job-dashboard.schema'
+import { InjectModel } from '@nestjs/mongoose'
+import { ActionRecordService } from '../action-record/actionRecord.service'
+import { Model } from 'mongoose'
+import { ListJobDashboardRequestDto, UpdateJobDashboardStatusDto } from './job-dashboard.dto'
+
+@Injectable()
+export class JobDashboardService {
+    constructor(
+        @InjectModel(JobDashboard.name) private jobDashboardModel: Model<JobDashboard>,
+        private actionRecordService: ActionRecordService
+    ) {}
+
+    async listJobDashboard(req: ListJobDashboardRequestDto) {
+        const toDoList = await this.getJobDashboardListQuery(req, 1)
+        const inProgressList = await this.getJobDashboardListQuery(req, 2)
+        const reviewList = await this.getJobDashboardListQuery(req, 3)
+        const completedList = await this.getJobDashboardListQuery(req, 4)
+
+        return {
+            toDoList: toDoList || [],
+            inProgressList: inProgressList || [],
+            inReviewList: reviewList || [],
+            completedList: completedList || []
+        }
+    }
+
+    async voidById(_id: string) {
+        const check = await this.jobDashboardModel.findOne({ _id })
+
+        if (check?.status !== 0) {
+            const finalData = {
+                status: 0,
+                jobValid: false,
+                updatedAt: new Date()
+            }
+
+            const res = await this.jobDashboardModel.updateOne({ _id }, finalData)
+
+            if (res.modifiedCount === 0) {
+                return {
+                    error: 'This task has been voided! Please contact admin!'
+                }
+            } else {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Void Job Dashboard',
+                    actionMethod: 'POST',
+                    actionFrom: 'Job Dashboard',
+                    actionData: finalData,
+                    actionSuccess: 'Sussess',
+                    createdAt: new Date()
+                })
+
+                return {
+                    message: 'Task voided successfully!'
+                }
+            }
+        } else {
+            return {
+                error: 'This task has been voided! Please contact admin!'
+            }
+        }
+    }
+
+    async getJobDashboardListQuery(req: ListJobDashboardRequestDto, status: number) {
+         const { name, memberId } = req
+
+        const allQuery: any = { 
+            jobValid: true,
+            ...(name ? { title: { $regex: name, $options: 'i' } } : {}),
+        }
+
+        return await this.jobDashboardModel.aggregate([
+            { 
+                $match: { 
+                    ...allQuery, 
+                    status,
+                } 
+            },
+            {
+                $lookup: {
+                    from: 'sysusers', // Make sure this matches your DB collection name
+                    let: { userIds: { $map: { input: '$userIds', as: 'userIds', in: { $toObjectId: '$$userIds' } } } }, // Convert strings to ObjectIds
+                    pipeline: [
+                        { $match: { $expr: { $in: ['$_id', '$$userIds'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                username: 1,
+                                avatarBase64: 1
+                            }
+                        }
+                    ],
+                    as: 'users'
+                }
+            },
+            { $sort: { sortOrder: 1 } }
+        ]).exec()
+    }
+
+    async updateTaskStatus(req: UpdateJobDashboardStatusDto) {
+        const { _id, status, sortOrder } = req
+
+        const check = await this.jobDashboardModel.findOne({ _id })
+
+        if (check) {
+            const finalData = {
+                status,
+                sortOrder,
+                updatedAt: new Date()
+            }
+
+            const res = await this.jobDashboardModel.updateOne({ _id }, finalData)
+
+            if (res.modifiedCount > 0) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Update Task Status',
+                    actionMethod: 'POST',
+                    actionFrom: 'Job Dashboard',
+                    actionData: finalData,
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+                return {
+                    message: 'Task status updated successfully!',
+                    move: true
+                }
+            } else {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Update Task Status',
+                    actionMethod: 'POST',
+                    actionFrom: 'Job Dashboard',
+                    actionData: finalData,
+                    actionSuccess: 'FAILURE',
+                    createdAt: new Date()
+                })
+
+                return {
+                    error: 'Task status updated failed!',
+                    move: false
+                }
+            }
+        } else {
+            return {
+                error: 'Task not found!',
+                move: false
+            }
+        }
+    }
+
+    async create(jobDashboard: JobDashboard) {
+        const { _id, number, title, ..._description } = jobDashboard
+        
+        const check = await this.jobDashboardModel.findOne({ title })
+
+        if (check) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Job Card',
+                actionMethod: 'POST',
+                actionFrom: 'Job Dashboard',
+                actionData: jobDashboard,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+            return {
+                error: 'This title already exist! Please create new one!'
+            }
+        } else {
+
+            const result = await this.jobDashboardModel
+                .findOne({ status: _description.status })
+                .sort({ sortOrder: -1 })
+                .select('sortOrder')
+                .lean()
+
+            const maxSortOrder = result?.sortOrder ?? 0
+
+            const newNumber = await this.createNewNumber()
+
+            const newData: any = {
+                ..._description,
+                title,
+                number: newNumber,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                jobValid: true,
+                sortOrder: maxSortOrder + 10
+            }
+
+            const createdJobDashboard = new this.jobDashboardModel(newData)
+
+            const res = await createdJobDashboard.save()
+
+            if (res) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Create Job Card',
+                    actionMethod: 'POST',
+                    actionFrom: 'Job Dashboard',
+                    actionData: newData,
+                    actionSuccess: 'SUCCESS',
+                    createdAt: new Date()
+                })
+                return {
+                    message: 'Job Card created successfully!',
+                    data: res
+                }
+            } else {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Create Job Card',
+                    actionMethod: 'POST',
+                    actionFrom: 'Job Dashboard',
+                    actionData: newData,
+                    actionSuccess: 'FAILURE',
+                    createdAt: new Date()
+                })
+                return {
+                    error: 'Failed to create Job Card!'
+                }
+            }
+        }
+    } 
+
+
+    /// get number
+    formatNumber(num: number, digits: number): string {
+        return (num + 1).toString().padStart(digits, '0')
+    }
+
+    async createNewNumber() {
+        const result = await this.jobDashboardModel.aggregate([
+            {
+              $addFields: { numberInt: { $toInt: "$number" } } // Convert to integer
+            },
+            {
+              $group: { 
+                _id: null, 
+                maxNumber: { $max: "$numberInt" } // Find max
+              }
+            }
+        ]).exec()
+
+        const maxNumber = result.length > 0 ? result[0].maxNumber : 0
+        if (maxNumber == null) {
+            return this.formatNumber(0, 8)
+        } else {
+            return this.formatNumber(maxNumber, 8)
+        }
+    }
+
+    async update(jobDashboard: JobDashboard) {
+        const { _id, ..._description } = jobDashboard
+
+        const check = await this.jobDashboardModel.findOne({ _id })
+
+        if (check?.jobValid === false) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Job Card',
+                actionMethod: 'PUT',
+                actionFrom: 'Job Dashboard',
+                actionData: jobDashboard,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+            return {
+                error: 'This Job Card has been voided! Please contact admin!'
+            }
+        } else {
+            const finalData = {
+                ...jobDashboard,
+                updatedAt: new Date()
+            }
+
+            const res = await this.jobDashboardModel.updateOne({ _id }, finalData)
+
+            if (res.modifiedCount > 0) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Update Job Card',
+                    actionMethod: 'PUT',
+                    actionFrom: 'Job Dashboard',
+                    actionData: finalData,
+                    actionSuccess: 'SUCCESS',
+                    createdAt: new Date()
+                })
+                return {
+                    message: 'Job Card updated successfully!',
+                    data: res
+                }
+            } else {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Update Job Card',
+                    actionMethod: 'PUT',
+                    actionFrom: 'Job Dashboard',
+                    actionData: finalData,
+                    actionSuccess: 'FAILURE',
+                    createdAt: new Date()
+                })
+                return {
+                    error: 'Failed to update Job Card!'
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,561 @@
+<div class="bg-white">
+  <section class="page-heading">
+    <div>
+      <h1>Working Tasks Board</h1>
+    </div>
+    <div class="bg-blue-400 p-3 rounded-lg font-bold text-white hover:bg-purple-400">
+      <button (click)="create()">＋ New Tasks</button>
+    </div>
+  </section>
+  <section class="summary">
+    <div class="summary-item">
+      <span class="stat-icon violet">▤</span>
+      <div>
+        <small>All Tasks</small><b>{{ jobs.length }} <em>Tasks</em></b>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="stat-icon blue">◷</span>
+      <div>
+        <small>In Progress</small><b>{{ active() }} <em>Currently in progress</em></b>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="stat-icon green">✓</span>
+      <div>
+        <small>Completion</small><b>{{ done() }} <em>Good jobs！</em></b>
+      </div>
+    </div>
+    <div class="summary-item progress-stat">
+      <div class="progress-label">
+        <small>Overall Completion</small
+        ><b
+          >{{ jobs.length ? ((done() / jobs.length) * 100 | number: '1.0-0') : 0 }}<em>%</em></b
+        >
+      </div>
+      <div class="progress-track">
+        <i [style.width.%]="jobs.length ? (done() / jobs.length) * 100 : 0"></i>
+      </div>
+    </div>
+  </section>
+  <section class="board-toolbar">
+    <div class="view-tabs">
+      <button [class.selected]="view() === 'board'" (click)="view.set('board')">
+        ▦ <span>Board</span></button
+      ><button [class.selected]="view() === 'list'" (click)="view.set('list')">
+        ☷ <span>Listing</span>
+      </button>
+    </div>
+    <div class="toolbar-actions">
+      <label class="search">
+      <span>⌕</span>
+        <input
+          aria-label="Find tasks"
+          placeholder="Find tasks..."
+          [ngModel]="search()"
+          (ngModelChange)="search.set($event)"
+        /><kbd>⌕</kbd>
+      </label>
+      <!--<select aria-label="Filter tasks" [ngModel]="filter()" (ngModelChange)="filter.set($event)">
+        <option value="all">All Members</option>
+        <option value="mine">Assigned to Me</option>
+      </select>-->
+      <button class="export" (click)="export()">↥ <span>Export</span></button>
+      <div class="avatar-stack">
+        @for (m of userLists; track m.id) {
+          @if (m.avatarBase64) {
+            <img class="avatar small rounded-full" [src]="m.avatarBase64" />
+          } @else {
+            <span class="avatar small" [class]="'avatar small member-' + m._id" [title]="m.name">{{
+              m.username
+            }}</span>
+          }
+        }
+      </div>
+    </div>
+  </section>
+  <div class="board-meta">
+    <span>
+      <span class="text-[0.9rem]">{{ filter() === 'mine' ? 'My Tasks' : 'Team Tasks' }}</span>
+      <span class="text-[0.9rem] px-3">·</span>
+      <span class="text-[0.9rem]"><span class="font-bold">{{ visible().length }}</span> Tasks</span>
+    </span>
+    <span class="text-[0.9rem]">Drag and drop task cards to update progress</span>
+  </div>
+  @if (view() === 'board') {
+    <section class="board" cdkDropListGroup>
+      @for (col of columns; track col.id) {
+        <div class="column">
+          <div class="column-heading">
+            <div>
+              <i [style.background]="col.color"></i>
+              <span class="font-bold text-[1rem] text-[#5c5959]">{{ col.name }}</span>
+              <span class="w-[2rem] h-[2rem] bg-[#e8e9f0] text-center flex items-center justify-center rounded-lg">
+                <span class="font-[0.5rem] text-[#a2a1b0]">{{ cards(col.id).length }}</span>
+              </span>
+            </div>
+            <button (click)="create(col.id)" [attr.aria-label]="'Add New ' + col.name + ' Task'">
+              <span class="font-bold text-[1.5rem] text-[#5c5959]">＋</span>
+            </button>
+          </div>
+          <div
+            class="drop-area"
+            cdkDropList
+            [cdkDropListData]="cards(col.id)"
+            (cdkDropListDropped)="drop($event, col.id)"
+          >
+            @for (job of cards(col.id); track $index) {
+              <article class="task-card" cdkDrag [cdkDragData]="job">
+                <button class="card-content" (click)="open(job)">
+                  <div class="card-top">
+                    <span class="font-[1rem] text-[#b4afbf]">Task #{{ $any(job).number }}</span>
+                    <span class="card-dots">···</span>
+                  </div>
+                  <div class="labels">
+                    @for (label of $any(job).labels; track $index) {
+                      <span
+                        class="label"
+                        [class.orange]="label === 'High Priority'"
+                        [class.teal]="label === 'Stock Take' || label === 'Repair'"
+                        [class.blue]="label === 'Development' || label === 'Review'"
+                        >{{ label === 'High Priority' ? '⚑ ' : '' }}{{ label }}</span
+                      >
+                    }
+                  </div>
+                  <span class="font-[1.6rem] font-bold"> {{ $any(job).title }} </span>
+                  <p class="font-[0.9rem] text-[#a29eae]"> {{ $any(job).description }} </p>
+                  @if ($any(job).checkLists.length) {
+                    <div class="check-progress">
+                      <div>
+                        <span>☑ Check List</span
+                        ><span>{{ countDone(job) }}/{{ countAllDone(job) }}</span>
+                      </div>
+                      <div class="mini-track">
+                        <i
+                          [style.width.%]="(countDone(job) / countAllDone(job)) * 100"
+                          [class.complete]="countDone(job) === $any(job).checkLists.length"
+                        ></i>
+                      </div>
+                    </div>
+                  }
+                  <div class="card-tags">
+                    <span>{{ $any(job).category }}</span>
+                    @for (tag of $any(job).tags; track $index) {
+                      <span># {{ tag }}</span>
+                    }
+                  </div>
+                  <div class="card-footer">
+                    <span class="date" [class.finished]="$any(job).status === 4"
+                      >{{ $any(job).status === 4 ? '✓' : '◷' }}
+                      {{ $any(job).jobEndDate ? ($any(job).jobEndDate | date: 'MM/DD/yyyy') : 'Date not set' }}</span
+                    >
+                    <div class="card-indicators">
+                      @if ($any(job).comments.length) {
+                        <span>☏ {{ $any(job).comments.length }}</span>
+                      }
+                      @if ($any(job).attachments.length) {
+                        <span>♧ {{ $any(job).attachments.length }}</span>
+                      }
+                      <div class="avatar-stack">
+                        @for (id of $any(job).users; track id) {
+                          <span [class]="'avatar tiny member-' + id">
+                            @if (!id && !id.avatarBase64) {
+                              <span [class]="'avatar tiny member-' + id">{{ initials(id.username) }}</span>
+                            } @else {
+                              <img class="rounded-full" [src]="id.avatarBase64" />
+                            }
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </article>
+            } @empty {
+              <div class="empty-column">Drag tasks here<br /><small>or add a new task</small></div>
+            }
+          </div>
+          <button (click)="create(col.id)">
+            <span class="font-bold text-[0.9rem] text-gray-400">＋ Add Task</span>
+          </button>
+        </div>
+      }
+    </section>
+  } @else {
+    <div class="list-view">
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Due Date</th>
+            <th>Assignee</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (job of visible(); track job._id) {
+            <tr>
+              <td>
+                <button (click)="open(job)">
+                  <small>{{ job.number }}</small
+                  >{{ job.title }}
+                </button>
+              </td>
+              <td>{{ job.category }}</td>
+              <td>
+                <select
+                  aria-label="Task Status"
+                  [ngModel]="job.status"
+                  (ngModelChange)="open(job); selected!.status = $event; save()"
+                >
+                  @for (col of columns; track col.id) {
+                    <option [ngValue]="col.id">{{ col.name }}</option>
+                  }
+                </select>
+              </td>
+              <td>{{ job.jobEndDate || '—' }}</td>
+              <td>
+                @for (id of job.users; track id) {
+                  @if (id.avatarBase64 === '') {
+                    <span [class]="'avatar tiny member-' + id">{{ initials(id.username) }}</span>
+                  } @else {
+                    <img class="avatar tiny rounded-full" [src]="id.avatarBase64" />
+                  }
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5">No tasks found.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  <footer class="p-3">
+  </footer>
+</div>
+@if (selected; as job) {
+  <div class="modal-backdrop" (click)="selected = null">
+    <section
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dialog-title"
+      (click)="$event.stopPropagation()"
+      (keydown.escape)="selected = null"
+      tabindex="-1"
+    >
+      <header class="modal-header">
+        <div>
+          <small>{{ job.number }} / Task Details</small>
+          <h2 id="dialog-title">{{ job.title || 'Add Task' }}</h2>
+        </div>
+        <button class="close" aria-label="Close" (click)="selected = null">×</button>
+      </header>
+      <nav class="modal-tabs">
+        @for (
+          t of [
+            { id: 'details', name: 'Task Details' },
+            { id: 'checks', name: 'Checklist' },
+            { id: 'attachments', name: 'Attachments' },
+            { id: 'comments', name: 'Comments' },
+            { id: 'relations', name: 'Related Data' },
+          ];
+          track t.id
+        ) {
+          <button [class.selected]="tab === t.id" (click)="tab = t.id">{{ t.name }}</button>
+        }
+      </nav>
+      <div class="modal-body">
+        @if (tab === 'details') {
+          <label>
+            Task Title <span class="required">*</span
+            ><input [(ngModel)]="job.title" placeholder="Enter task title" maxlength="200" /></label
+          ><label
+            >Description<textarea
+              [(ngModel)]="job.description"
+              rows="3"
+              placeholder="Additional task details..."
+            ></textarea>
+          </label>
+          <div class="form-grid">
+            <label>Task Number<input [(ngModel)]="job.number" /></label
+            ><label
+              >Category<input [(ngModel)]="job.category" list="categories" /><datalist id="categories">
+                <option  [ngValue]="'General Task'">General Task</option>
+                <option [ngValue]="'Design'">Design</option>
+                <option [ngValue]="'Development'">Development</option>
+                <option [ngValue]="'Operations'">Operations</option>
+                <option [ngValue]="'Maintenance'">Maintenance</option>
+                <option [ngValue]="'Assets'">Assets</option>
+              </datalist></label
+            ><label
+              >Status<select [(ngModel)]="job.status">
+                @for (col of columns; track col.id) {
+                  <option [ngValue]="col.id">{{ col.name }}</option>
+                }
+              </select></label
+            ><label
+              >Valid Status<select [(ngModel)]="job.jobValid">
+                <option  [ngValue]="true">Valid</option>
+                <option  [ngValue]="false">Invalid</option>
+              </select></label
+            ><label>Start Date<input type="date" [(ngModel)]="job.jobStartDate" /></label
+            ><label>End Date<input type="date" [(ngModel)]="job.jobEndDate" /></label
+            ><label
+              >Remaining Hours<input [(ngModel)]="job.jobTimeRemain" placeholder="For example：4 hours" /></label
+            ><label
+              >Labels (comma-separated)<input [(ngModel)]="labelText" placeholder="High Priority, Development"
+            /></label>
+          </div>
+          <label>Tags (comma-separated)<input [(ngModel)]="tagText" placeholder="Q4, 內部" /></label>
+          <div class="lookup-field">
+              <span class="field-label">Location</span>
+              <app-filter-list-api
+                  label="Location"
+                  [apiUrl]="'/base/location/list'"
+                  [requestBody]="placeSearchForm"
+                  [postApi]="loadPlaceLists"
+                  [multiple]="true"
+                  [searchDataKey]="['query']"
+                  [(value)]="job.locationIds"
+              />
+            </div>
+          <div class="lookup-field">
+            <span class="field-label">Users</span>
+            <app-filter-list-api
+                label="Members"
+                [apiUrl]="'/sys/user/list'"
+                [requestBody]="systemUserSearchForm"
+                [postApi]="loadUserLists"
+                [multiple]="true"
+                [searchDataKey]="['username', 'email']"
+                [(value)]="job.userIds"
+            />
+          </div>
+        }
+        @if (tab === 'checks') {
+          <h3>
+            Check List <small>{{ countDone(job) }} / {{ job.checkLists.length }}</small>
+          </h3>
+          @for (item of job.checkLists; track $index) {
+            @if (item.status === 1) {
+              <div class="check-row">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="item.checked"
+                  [attr.aria-label]="item.name"
+                /><input
+                  class="check-name"
+                  [(ngModel)]="item.name"
+                  aria-label="Check Item Name"
+                  [class.struck]="item.checked"
+                />
+                <button
+                  class="icon-button"
+                  aria-label="Delete Check Item"
+                  (click)="item.status = 0;"
+                >
+                  ×
+                </button>
+              </div>
+            }
+          }
+          <div class="inline-form">
+            <input
+              [(ngModel)]="checklist"
+              placeholder="Create new check item..."
+              (keydown.enter)="addCheck()"
+            /><button class="primary" (click)="addCheck()">Add Check Item</button>
+          </div>
+        }
+        @if (tab === 'attachments') {
+          <label class="upload-area"
+            >↥<b>Add Attachments</b><span>Choose files, each file up to 2 MB</span
+            ><input type="file" multiple (change)="attach($event)"
+          /></label>
+          @for (a of job.attachments; track $index) {
+            @if (a.status === 1) {
+              <div class="attachment-row">
+                <span>▤</span>
+                <div>
+                  <b>{{ a.fileName }}</b
+                  ><small
+                    >{{ a.fileType || 'file' }} · {{ a.updatedAt | date: 'yyyy-MM-dd HH:mm' }}</small
+                  >
+                </div>
+                <button (click)="download(a)">Download</button
+                ><button aria-label="Remove Attachment" (click)="a.status = 0">×</button>
+              </div>
+            }
+          }
+        }
+        @if (tab === 'comments') {
+          <h3>Work Discussion</h3>
+          @for (c of job.comments; track $index) {
+            @if (c.status === 1) {
+              <div class="comment">
+              <span [class]="'avatar tiny member-' + c">
+                @if (!c.avatar) {
+                  {{ initials(c.username) }}
+                } @else {
+                  <img class="rounded-full" [src]="c.avatar" />
+                }
+              </span>
+              <div>
+                <b>{{ c.username }}</b>
+                <p>{{ c.comment }}</p>
+              </div>
+              @if (yourUserData.superAdmin === true) {
+                <button
+                  class="icon-button"
+                  aria-label="Delete Comment"
+                  (click)="c.status = 0;"
+                >
+                  ×
+                </button>
+              }
+            </div>
+            }
+          } @empty {
+            <p class="empty-copy">Still no comments, share some work progress.</p>
+          }
+          <textarea [(ngModel)]="comment" rows="3" placeholder="Write your comment..."></textarea
+          >
+          <div class="pt-5">
+            <button class="primary" (click)="addComment()" [disabled]="!comment.trim()">
+              Add Comment
+            </button>
+          </div>
+        }
+        @if (tab === 'relations') {
+          <h3>Task Relations Data</h3>
+          <div class="form-grid">
+            <div class="lookup-field">
+              <span class="field-label">Department</span>
+              <app-filter-list-api
+                  label="Department"
+                  [apiUrl]="'/sys/department/list'"
+                  [requestBody]="deptSearchForm"
+                  [postApi]="loadDeptLists"
+                  [multiple]="false"
+                  [searchDataKey]="['deptCode', 'deptName']"
+                  [(singleValue)]="job.jobRelationData.deptCode"
+                  (singleValueChange)="job.jobRelationData.deptCode"
+              />
+            </div>
+            @if (job.locationIds.length === 0) {
+              <div class="lookup-field">
+                <span class="field-label">Location</span>
+                <app-filter-list-api
+                    label="Location"
+                    [apiUrl]="'/base/location/list'"
+                    [requestBody]="placeSearchForm"
+                    [postApi]="loadPlaceLists"
+                    [multiple]="false"
+                    [searchDataKey]="['query']"
+                    [(singleValue)]="job.jobRelationData.placeCode"
+                    (singleValueChange)="job.jobRelationData.placeCode"
+                />
+              </div>
+            }
+            <div class="lookup-field">
+              <span class="field-label">Vendor</span>
+              <app-filter-list-api
+                  label="Vendor"
+                  [apiUrl]="'/base/vendor/list'"
+                  [requestBody]="vendorSearchForm"
+                  [postApi]="loadVendorLists"
+                  [multiple]="false"
+                  [searchDataKey]="['name', 'place', 'contact']"
+                  [(singleValue)]="job.jobRelationData.vendorCode"
+                  (singleValueChange)="job.jobRelationData.vendorCode"
+              />
+            </div>
+            <div class="lookup-field">
+              <span class="field-label">Product Type</span>
+              <app-filter-list-api
+                  label="Asset Type"
+                  [apiUrl]="'/product/product-type/list'"
+                  [requestBody]="assetTypeSearchForm"
+                  [postApi]="loadAssetTypeLists"
+                  [multiple]="false"
+                  [searchDataKey]="['name']"
+                  [(singleValue)]="job.jobRelationData.typeCode"
+                  (singleValueChange)="job.jobRelationData.typeCode"
+              />
+            </div>
+            <div class="lookup-field">
+              <span class="field-label">Product</span>
+              <app-filter-list-api
+                  label="Product"
+                  [apiUrl]="'/product/product-list/list'"
+                  [requestBody]="productSearchForm"
+                  [postApi]="loadProductLists"
+                  [multiple]="false"
+                  [searchDataKey]="['query']"
+                  [(singleValue)]="job.jobRelationData.productCode"
+                  (singleValueChange)="job.jobRelationData.productCode"
+              />
+            </div>
+            <div class="lookup-field">
+              <span class="field-label">Stock Take</span>
+              <app-filter-list-api
+                  label="Stock Take"
+                  [apiUrl]="'/product/stock-take/list'"
+                  [requestBody]="stockTakeSearchForm"
+                  [postApi]="loadStockTakeLists"
+                  [multiple]="false"
+                  [searchDataKey]="['name']"
+                  [(singleValue)]="job.jobRelationData.stockTakeName"
+                  (singleValueChange)="job.jobRelationData.stockTakeName"
+              />
+            </div>
+            <div class="lookup-field">
+              <span class="field-label">Invoice</span>
+              <app-filter-list-api
+                  label="Invoice"
+                  [apiUrl]="'/invoice/list'"
+                  [requestBody]="invoiceSearchForm"
+                  [postApi]="loadInvoiceLists"
+                  [multiple]="false"
+                  [searchDataKey]="['number']"
+                  [(singleValue)]="job.jobRelationData.invoiceNumber"
+                  (singleValueChange)="job.jobRelationData.invoiceNumber"
+              />
+            </div>
+            <div class="lookup-field">
+              <span class="field-label">Return Invoice</span>
+              <app-filter-list-api
+                  label="Return Invoice"
+                  [apiUrl]="'/return-invoice/list'"
+                  [requestBody]="returnInvoiceSearchForm"
+                  [postApi]="loadReturnInvoiceLists"
+                  [multiple]="false"
+                  [searchDataKey]="['caseNumber', 'invoiceNumber']"
+                  [(singleValue)]="job.jobRelationData.returnInvoiceCaseNumber"
+                  (singleValueChange)="job.jobRelationData.returnInvoiceCaseNumber"
+              />
+            </div>
+          </div>
+        }
+        @if (error) {
+          <p class="error" role="alert">{{ error }}</p>
+        }
+      </div>
+      <footer class="modal-footer">
+        <button class="danger" (click)="remove()">Remove Task</button>
+        <div>
+          <button class="secondary" (click)="selected = null">Cancel</button
+          ><button class="primary" (click)="save()">Save Task</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+}
+@if (toast()) {
+  <div class="toast" role="status">✓ {{ toast() }}</div>
+}

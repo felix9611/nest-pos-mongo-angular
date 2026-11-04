@@ -25,6 +25,7 @@ export interface ListLocationRequestDto {
     name?: string
     place?: string
     contact?: string
+    query?: string
 }
 
 export class CreateLocationBody {
@@ -90,6 +91,10 @@ export class ListLocationQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
     contact?: string
+
+    @ApiProperty({ description: 'For search data keywords' })  
+    @IsOptional()
+    query?: string
 }
 
 export class ListLocationQueryRes extends CommonPageAndListResponse {
