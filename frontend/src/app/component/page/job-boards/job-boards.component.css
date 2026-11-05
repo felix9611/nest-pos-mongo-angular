@@ -656,7 +656,7 @@ h1 {
 }
 .board {
   display: grid;
-  grid-template-columns: repeat(4, minmax(225px, 1fr));
+  grid-template-columns: repeat(5, minmax(200px, 1fr));
   gap: 17px;
   margin: 0 37px;
   align-items: start;
@@ -1280,7 +1280,7 @@ td select {
   }
   .board {
     margin: 0 24px;
-    grid-template-columns: repeat(4, 250px);
+    grid-template-columns: repeat(5, 250px);
   }
   .toolbar-actions {
     gap: 8px;
@@ -1412,7 +1412,7 @@ td select {
   }
   .board {
     margin: 0 18px;
-    grid-template-columns: repeat(4, 260px);
+    grid-template-columns: repeat(5, 260px);
   }
   .page-footer {
     margin: 18px;
