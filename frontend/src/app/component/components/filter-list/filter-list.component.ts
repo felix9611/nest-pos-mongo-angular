@@ -18,12 +18,12 @@ export interface ListOption {
 @Component({
   selector: 'app-filter-list-api',
   standalone: true,
-  styleUrls: ['./filter-list.component.css'],
+  styleUrls: [],
   template: `
     <div class="filter-list">
       <button
         type="button"
-        class="filter-trigger"
+        class="filter-trigger [font:inherit] cursor-pointer [&:focus-visible]:[outline:2px_solid_#b09bd7] [&:focus-visible]:[outline-offset:2px] w-[100%] flex justify-between gap-[10px] [border:1px_solid_#e5dfec] rounded-[6px] p-[11px_12px] [background:#fff] text-left text-[13px] text-[#756780] [&_>_span:first-child]:overflow-hidden [&_>_span:first-child]:text-ellipsis [&_>_span:first-child]:whitespace-nowrap max-[760px]:min-h-[46px] max-[760px]:text-[16px]"
         [attr.aria-label]="label"
         [attr.aria-expanded]="expanded"
         (click)="toggle()"
@@ -32,10 +32,19 @@ export interface ListOption {
         ><span>⌄</span>
       </button>
       @if (selectedIds.length) {
-        <div class="selected-options" aria-live="polite" aria-label="Selected">
+        <div
+          class="selected-options flex flex-wrap gap-[6px] [margin-top:8px] [&_button]:[border:1px_solid_#e8dff2] [&_button]:[background:#f6f1fb] [&_button]:p-[6px_9px] [&_button]:rounded-[5px] [&_button]:text-[12px] [&_button]:text-[#9575b1] max-[760px]:[&_button]:min-h-[44px] max-[760px]:[&_button]:text-[13px]"
+          aria-live="polite"
+          aria-label="Selected options"
+        >
           @for (id of selectedIds; track id) {
-             @if (multiple === true) {
-              <button type="button" (click)="remove(id)" [attr.aria-label]="'Remove ' + name(id)">
+            @if (multiple === true) {
+              <button
+                class="[font:inherit] cursor-pointer [&:focus-visible]:[outline:2px_solid_#b09bd7] [&:focus-visible]:[outline-offset:2px]"
+                type="button"
+                (click)="remove(id)"
+                [attr.aria-label]="'Remove ' + name(id)"
+              >
                 {{ name(id) }} ×
               </button>
             }
@@ -43,8 +52,11 @@ export interface ListOption {
         </div>
       }
       @if (expanded) {
-        <div class="filter-menu">
+        <div
+          class="filter-menu [margin-top:6px] [border:1px_solid_#e5dfec] rounded-[8px] p-[10px] [background:#fff] [&_input]:block [&_input]:w-[100%] [&_input]:m-[0_0_8px] [&_input]:[border:1px_solid_#e5dfec] [&_input]:rounded-[6px] [&_input]:p-[10px] [&_input]:[background:#faf8fd] [&_input]:text-[13px] max-[760px]:[&_input]:min-h-[46px] max-[760px]:[&_input]:text-[16px]"
+        >
           <input
+            class="[font:inherit] [&:focus-visible]:[outline:2px_solid_#b09bd7] [&:focus-visible]:[outline-offset:2px]"
             type="search"
             [name]="searchKeys.join(',')"
             [value]="query"
@@ -54,18 +66,31 @@ export interface ListOption {
             [placeholder]="'Search ' + label + '...'"
             (keydown.escape)="$event.stopPropagation(); expanded = false"
           />
-          <div class="api-state" aria-live="polite">
+          <div
+            class="api-state text-[12px] text-[#887397] [&_button]:[border:0] [&_button]:[background:#f6f1fb] [&_button]:rounded-[5px] [&_button]:p-[8px] [&_button]:text-[#8664bc] max-[760px]:[&_button]:min-h-[44px] max-[760px]:[&_button]:text-[13px]"
+            aria-live="polite"
+          >
             @if (loading()) {
-              <p>Locading...</p>
+              <p>Loading...</p>
             }
             @if (error()) {
               <p role="alert">{{ error() }}</p>
-              <button type="button" (click)="loadPage(failedPage)">Reload</button>
+              <button
+                class="[font:inherit] cursor-pointer [&:focus-visible]:[outline:2px_solid_#b09bd7] [&:focus-visible]:[outline-offset:2px]"
+                type="button"
+                (click)="loadPage(failedPage)"
+              >
+                Reload
+              </button>
             }
           </div>
-          <div class="filter-options" [attr.aria-label]="label + 'Options'">
+          <div
+            class="filter-options max-h-[220px] overflow-y-auto [&_>_button]:flex [&_>_button]:items-center [&_>_button]:justify-between [&_>_button]:w-[100%] [&_>_button]:gap-[10px] [&_>_button]:[border:0] [&_>_button]:rounded-[5px] [&_>_button]:p-[10px] [&_>_button]:[background:#fff] [&_>_button]:text-left [&_>_button]:text-[#8f819e] [&_>_button:hover]:[background:#f3edfb] [&_>_button:hover]:text-[#8664bc] [&_>_button.is-selected]:[background:#f3edfb] [&_>_button.is-selected]:text-[#8664bc] [&_b]:block [&_b]:text-[13px] [&_b]:font-[500] [&_small]:block [&_small]:text-[11px] [&_small]:[margin-top:4px] max-[760px]:[&_>_button]:min-h-[56px] max-[760px]:[&_b]:text-[14px] max-[760px]:[&_small]:text-[12px]"
+            [attr.aria-label]="label + 'options'"
+          >
             @for (option of filtered(); track option.value) {
               <button
+                class="[font:inherit] cursor-pointer [&:focus-visible]:[outline:2px_solid_#b09bd7] [&:focus-visible]:[outline-offset:2px]"
                 type="button"
                 [class.is-selected]="selectedIds.includes(option.value)"
                 [attr.aria-pressed]="selectedIds.includes(option.value)"
@@ -78,23 +103,31 @@ export interface ListOption {
               </button>
             } @empty {
               @if (!loading() && !error()) {
-                <p class="filter-empty">Nothing any matches data</p>
+                <p class="filter-empty text-[12px] text-[#887397]">No results</p>
               }
             }
           </div>
           @if (hasMore() && !error()) {
             <button
               type="button"
-              class="load-more"
+              class="load-more [font:inherit] cursor-pointer [&:focus-visible]:[outline:2px_solid_#b09bd7] [&:focus-visible]:[outline-offset:2px] w-[100%] min-h-[44px] [margin-top:8px] [border:1px_solid_#e5dfec] rounded-[6px] [background:#f6f1fb] text-[#8664bc] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default"
               [disabled]="loading()"
               (click)="loadPage(page + 1)"
             >
-              Load More
+              Load more
             </button>
           }
-          <div class="filter-menu-footer">
+          <div
+            class="filter-menu-footer [border-top:1px_solid_#f0ebf5] [margin-top:6px] [padding-top:8px] flex items-center justify-between gap-[8px] [&_small]:text-[12px] [&_small]:text-[#887397] [&_button]:[border:0] [&_button]:[background:#f6f1fb] [&_button]:rounded-[5px] [&_button]:p-[8px] [&_button]:text-[#8664bc] max-[760px]:[&_button]:min-h-[44px] max-[760px]:[&_button]:text-[13px]"
+          >
             <small>{{ filtered().length }} options</small
-            ><button type="button" (click)="clear()">Clear All</button>
+            ><button
+              class="[font:inherit] cursor-pointer [&:focus-visible]:[outline:2px_solid_#b09bd7] [&:focus-visible]:[outline-offset:2px]"
+              type="button"
+              (click)="clear()"
+            >
+              Clear
+            </button>
           </div>
         </div>
       }
@@ -282,7 +315,7 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
   summary() {
     return this.selectedIds.length
       ? this.selectedIds.map((id) => this.name(id)).join('、')
-      : '請選擇' + this.label;
+      : 'Please select ' + this.label;
   }
   choose(id: string) {
     if (this.multiple) {
