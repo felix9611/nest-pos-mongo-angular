@@ -10,7 +10,7 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
 import { Department, DepartmentSchema } from '../department/department.schame'
 import { LoginRecord, LoginRecordSchema } from './login-reocrd.schame'
 import { DepartmentService } from '../department/department.service'
-import { LocationSchema, Location } from '../location/location.schame'
+import { Location, LocationSchema } from '../location/location.schame'
 
 @Module({
     imports: [
