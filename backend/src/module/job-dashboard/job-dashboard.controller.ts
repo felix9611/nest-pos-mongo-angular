@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post, Req, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, HttpException, HttpStatus, Param, Post, Req, UseGuards } from "@nestjs/common"
 import { JobDashboardService } from "./job-dashboard.server"
 import { ApiBody, ApiOperation } from "@nestjs/swagger"
 import { AuthGuard } from "../auth/AuthGuard"
@@ -13,13 +13,21 @@ export class JobDashboardController {
     @Post('create')
     @UseGuards(AuthGuard)
     async create(@Body() createData: JobDashboard, @Req() { user }: { user: JwtPayload }) {
-        return await this.jobDashboardService.create(createData)
+        if (!(user.superAdmin === true || user.manager === true) && createData.status >= 3 ) {
+            throw new HttpException({ error: 'You do not allow to create this task on this status' }, HttpStatus.FORBIDDEN)
+        } else {
+            return await this.jobDashboardService.create(createData)
+        }
     }
 
     @Post('update')
     @UseGuards(AuthGuard)
-    async update(@Body() createData: JobDashboard, @Req() { user }: { user: JwtPayload }) {
-        return await this.jobDashboardService.update(createData)
+    async update(@Body() updateData: JobDashboard, @Req() { user }: { user: JwtPayload }) {
+        if (!(user.superAdmin === true || user.manager === true) && updateData.status >= 3 ) {
+            throw new HttpException({ error: 'You do not allow to update this task on this status' }, HttpStatus.FORBIDDEN)
+        } else {
+            return await this.jobDashboardService.update(updateData)
+        }
     }
 
     @Post('list')
@@ -31,12 +39,16 @@ export class JobDashboardController {
     @Post('change-status')
     @UseGuards(AuthGuard)
     async changeStatus(@Body() req: UpdateJobDashboardStatusDto, @Req() { user }: { user: JwtPayload }) {
-        return await this.jobDashboardService.updateTaskStatus(req)
+        if (!(user.superAdmin === true || user.manager === true) && req.status > 3 ) {
+            throw new HttpException({ error: 'You do not allow to move this task to this status' }, HttpStatus.FORBIDDEN)
+        } else {
+            return await this.jobDashboardService.updateTaskStatus(req)
+        }
     }
 
     @Delete('void/:id')
     @UseGuards(AuthGuard)
     async delete(@Param('id') _id: string, @Req() { user }: { user: JwtPayload }) {
-        return await this.jobDashboardService.voidById(_id)
+        return await this.jobDashboardService.voidById(_id, user)
     }
 }

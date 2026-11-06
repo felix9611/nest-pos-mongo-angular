@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { Model } from 'mongoose'
 import { ListJobDashboardRequestDto, UpdateJobDashboardStatusDto } from './job-dashboard.dto'
+import { JwtPayload } from '../auth/auth.dto'
 
 @Injectable()
 export class JobDashboardService {
@@ -28,39 +29,45 @@ export class JobDashboardService {
         }
     }
 
-    async voidById(_id: string) {
+    async voidById(_id: string, user: JwtPayload) {
         const check = await this.jobDashboardModel.findOne({ _id })
 
-        if (check?.status !== 0) {
-            const finalData = {
-                status: 0,
-                jobValid: false,
-                updatedAt: new Date()
+        if (!(user.superAdmin === true || user.manager === true) && check && check.status >= 3) {
+            return {
+                error: 'You do not allow to void this task on this status'
             }
+        } else {
+            if (check?.status !== 0) {
+                const finalData = {
+                    status: 0,
+                    jobValid: false,
+                    updatedAt: new Date()
+                }
 
-            const res = await this.jobDashboardModel.updateOne({ _id }, finalData)
+                const res = await this.jobDashboardModel.updateOne({ _id }, finalData)
 
-            if (res.modifiedCount === 0) {
+                if (res.modifiedCount === 0) {
+                    return {
+                        error: 'This task has been voided! Please contact admin!'
+                    }
+                } else {
+                    await this.actionRecordService.saveRecord({
+                        actionName: 'Void Job Dashboard',
+                        actionMethod: 'POST',
+                        actionFrom: 'Job Dashboard',
+                        actionData: finalData,
+                        actionSuccess: 'Sussess',
+                        createdAt: new Date()
+                    })
+
+                    return {
+                        message: 'Task voided successfully!'
+                    }
+                }
+            } else {
                 return {
                     error: 'This task has been voided! Please contact admin!'
                 }
-            } else {
-                await this.actionRecordService.saveRecord({
-                    actionName: 'Void Job Dashboard',
-                    actionMethod: 'POST',
-                    actionFrom: 'Job Dashboard',
-                    actionData: finalData,
-                    actionSuccess: 'Sussess',
-                    createdAt: new Date()
-                })
-
-                return {
-                    message: 'Task voided successfully!'
-                }
-            }
-        } else {
-            return {
-                error: 'This task has been voided! Please contact admin!'
             }
         }
     }
