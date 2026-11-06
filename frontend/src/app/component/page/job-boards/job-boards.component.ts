@@ -61,7 +61,37 @@ export class JobBoardsComponent  {
       if (!options.some((o) => o.value === id)) options.push({ value: id, label: id });
     return options;
   }
-  selected: Job | null = null
+  selected: Job | null = {
+    status: 0,
+    category: 'General',
+    number: '',
+    _id: '',
+    title: '',
+    description: '',
+    jobStartDate: '',
+    jobEndDate: '',
+    jobTimeRemain: '',
+    tags: [],
+    labels: [],
+    locationIds: [],
+    attachments: [],
+    comments: [],
+    checkLists: [],
+    userIds: [],
+    jobRelationData: {
+      productCode: '',
+      typeCode: '',
+      deptCode: '',
+      placeCode: '',
+      vendorCode: '',
+      stockTakeName: '',
+      invoiceNumber: '',
+      returnInvoiceCaseNumber: ''
+    },
+    jobValid: false,
+    users: [],
+    sortOrder: 0
+  }
   tab = 'details'
   tagText = ''
   labelText = ''

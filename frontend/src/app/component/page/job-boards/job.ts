@@ -40,7 +40,7 @@ export interface Job {
     invoiceNumber: string
     returnInvoiceCaseNumber: string
   }
-  jobValid: string
+  jobValid: boolean
   status: number
   users: {
     username: string
@@ -73,7 +73,7 @@ export const newJob = (status = 1): Job => ({
     invoiceNumber: '',
     returnInvoiceCaseNumber: '',
   },
-  jobValid: '有效',
+  jobValid: false,
   status,
   users: [],
   sortOrder: 0,

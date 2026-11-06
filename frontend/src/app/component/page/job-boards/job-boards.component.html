@@ -461,12 +461,15 @@
               <label>
                 Category
                 <select [(ngModel)]="job.category">
-                  <option [value]="'General'">General</option>
-                  <option [value]="'User'">User</option>
-                  <option [value]="'User'">User</option>
-                  <option [value]="'Operations'"]>Operations</option>
-                  <option [value]="'Repair'"]>Repair</option>
-                  <option [value]="'Assets'"]="">Assets</option>
+                  <option [ngValue]="'General'">General</option>
+                  <option [ngValue]="'User'">User</option>
+                  <option [ngValue]="'Operations'"]>Operations</option>
+                  <option [ngValue]="'Products'"]="">Product</option>
+                  <option [ngValue]="'Stock_Management'"]>Stock Management</option>
+                  <option [ngValue]="'Sales'"]>Sales</option>
+                  <option [ngValue]="'Support'"]>Support</option>
+                  <option [ngValue]="'Invoice'"]>Invoice</option>
+                  <option [ngValue]="'Other'"]>Other</option>
                 </select>
               </label>
               <label>Status
@@ -479,8 +482,8 @@
               <label>
                 Job Valid
                 <select class="[font:inherit]" [(ngModel)]="job.jobValid">
-                  <option>Valid</option>
-                  <option>Invalid</option>
+                  <option [ngValue]="true">Valid</option>
+                  <option [ngValue]="false">Invalid</option>
                 </select>
               </label>
               <label>Start Date
@@ -738,7 +741,7 @@
                   Product Type
                 </span>
                 <app-filter-list-api
-                    label="Asset Type"
+                    label="Product Type"
                     [apiUrl]="'/product/product-type/list'"
                     [requestBody]="assetTypeSearchForm"
                     [postApi]="loadAssetTypeLists"

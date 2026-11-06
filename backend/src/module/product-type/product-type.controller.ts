@@ -77,11 +77,7 @@ export class ProductTypeController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListproductTypeModelRequestDto, @Req() { user }: { user: JwtPayload }) {
-        if (user.superAdmin === true) {
-            return this.productTypeService.listPage(req)
-        } else {
-            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
-        }
+        return this.productTypeService.listPage(req)
     }
 
     @ApiOperation({ summary: 'List with filters'})

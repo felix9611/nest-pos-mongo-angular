@@ -90,13 +90,13 @@ export interface ListOption {
           >
             @for (option of filtered(); track option.value) {
               <button
-                class="[font:inherit] cursor-pointer [&:focus-visible]:[outline:2px_solid_#b09bd7] [&:focus-visible]:[outline-offset:2px]"
+                class="[font:inherit] cursor-pointer [&:focus-visible]:[outline:0px_solid_#b09bd7] [&:focus-visible]:[outline-offset:0px]"
                 type="button"
                 [class.is-selected]="selectedIds.includes(option.value)"
                 [attr.aria-pressed]="selectedIds.includes(option.value)"
                 (click)="choose(option.value)"
               >
-                <span
+                <span class="text-[#7d7d7d]"
                   ><b>{{ option.label }}</b
                   ><small>{{ option.value }}</small></span
                 ><span>{{ selectedItem(option.value) }}</span>
