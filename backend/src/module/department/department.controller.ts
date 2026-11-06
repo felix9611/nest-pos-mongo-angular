@@ -89,11 +89,7 @@ export class DepartmentController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListDeptRequestDto, @Req() { user }: { user: JwtPayload }) {
-        if (user.superAdmin === true) {
-            return this.deptService.listPage(req)
-        } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
-        }
+        return this.deptService.listPage(req)
     }
 
     @ApiOperation({ summary: 'Batch Create Department' })

@@ -108,11 +108,7 @@ export class SysUserController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listPage(@Body() requestBody: ListUserRequestDto, @Req() { user }: { user: JwtPayload }) {
-        if (user.superAdmin === true) {
-            return await this.userService.listUser(requestBody)
-        } else {
-            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
-        }
+        return await this.userService.listUser(requestBody)
     }
 
 }
