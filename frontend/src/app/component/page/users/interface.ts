@@ -8,4 +8,5 @@ export interface UserForm {
     roles?: number[]
     placeIds?: string[]
     superAdmin?: boolean
+    manager?: boolean
 }

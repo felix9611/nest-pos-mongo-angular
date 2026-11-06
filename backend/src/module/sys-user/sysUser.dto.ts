@@ -13,6 +13,7 @@ export interface CreateUserDto {
     roles?: string[],
     placeIds?: string[]
     superAdmin?: boolean
+    manager?: boolean
 }
 
 export interface CreateUserRequestDto {
@@ -146,3 +147,5 @@ export class SysRoleQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: UserDataWithDepartment, isArray: true, description: 'Data List' })
     lists?: UserDataWithDepartment[]
 }
+
+

@@ -42,6 +42,12 @@
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
+                    <nz-form-label class="font-bold" nzFor="username">Manager</nz-form-label>
+                    <nz-form-control [nzSpan]="14">
+                        {{ userInfo.manager? 'Yes' : 'No' }}
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
                     <nz-form-label class="font-bold" nzFor="email">E-mail</nz-form-label>
                     <nz-form-control [nzSpan]="14">
                         {{ userInfo.email }}

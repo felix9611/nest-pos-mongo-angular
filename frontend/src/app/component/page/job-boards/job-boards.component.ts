@@ -69,6 +69,7 @@ export class JobBoardsComponent  {
   checklist = ''
   error = ''
   toast = signal('')
+  failed = signal('')
 
   private reloadTimer?: ReturnType<typeof setInterval>
   private loadingJobs = false
@@ -511,11 +512,11 @@ export class JobBoardsComponent  {
     if (!this.selected) return;
     const j = this.selected;
     if (!j.title.trim()) {
-      this.error = '請輸入工作標題。';
+      this.error = 'Please enter a title.';
       return;
     }
     if (j.jobStartDate && j.jobEndDate && j.jobEndDate < j.jobStartDate) {
-      this.error = '結束日期不可早於開始日期。';
+      this.error = 'End date must be after the start date.';
       return;
     }
 
@@ -568,55 +569,61 @@ export class JobBoardsComponent  {
  savingMove = false;
 
   async drop(event: CdkDragDrop<Job[]>, status: number) {
-    if (this.savingMove) return
 
-    const moved = event.item.data as Job
+      if (this.savingMove) return
 
-    const target = event.container.data.filter(job => job._id !== moved._id);
-    target.splice(event.currentIndex, 0, moved);
+      const moved = event.item.data as Job
 
-    const previous = target[event.currentIndex - 1];
-    const next = target[event.currentIndex + 1];
+      const target = event.container.data.filter(job => job._id !== moved._id);
+      target.splice(event.currentIndex, 0, moved);
 
-    let sortOrder: number;
+      const previous = target[event.currentIndex - 1];
+      const next = target[event.currentIndex + 1];
 
-    if (previous && next) {
-      sortOrder = previous.sortOrder + (next.sortOrder - previous.sortOrder) / 2
-    } else if (previous) {
-      sortOrder = previous.sortOrder + 10
-    } else if (next) {
-      sortOrder = next.sortOrder - 10
-    } else {
-      sortOrder = 10
-    }
+      if (!(this.yourUserData.superAdmin || this.yourUserData.manager) && (status > 3 || target[0].status === 4 || target[0].status === 5)) {
+        this.failNotify('You are not allowed to move this task')
+        return
+      } else {
+        let sortOrder: number;
 
-    const previousJobs = structuredClone(this.jobs);
-    const list = [...event.container.data];
+        if (previous && next) {
+          sortOrder = previous.sortOrder + (next.sortOrder - previous.sortOrder) / 2
+        } else if (previous) {
+          sortOrder = previous.sortOrder + 10
+        } else if (next) {
+          sortOrder = next.sortOrder - 10
+        } else {
+          sortOrder = 10
+        }
 
-    if (event.previousContainer === event.container) {
-      moveItemInArray(list, event.previousIndex, event.currentIndex);
-    } else {
-      list.splice(event.currentIndex, 0, { ...moved, status });
-    }
+        const previousJobs = structuredClone(this.jobs);
+        const list = [...event.container.data];
 
-    if (moved.status === status) return
+        if (event.previousContainer === event.container) {
+          moveItemInArray(list, event.previousIndex, event.currentIndex);
+        } else {
+          list.splice(event.currentIndex, 0, { ...moved, status });
+        }
 
-    this.savingMove = true
+        if (moved.status === status) return
 
-    try {
-      await postApiWithAuth('/tasks/change-status', {
-        _id: moved._id,
-        status,
-        sortOrder
-      })
-      this.loadJobLists()
-      this.notify('Updated successfully')
-    } catch (error) {
-      this.jobs = previousJobs
-      this.notify('Update failed, the tasks have been fallback')
-      console.error(error)
-    } finally {
-      this.savingMove = false
+        this.savingMove = true
+
+      try {
+          await postApiWithAuth('/tasks/change-status', {
+            _id: moved._id,
+            status,
+            sortOrder
+          })
+          this.loadJobLists()
+          this.notify('Updated successfully')
+      } catch (error) {
+          this.jobs = previousJobs
+          this.failNotify('Update failed, the tasks have been fallback')
+          console.error(error)
+      } finally {
+        this.savingMove = false
+      }
     }
   }
   toggleMember(id: string) {
@@ -648,7 +655,7 @@ export class JobBoardsComponent  {
     if (!target) return;
     for (const file of Array.from(input.files || [])) {
       if (file.size > 2 * 1024 * 1024) {
-        this.error = '每個附件上限為 2 MB。';
+        this.error = 'Per file size limit is 2MB';
         continue;
       }
       try {
@@ -666,7 +673,7 @@ export class JobBoardsComponent  {
           status: 1
         });
       } catch {
-        this.error = 'Attachment upload failed, please try again.';
+        this.failNotify('Attachment upload failed, please try again.')
       }
     }
     input.value = '';
@@ -698,5 +705,10 @@ export class JobBoardsComponent  {
   notify(s: string) {
     this.toast.set(s);
     setTimeout(() => this.toast.set(''), 3500);
+  }
+
+  failNotify(s: string) {
+    this.failed.set(s);
+    setTimeout(() => this.failed.set(''), 4000);
   }
 }

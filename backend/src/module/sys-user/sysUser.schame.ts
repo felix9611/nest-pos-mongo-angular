@@ -1,6 +1,9 @@
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { HydratedDocument, SchemaTypes, Types } from 'mongoose'
 import { BaseSchema } from '../base/baseSchema'
+import { Department, DepartmentSchema } from '../department/department.schame'
+import { SysRole, SysRoleSchema } from '../sys-role/role.schame'
 
 export type SysUserDocument = HydratedDocument<SysUser>
 @Schema()
@@ -15,7 +18,10 @@ export class SysUser extends BaseSchema {
     avatarBase64?: string
 
     @Prop({ type: SchemaTypes.Boolean, required: true })
-    superAdmin!: boolean
+    superAdmin?: boolean
+
+    @Prop({ type: SchemaTypes.Boolean, required: true })
+    manager?: boolean
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Department' })
     deptIds!: Types.ObjectId[]

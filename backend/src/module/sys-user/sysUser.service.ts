@@ -48,7 +48,8 @@ export class SysUserService {
           status: 1,
           createdAt: new Date(),
           updateAt: new Date(),
-          superAdmin: userData.superAdmin
+          superAdmin: userData.superAdmin,
+          manager: userData.manager
         }
 
         return await this.sysUserModel.create(finalData)
@@ -200,6 +201,7 @@ export class SysUserService {
     ]).exec()
 
     const loginRecords = await this.loginRecordModel.find({ username }).sort({ loginTime: -1 }).limit(15).exec()
+  
     const finalUserData = answer[0]
     delete finalUserData.password
 
@@ -233,6 +235,7 @@ export class SysUserService {
       placeIds: answer?.placeIds,
       locations:locations,
       superAdmin: answer?.superAdmin,
+      manager: answer?.manager,
       password: answer?.password
     }
   }
@@ -309,4 +312,5 @@ export class SysUserService {
     const create = new this.loginRecordModel(finalData)
     return await create.save()
   }
+
 }

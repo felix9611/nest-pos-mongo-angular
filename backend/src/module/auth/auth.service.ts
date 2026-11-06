@@ -36,7 +36,15 @@ export class AuthService {
         msg: 'Password not match!'
       }
     } else {
-      const payload = { sub: user._id, username: user.username, departmentIds: user.deptIds, placeIds: user.placeIds, roles: user.roles, superAdmin: user.superAdmin }
+      const payload = { 
+        sub: user._id, 
+        username: user.username, 
+        departmentIds: user.deptIds, 
+        placeIds: user.placeIds, 
+        roles: user.roles, 
+        superAdmin: user.superAdmin, 
+        manager: user.manager 
+      }
       await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
       return {
         accessToken: await this.jwtService.signAsync(payload),
@@ -52,13 +60,14 @@ export class AuthService {
         const decoded = await this.jwtService.verifyAsync<JwtPayload>(tokenString)
         return {
           status: true,
-              user: {
-              userId: decoded.sub,
-              username: decoded.username,
-              departmentIds: decoded.departmentIds,
-              placeIds: decoded.placeIds,
-              roles: decoded.roles,
-              superAdmin: decoded.superAdmin,
+          user: {
+            userId: decoded.sub,
+            username: decoded.username,
+            departmentIds: decoded.departmentIds,
+            placeIds: decoded.placeIds,
+            roles: decoded.roles,
+            superAdmin: decoded.superAdmin,
+            manager: decoded.manager
           },
         }
       } catch (error) {

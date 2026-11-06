@@ -158,13 +158,15 @@
                 >{{ cards(col.id).length }}</span
               >
             </div>
-            <button
-              class="[font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)]"
-              (click)="create(col.id)"
-              [attr.aria-label]="'Add New ' + col.name + 'Task'"
-            >
-              ＋
-            </button>
+            @if (yourUserData.manager === true || yourUserData.superAdmin === true) {
+              <button
+                class="[font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)]"
+                (click)="create(col.id)"
+                [attr.aria-label]="'Add New ' + col.name + 'Task'"
+              >
+                ＋
+              </button>
+            }
           </div>
           <div
             class="drop-area min-h-[85px]"
@@ -820,27 +822,44 @@
         }
       
         </div>
-        <footer
-        class="modal-footer p-[17px_28px] [background:#fcfbfe] [border-top:1px_solid_#eee9f5] flex justify-between [flex-shrink:0] [&_>_div]:flex [&_>_div]:gap-[9px] max-[760px]:p-[12px_16px_calc(12px_+_env(safe-area-inset-bottom,_0px))] max-[760px]:gap-[10px] max-[760px]:[&_>_div]:gap-[8px] max-[760px]:[&_.primary]:[padding-inline:14px] max-[760px]:[&_.secondary]:[padding-inline:14px] max-[360px]:flex-wrap max-[360px]:[&_>_div]:[flex:1] max-[360px]:[&_>_div]:justify-end"
-      >
-        <button
-          class="danger [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [background:none] [border:0] text-[#be8f9c] text-[11px]"
-          (click)="remove()"
-        >
-          Delete
-        </button>
+        <footer class="modal-footer p-[17px_28px] [background:#fcfbfe] [border-top:1px_solid_#eee9f5] flex justify-between [flex-shrink:0] [&_>_div]:flex [&_>_div]:gap-[9px] max-[760px]:p-[12px_16px_calc(12px_+_env(safe-area-inset-bottom,_0px))] max-[760px]:gap-[10px] max-[760px]:[&_>_div]:gap-[8px] max-[760px]:[&_.primary]:[padding-inline:14px] max-[760px]:[&_.secondary]:[padding-inline:14px] max-[360px]:flex-wrap max-[360px]:[&_>_div]:[flex:1] max-[360px]:[&_>_div]:justify-end">
+        @if (!(yourUserData.manager || yourUserData.superAdmin) && selected.status < 3) {
+          <button
+            class="danger [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [background:none] [border:0] text-[#be8f9c] text-[11px]"
+            (click)="remove()"
+          >
+            Delete
+          </button>
+        } @else if (yourUserData.manager || yourUserData.superAdmin) {
+          <button
+            class="danger [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [background:none] [border:0] text-[#be8f9c] text-[11px]"
+            (click)="remove()"
+          >
+            Delete
+          </button>
+        }
         <div>
           <button
             class="secondary [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [border:1px_solid_#e5ddec] [background:white] p-[9px_17px] rounded-[6px] text-[#9e90ac]"
             (click)="selected = null"
           >
-            Cancel</button
-          ><button
+            Cancel
+          </button>
+          @if (!(yourUserData.manager || yourUserData.superAdmin) && selected.status < 3) {
+          <button
             class="primary [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [border:1px_solid_#7960cc] [background:#8064d4] text-[#fff] rounded-[7px] p-[10px_15px] font-[500] [box-shadow:0_3px_5px_#8064d412] whitespace-nowrap [&_span]:text-[11px]"
             (click)="save()"
           >
             Save
           </button>
+        } @else if (yourUserData.manager || yourUserData.superAdmin) {
+          <button
+            class="primary [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [border:1px_solid_#7960cc] [background:#8064d4] text-[#fff] rounded-[7px] p-[10px_15px] font-[500] [box-shadow:0_3px_5px_#8064d412] whitespace-nowrap [&_span]:text-[11px]"
+            (click)="save()"
+          >
+            Save
+          </button>
+        }
         </div>
       </footer>
     </section>
@@ -848,4 +867,8 @@
 }
 @if (toast()) {
   <div class="toast" role="status">✓ {{ toast() }}</div>
+}
+
+@if (failed()) {
+  <div class="toast" role="status"> {{ failed() }}</div>
 }

@@ -35,9 +35,9 @@ export class UserDetailDto {
 
     @ApiProperty({ description: 'Department ID' })
     deptId!: string
-    
+
     @ApiProperty({ description: 'Email Address' })
-    email!: string
+    email?: string
 
     @ApiProperty({ description: 'User Roles ID List', example: [] })
     roles?: any[]
@@ -55,10 +55,10 @@ export class UserDetailDto {
     updatedAt?: string
 
     @ApiProperty({ description: 'Department'})
-    department!: DepartmentBody
+    department?: DepartmentBody
 
     @ApiProperty({ description: 'Role Lists', type: SysRoleBody, isArray: true})
-    roleLists!: SysRoleBody[]
+    roleLists?: SysRoleBody[]
 }
 
 export interface JwtPayload {
@@ -68,4 +68,5 @@ export interface JwtPayload {
   placeIds: string[]
   roles: string[]
   superAdmin: boolean
+  manager: boolean
 }
