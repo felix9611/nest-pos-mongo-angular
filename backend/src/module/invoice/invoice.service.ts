@@ -125,7 +125,7 @@ export class InvoiceService {
         }
     }
 
-    async create(createData: CreateInvoiceDto) {
+    async create(createData: CreateInvoiceDto, source: string) {
         const { invoicePayments, invoiceItems, locationId, locationCode, ..._data } = createData
 
         const newCode = await this.createNewCode()
@@ -144,7 +144,8 @@ export class InvoiceService {
             number,
             taxRefNo,
             locationId,
-            ..._data
+            source,
+            ..._data,
         }
 
         const create = new this.invoiceModel(finalData)
