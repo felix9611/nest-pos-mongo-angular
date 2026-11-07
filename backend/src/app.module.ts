@@ -28,6 +28,7 @@ import { InvoiceMoudule } from './module/invoice/invoice.module'
 import { StockTakeMoudule } from './module/stock-take/stock-take.module'
 import { ReturnInvoiceMoudule } from './module/returnInvoice/returnInvoice.module'
 import { JobDashboardModule } from './module/job-dashboard/job-dashboard.module'
+import { ApiKeyMoudule } from './module/apikey/apikey.module'
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { JobDashboardModule } from './module/job-dashboard/job-dashboard.module'
     StockTakeMoudule,
     ReturnInvoiceMoudule,
     JobDashboardModule,
+    ApiKeyMoudule,
     MongooseModule.forRoot('mongodb://localhost/pos'),
     MongooseModule.forFeature([
       { name: SysRole.name, schema: SysRoleSchema },
