@@ -61,6 +61,14 @@ export class UserDetailDto {
     roleLists?: SysRoleBody[]
 }
 
+export class ApiKeyLoginBody {
+    @ApiProperty({ description: 'Source' })
+    source!: string
+
+    @ApiProperty({ description: 'Answer' })
+    answer!: string
+}
+
 export interface JwtPayload {
   sub: string
   username: string

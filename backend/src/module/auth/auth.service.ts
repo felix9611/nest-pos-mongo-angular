@@ -3,7 +3,7 @@ import { SysUserService } from '../sys-user/sysUser.service'
 import { JwtService } from '@nestjs/jwt'
 import { hashPassword, salt } from '../../tool/password-tools'
 import { jwtConstants } from './constants'
-import { JwtPayload } from './auth.dto'
+import { ApiKeyLoginBody, JwtPayload } from './auth.dto'
 
 @Injectable()
 export class AuthService {
@@ -47,7 +47,10 @@ export class AuthService {
       }
       await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
       return {
-        accessToken: await this.jwtService.signAsync(payload),
+        accessToken: await this.jwtService.signAsync(payload, {
+          secret: jwtConstants.secret,
+            
+        }),
       }
     }
     
@@ -77,6 +80,14 @@ export class AuthService {
       return {
         msg: 'Invalid token!'
       }
+    }
+  }
+
+  async apiLogin(req: ApiKeyLoginBody) {
+    
+
+    const apiPayload = {
+      // sourceSystem: req.source,
     }
   }
 }
