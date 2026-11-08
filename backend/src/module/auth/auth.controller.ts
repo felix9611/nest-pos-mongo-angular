@@ -5,7 +5,7 @@ import { AuthGuard } from './AuthGuard'
 import { SysUserService } from '../sys-user/sysUser.service'
 import { Public } from './public.decorator'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { LoginBody, TokenBody, UserDetailDto, VerifyTokenRes } from './auth.dto'
+import { ApiKeyLoginBody, LoginBody, TokenBody, UserDetailDto, VerifyTokenRes } from './auth.dto'
 import { ReturnMsg } from 'src/tool/open-api-body'
 
 @Controller('auth')
@@ -37,5 +37,12 @@ export class AuthController {
   @UseGuards(AuthGuard)
   async getUserProfile(@Req() req: any) {
     return await this.userService.findOneUser(req.user.username)
+  }
+
+  @Public()
+  @Post('api/login')
+
+  async apiGetToken(@Body() req: ApiKeyLoginBody){
+    return await this.authService.apiLogin(req)
   }
 }

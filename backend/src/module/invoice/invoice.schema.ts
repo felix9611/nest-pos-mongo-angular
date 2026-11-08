@@ -31,6 +31,9 @@ export class Invoice extends BaseSchema {
 
     @Prop({ type: SchemaTypes.String })
     remark?: string
+
+    @Prop({ type: SchemaTypes.String })
+    sourece?: string
 }
 
 export const InvoiceSchema = SchemaFactory.createForClass(Invoice)

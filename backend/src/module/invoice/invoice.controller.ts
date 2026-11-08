@@ -25,10 +25,10 @@ export class InvoiceController {
             if (!user.placeIds.includes(createData.locationId)) {
                 throw new HttpException({ message: 'Location access denied' }, HttpStatus.FORBIDDEN)
             } else {
-                return await this.invoiceService.create(createData)
+                return await this.invoiceService.create(createData, 'POS')
             }
         } else {
-            return await this.invoiceService.create(createData)
+            return await this.invoiceService.create(createData, 'POS')
         }
     }
 
