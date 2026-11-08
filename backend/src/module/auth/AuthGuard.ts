@@ -10,9 +10,10 @@ import { jwtConstants } from './constants'
 import { Request } from 'express'
 import { Reflector } from '@nestjs/core'
 import { IS_PUBLIC_KEY } from './public.decorator'
+import { env } from 'process'
   
-@Injectable()
-export class AuthGuard implements CanActivate {
+  @Injectable()
+  export class AuthGuard implements CanActivate {
     constructor(private jwtService: JwtService, private reflector: Reflector) {}
   
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -29,12 +30,10 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException()
       }
       try {
-        const payload = await this.jwtService.verifyAsync(
-          token,
-          {
-            secret: jwtConstants.secret
-          }
-        )
+        const payload = await this.jwtService.verifyAsync(token, {
+          secret: env.JWT_SECRET,
+          issuer: env.JWT_ISSUER
+        })
         // 💡 We're assigning the payload to the request object here
         // so that we can access it in our route handlers
         request['user'] = payload

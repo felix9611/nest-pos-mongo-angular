@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt'
 import { hashPassword, salt } from '../../tool/password-tools'
 import { jwtConstants } from './constants'
 import { ApiKeyLoginBody, JwtPayload } from './auth.dto'
+import { env } from 'process'
 
 @Injectable()
 export class AuthService {
@@ -48,9 +49,9 @@ export class AuthService {
       await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
       return {
         accessToken: await this.jwtService.signAsync(payload, {
-          secret: jwtConstants.secret,
-            
-        }),
+          secret: env.JWT_SECRET,
+          issuer: env.JWT_ISSUER
+        })
       }
     }
     
@@ -60,18 +61,19 @@ export class AuthService {
     const [type, tokenString] = token.split(' ') ?? []
     if (type === 'Bearer') {
       try {
-        const decoded = await this.jwtService.verifyAsync<JwtPayload>(tokenString)
-        return {
-          status: true,
-          user: {
-            userId: decoded.sub,
-            username: decoded.username,
-            departmentIds: decoded.departmentIds,
-            placeIds: decoded.placeIds,
-            roles: decoded.roles,
-            superAdmin: decoded.superAdmin,
-            manager: decoded.manager
-          },
+        const decoded = await this.jwtService.verifyAsync(tokenString, {
+          secret: env.JWT_SECRET,
+          issuer: env.JWT_ISSUER
+        })
+
+        const user = await this.usersService.findOneUserAllData(decoded.username)
+
+        if (!user) {
+          throw new UnauthorizedException('Invalid access')
+        } else {
+          return {
+            status: true
+          }
         }
       } catch (error) {
         throw new UnauthorizedException('Invalid or expired token')
