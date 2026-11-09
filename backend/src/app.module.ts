@@ -30,6 +30,7 @@ import { ReturnInvoiceMoudule } from './module/returnInvoice/returnInvoice.modul
 import { JobDashboardModule } from './module/job-dashboard/job-dashboard.module'
 import { ApiKeyMoudule } from './module/apikey/apikey.module'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConnectAuthGuard } from './module/auth/ConeectAuthGuard'
 
 @Module({
   imports: [
@@ -77,6 +78,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
       provide: APP_GUARD,
       useClass: AuthGuard // This applies the guard globally
     },
+    {
+      provide: APP_GUARD,
+      useClass: ConnectAuthGuard
+    }
   ],
 })
 export class AppModule {
