@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { InvoiceService } from './invoice.service'
 import { AuthGuard } from '../auth/AuthGuard'
-import { CreateInvoiceBody, CreateInvoiceDto, DashboardReqDto, DetailInvoiceBody, InvoiceBody, InvoiceListRequestDto, InvoiceQueryReq, InvoiceQueryRes, ListInvoiceQueryReq, ListInvoiceQueryRes } from './invoice.dto'
+import { CreateInvoiceBody, CreateInvoiceDto, CreateInvoiceFromApiDto, DashboardReqDto, DetailInvoiceBody, InvoiceBody, InvoiceListRequestDto, InvoiceQueryReq, InvoiceQueryRes, ListInvoiceQueryReq, ListInvoiceQueryRes } from './invoice.dto'
 import { InvoiceQueryService } from './invoice-query.service'
 import { ReturnMsg } from 'src/tool/open-api-body'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
@@ -13,6 +13,16 @@ export class InvoiceController {
         private invoiceService: InvoiceService,
         private invoiceQueryService: InvoiceQueryService
     ) {}
+
+    @ApiOperation({ summary: 'Create Invoice By Other Api' })
+    @ApiBody({ type: CreateInvoiceBody })
+    @ApiResponse({ description: 'If save successful', status: 201, type: InvoiceBody })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @Post('api/:source/create')
+    @UseGuards(AuthGuard)
+    async createFromOther(@Param('source') source: string, @Body() createData: CreateInvoiceFromApiDto) {
+        return await this.invoiceService.createFromApi(createData, source)
+    }
 
     @ApiOperation({ summary: 'Create Invoice' })
     @ApiBody({ type: CreateInvoiceBody })

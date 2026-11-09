@@ -19,7 +19,7 @@ export class InvoicePayment {
     @Prop({ type: SchemaTypes.Date, required: true })
     paymentTime!: string
 
-    @Prop({ type: SchemaTypes.Subdocument })
+    @Prop({ type: SchemaTypes.Mixed })
     subData?: any
 }
 
