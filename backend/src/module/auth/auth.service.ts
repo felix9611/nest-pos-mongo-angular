@@ -5,11 +5,13 @@ import { hashPassword, salt } from '../../tool/password-tools'
 import { jwtConstants } from './constants'
 import { ApiKeyLoginBody, JwtPayload } from './auth.dto'
 import { env } from 'process'
+import { ApiKeyService } from '../apikey/apikey.service'
 
 @Injectable()
 export class AuthService {
     constructor(
         private usersService: SysUserService,
+        private apiKeyService: ApiKeyService,
         private jwtService: JwtService
     ) {}
 
