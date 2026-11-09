@@ -24,6 +24,20 @@ export interface InvoicePaymentDto {
     paymentTime: string
 }
 
+export interface CreateInvoiceFromApiDto {
+    number: string
+    memberId: string
+    locationId: string
+    locationCode: string
+    totalAmount: number
+    discount: number
+    discountType: string
+    taxTotal: number
+    remark: string
+    invoiceItems: InvoiceItemDto[]
+    invoicePayments: InvoicePaymentDto[]
+}
+
 export interface CreateInvoiceDto {
     memberId: string
     locationId: string

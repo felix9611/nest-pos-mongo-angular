@@ -75,8 +75,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
     AppService,
     {
       provide: APP_GUARD,
-      useClass: AuthGuard // This applies the guard globally
-    },
+      useClass: AuthGuard,
+    }
   ],
 })
 export class AppModule {

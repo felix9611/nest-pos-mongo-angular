@@ -19,6 +19,10 @@ export class ProductLocationService {
         private actionRecordService: ActionRecordService
     ) {}
 
+    async dataSync() {
+        return await this.productLocationModel.find().exec()
+    }
+
     async stockMove(data: StockMoveProductLocationDto) {
         const { 
             productCode, 

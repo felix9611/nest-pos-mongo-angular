@@ -5,11 +5,13 @@ import { hashPassword, salt } from '../../tool/password-tools'
 import { jwtConstants } from './constants'
 import { ApiKeyLoginBody, JwtPayload } from './auth.dto'
 import { env } from 'process'
+import { ApiKeyService } from '../apikey/apikey.service'
 
 @Injectable()
 export class AuthService {
     constructor(
         private usersService: SysUserService,
+        private apiKeyService: ApiKeyService,
         private jwtService: JwtService
     ) {}
 
@@ -18,12 +20,11 @@ export class AuthService {
     password: string,
     ipAddress: string
   ): Promise<any> {
-    console.log(username)
     const user = await this.usersService.findOneUserAllData(username)
 
     if (!user) {
       return {
-        msg: 'Username not found'
+        error: 'Username not found'
       }
     }
 
@@ -66,15 +67,27 @@ export class AuthService {
           issuer: env.JWT_ISSUER
         })
 
-        const user = await this.usersService.findOneUserAllData(decoded.username)
+        if (decoded?.source) {
+          const data = await this.apiKeyService.getKeyData(decoded?.source)
 
-        if (!user) {
-          throw new UnauthorizedException('Invalid access')
-        } else {
-          return {
-            status: true
+          if (!data) {
+            throw new UnauthorizedException('Invalid access')
+          } else {
+            return {
+              status: true
+            }
           }
-        }
+        } else {
+          const user = await this.usersService.findOneUserAllData(decoded.username)
+
+          if (!user) {
+            throw new UnauthorizedException('Invalid access')
+          } else {
+            return {
+              status: true
+            }
+          }
+        }    
       } catch (error) {
         throw new UnauthorizedException('Invalid or expired token')
       }
@@ -86,10 +99,34 @@ export class AuthService {
   }
 
   async apiLogin(req: ApiKeyLoginBody) {
-    
+    const data = await this.apiKeyService.getKeyData(req.source)
 
-    const apiPayload = {
-      // sourceSystem: req.source,
+     if (!data) {
+      return {
+        msg: 'Source not found'
+      }
     }
+
+    const keyString = hashPassword(req.answer, salt)
+
+    if (data.key !== keyString) {
+      return {
+        msg: 'Answer not match!'
+      }
+    } else {
+      const apiPayload = {
+        issuer: env.JWT_ISSUER,
+        source: data.source
+      }
+
+      return {
+        accessToken: await this.jwtService.signAsync(apiPayload, {
+          secret: env.JWT_SECRET,
+          issuer: env.JWT_ISSUER
+        })
+      }
+    }
+
+    
   }
 }

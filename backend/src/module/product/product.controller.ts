@@ -213,4 +213,20 @@ export class ProductController {
     async checkProductAndLocation(@Body() data: CheckProductAndLocationDto) {
         return await this.productLocationService.checkProductAndLocationDto(data)
     }
+
+    @ApiOperation({ summary: 'Online Store Data Sync' })
+    @ApiResponse({ description: 'Return body', status: 201})
+    @Get('data/sync')
+    @UseGuards(AuthGuard)
+    async onlineStore() {
+        return await this.productService.findAll()
+    }
+
+    @ApiOperation({ summary: 'Online Store Data Sync' })
+    @ApiResponse({ description: 'Return body', status: 201})
+    @Get('location/sync')
+    @UseGuards(AuthGuard)
+    async onlineStoreInventory() {
+        return await this.productLocationService.dataSync()
+    }
 }
