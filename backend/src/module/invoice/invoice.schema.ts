@@ -3,7 +3,10 @@ import { HydratedDocument, SchemaTypes, Types } from 'mongoose'
 import { BaseSchema } from '../base/baseSchema'
 
 export type InvoiceDocument = HydratedDocument<Invoice>
-@Schema()
+@Schema({
+  timestamps: true,
+  strict: 'throw'
+})
 export class Invoice extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
     number!: string
@@ -33,7 +36,7 @@ export class Invoice extends BaseSchema {
     remark?: string
 
     @Prop({ type: SchemaTypes.String })
-    sourece?: string
+    source!: string
 }
 
 export const InvoiceSchema = SchemaFactory.createForClass(Invoice)

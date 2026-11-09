@@ -131,11 +131,13 @@ export class InvoiceService {
         const taxRefNo = this.randomNumber()
 
         const finalData = {
-            taxRefNo,
-            locationId,
-            source,
             ..._data,
+            locationId,
+            taxRefNo,
+            source,
         }
+
+         console.log(this.invoiceModel.schema.path('source'))
 
         const create = new this.invoiceModel(finalData)
         const res = await create.save()
@@ -207,14 +209,15 @@ export class InvoiceService {
         const taxRefNo = this.randomNumber()
 
         const finalData = {
+            ..._data,
             number,
             taxRefNo,
-            locationId,
             source,
-            ..._data,
+            locationId
         }
 
         const create = new this.invoiceModel(finalData)
+
         const res = await create.save()
         if (res) {
 
