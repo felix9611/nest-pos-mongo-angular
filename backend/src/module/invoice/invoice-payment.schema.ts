@@ -18,6 +18,9 @@ export class InvoicePayment {
 
     @Prop({ type: SchemaTypes.Date, required: true })
     paymentTime!: string
+
+    @Prop({ type: SchemaTypes.Subdocument })
+    subData?: any
 }
 
 export const InvoicePaymentSchema = SchemaFactory.createForClass(InvoicePayment)
