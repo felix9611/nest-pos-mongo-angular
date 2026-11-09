@@ -1,4 +1,4 @@
-<h1>POS System</h1>
+<h1>POS System V2</h1>
 <p><strong>Nest.js & Angular SSR | Cloud-based Web Application for POS System</strong></p>
 <p>NCPL（Non-Commercial Public License）</p>
 
@@ -45,6 +45,7 @@
   <li><strong>Member System Integration</strong></li>
   <li><strong>Secure Authentication & Authorization:</strong> Utilizes <strong>JWT tokens</strong> for data protection.</li>
   <li><strong>Real-Time Work Tasks Tracking: Planning, Tracking, Assignment any Job</strong> for organize & stores different tasks.</li>
+  <li><strong>Provide sync api for other service to access basic information,like store location & products and support, for example Online Store</li>
 </ul>
 
 <h2>⚙️ Tech Stack</h2>
