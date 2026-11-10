@@ -15,9 +15,36 @@ export class ProductService {
     ) {}
 
     async findAll(): Promise<Product[]> {
-        return this.productModel.find({
-            status: 1
-        }).exec()
+        const lists = await await this.productModel.aggregate([
+            {
+                $lookup: {
+                    from: "productfiles",
+                    let: {
+                        productIdStr: {
+                            $toString: "$_id"
+                        }
+                    },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $eq: ["$productId", "$$productIdStr"]
+                                }
+                            }
+                        }
+                    ],
+                    as: "productfiles"
+                }
+            },
+            { 
+                $addFields: { 
+                    productCodeInt: { $toInt: "$productCode" } 
+                } 
+            },
+            { $sort: { productCodeInt: 1 } } 
+        ]).exec()
+
+        return lists
     }
 
     async create(createData: UpdateProductDto) {
