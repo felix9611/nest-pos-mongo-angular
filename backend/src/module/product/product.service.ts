@@ -383,14 +383,14 @@ export class ProductService {
 
     // Product File
 
-    async uploadFile(updateFiles: ProductFileDto[], assetId: string) {
+    async uploadFile(updateFiles: ProductFileDto[], productId: string) {
         for (const file of updateFiles) {
             await this.actionRecordService.saveRecord({
                 actionName: 'Upload Product Files',
                 actionMethod: 'POST',
                 actionFrom: 'Product(Files)',
                 actionData: {
-                    assetId,
+                    productId,
                     filename: file.fileName,
                     fileType: file.fileType,
                     status: 1
@@ -401,7 +401,7 @@ export class ProductService {
 
             const create = new this.productFileModel({
                 ...file,
-                assetId,
+                productId,
                 status: 1
             })
             return create.save()
