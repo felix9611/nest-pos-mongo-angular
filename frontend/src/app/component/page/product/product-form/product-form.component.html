@@ -87,7 +87,7 @@
             <nz-form-item>
                 <div class="px-1 w-[105px] flex items-center">Department</div>
                 <nz-form-control>
-                    <nz-select name="deptId" [(ngModel)]="editForm.deptId" nzAllowClear  nzShowArrow nzPlaceHolder="Please select">
+                    <nz-select name="deptIdnew" [(ngModel)]="editForm.deptId" nzAllowClear  nzShowArrow nzPlaceHolder="Please select">
                         @for (option of deptLists; track option) {
                           <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
                         }
