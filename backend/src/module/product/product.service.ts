@@ -408,8 +408,8 @@ export class ProductService {
         }
     }
 
-    async getListFiles(assetId: string) {
-        const files = await this.productFileModel.find({ assetId, status: 1 }).exec()
+    async getListFiles(productId: string) {
+        const files = await this.productFileModel.find({ productId, status: 1 }).exec()
         
         if (files.length > 0) {
             return files
