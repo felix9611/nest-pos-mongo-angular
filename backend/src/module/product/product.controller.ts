@@ -196,6 +196,18 @@ export class ProductController {
         }
     }
 
+    @ApiOperation({ summary: 'List files by ID' })
+    @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
+    @Get('/load-file/:id')
+    @UseGuards(AuthGuard)
+    async loadFile(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) { 
+        if (user.superAdmin === true) {
+            return await this.productService. getListFiles(id)
+        } else {
+            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
+    }
+
     @ApiOperation({ summary: 'Query for dashboard datas' })
     @ApiBody({ type: GetByDeptAndQtyRequestBody })
     @ApiResponse({ description: 'If successful', status: 201, type: ProductLocationQueryResponse, isArray: true })
