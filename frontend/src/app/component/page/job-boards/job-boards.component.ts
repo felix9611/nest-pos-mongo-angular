@@ -61,37 +61,7 @@ export class JobBoardsComponent  {
       if (!options.some((o) => o.value === id)) options.push({ value: id, label: id });
     return options;
   }
-  selected: Job | null = {
-    status: 0,
-    category: 'General',
-    number: '',
-    _id: '',
-    title: '',
-    description: '',
-    jobStartDate: '',
-    jobEndDate: '',
-    jobTimeRemain: '',
-    tags: [],
-    labels: [],
-    locationIds: [],
-    attachments: [],
-    comments: [],
-    checkLists: [],
-    userIds: [],
-    jobRelationData: {
-      productCode: '',
-      typeCode: '',
-      deptCode: '',
-      placeCode: '',
-      vendorCode: '',
-      stockTakeName: '',
-      invoiceNumber: '',
-      returnInvoiceCaseNumber: ''
-    },
-    jobValid: false,
-    users: [],
-    sortOrder: 0
-  }
+  selected: Job | null = null
   tab = 'details'
   tagText = ''
   labelText = ''
@@ -523,19 +493,26 @@ export class JobBoardsComponent  {
   }
 
   open(job: Job) {
-    this.selected = structuredClone(job);
-    this.tagText = job.tags.join(', ');
-    this.labelText = job.labels.join(', ');
-    this.tab = 'details';
-    this.error = '';
-    this.comment = '';
-    this.checklist = '';
+    this.selected = structuredClone(job)
+    this.tagText = job.tags.join(', ')
+    this.labelText = job.labels.join(', ')
+    this.tab = 'details'
+    this.error = ''
+    this.comment = ''
+    this.checklist = ''
   }
 
   create(status = 1) {
-    const job = newJob(status);
-   //  job.nuumber = `JOB-${String(this.jobs.length + 1).padStart(3, '0')}`;
-    this.open(job);
+    const job = newJob(status)
+    this.open(job)
+  }
+
+  changeStatus(job: Job | null | undefined, status: number) {
+    if (!job?._id) return
+
+    this.jobs = this.jobs.map(item =>
+      item._id === job._id ? { ...item, status } : item,
+    )
   }
 
   async save() {
