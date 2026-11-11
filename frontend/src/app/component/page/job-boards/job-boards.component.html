@@ -340,7 +340,7 @@
                   class="[font:inherit]"
                   aria-label="Work Status"
                   [ngModel]="job.status"
-                  (ngModelChange)="open(job); selected!.status = $event; save()"
+                  (ngModelChange)="changeStatus(job, $event)"
                 >
                   @for (col of columns; track col.id) {
                     <option [ngValue]="col.id">{{ col.name }}</option>
@@ -598,7 +598,7 @@
         }
 
         @if (tab === 'comments') {
-          <h3>工作討論</h3>
+          <h3>Task Comments</h3>
           @for (c of job.comments; track $index) {
             @if (c.status === 1) {
               <div
