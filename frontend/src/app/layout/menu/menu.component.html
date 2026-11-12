@@ -1,6 +1,6 @@
 <ul class="h-screen fixed left-0 bg-gray-900 text-white shadow-lg transition-all duration-300 lg:w-60 md:w-[10rem] sm:w-30 w-14 overflow-y-scroll z-2">
   <div class="top-0 text-center text-[1.5rem] py-5 font-bold"  [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
-    POS 
+    POS
   </div>
   <div>
     <li *ngFor="let item of menuItems">
@@ -14,7 +14,6 @@
                   [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
                   {{ item.name }}
               </span>
-              
             </a>
             <a *ngIf="item.childrens && item.childrens.length > 0" class="flex items-center px-4 cursor-pointer">
               <mat-icon aria-hidden="false" [fontIcon]="item.icon"></mat-icon>
@@ -22,10 +21,10 @@
                   [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
                   {{ item.name }}
               </span>
-              
             </a>
-            <span *ngIf="item.childrens && item.childrens.length > 0" class="flex justify-self-end items-center">{{ activeParent === item ? '▲' : '▼' }}</span>
-            
+            @if (item.childrens && item.childrens.length > 0) {
+              <span class="flex justify-self-end items-center">{{ activeParent === item ? '▲' : '▼' }}</span>
+            }
       </div>
   
       <!-- Child Menu Items -->
