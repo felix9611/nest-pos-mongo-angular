@@ -328,38 +328,21 @@ export class JobDashboardService {
         }
     }
 
-    async asyncTasks(userId: string) {
+    async asyncTasks(user: JwtPayload) {
         
         const filter = {
-            userIds: { $in: [userId] },
+            ...(!(user.superAdmin || user.manager) ? 
+                { userIds: { $in: [user.sub] }, status: { $lt: 3 } }: { status: { $lt: 5 } }
+            ),
             jobValid: true
         }
 
         return await this.jobDashboardModel.aggregate([
             { 
-                $match: { 
-                    ...filter, 
-                    status: { $lt: 5 }
-                } 
+                $match: filter
             },
-            {
-                $lookup: {
-                    from: 'sysusers', // Make sure this matches your DB collection name
-                    let: { userIds: { $map: { input: '$userIds', as: 'userIds', in: { $toObjectId: '$$userIds' } } } }, // Convert strings to ObjectIds
-                    pipeline: [
-                        { $match: { $expr: { $in: ['$_id', '$$userIds'] } } },
-                        {
-                            $project: {
-                                _id: 0,
-                                username: 1,
-                                avatarBase64: 1
-                            }
-                        }
-                    ],
-                    as: 'users'
-                }
-            },
-            { $sort: { sortOrder: 1 } }
+            { $sort: { sortOrder: 1 } },
+            { $limit: 10}
         ]).exec()
 
     }

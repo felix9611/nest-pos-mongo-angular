@@ -55,6 +55,6 @@ export class JobDashboardController {
     @Get('sync')
     @UseGuards(AuthGuard)
     async sync(@Req() { user }: { user: JwtPayload }) {
-        return await this.jobDashboardService.asyncTasks(user.sub)
+        return await this.jobDashboardService.asyncTasks(user)
     }
 }
