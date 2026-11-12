@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpException, HttpStatus, Param, Post, Req, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from "@nestjs/common"
 import { JobDashboardService } from "./job-dashboard.server"
 import { ApiBody, ApiOperation } from "@nestjs/swagger"
 import { AuthGuard } from "../auth/AuthGuard"
@@ -16,7 +16,7 @@ export class JobDashboardController {
         if (!(user.superAdmin === true || user.manager === true) && createData.status >= 3 ) {
             throw new HttpException({ error: 'You do not allow to create this task on this status' }, HttpStatus.FORBIDDEN)
         } else {
-            return await this.jobDashboardService.create(createData)
+            return await this.jobDashboardService.create(createData, user.username)
         }
     }
 
@@ -33,7 +33,7 @@ export class JobDashboardController {
     @Post('list')
     @UseGuards(AuthGuard)
     async list(@Body() req: ListJobDashboardRequestDto, @Req() { user }: { user: JwtPayload }) {
-        return await this.jobDashboardService.listJobDashboard(req)
+        return await this.jobDashboardService.listJobDashboard(req, user)
     }
 
     @Post('change-status')
@@ -50,5 +50,11 @@ export class JobDashboardController {
     @UseGuards(AuthGuard)
     async delete(@Param('id') _id: string, @Req() { user }: { user: JwtPayload }) {
         return await this.jobDashboardService.voidById(_id, user)
+    }
+
+    @Get('sync')
+    @UseGuards(AuthGuard)
+    async sync(@Req() { user }: { user: JwtPayload }) {
+        return await this.jobDashboardService.asyncTasks(user.sub)
     }
 }

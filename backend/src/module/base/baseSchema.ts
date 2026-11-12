@@ -11,6 +11,12 @@ export class BaseSchema {
     @Prop({ type: SchemaTypes.Date, default: Date.now})
     updatedAt?: Date
 
+    @Prop({ type: SchemaTypes.String, required: false })
+    createdBy?: string
+
+    @Prop({ type: SchemaTypes.String, required: false })
+    updatedBy?: string
+
     @Prop({ type: SchemaTypes.Number, default: 1})
     status!: number
 }
