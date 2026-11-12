@@ -471,7 +471,7 @@ export class JobBoardsComponent  {
     );
   }
   done(): number {
-    return this.jobs.filter((j) => j.status === 4).length;
+    return this.jobs.filter((j) => j.status === 5).length
   }
   active(): number {
     return this.jobs.filter((j) => j.status === 2).length;
