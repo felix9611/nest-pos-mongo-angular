@@ -13,12 +13,26 @@ export class JobDashboardService {
         private actionRecordService: ActionRecordService
     ) {}
 
-    async listJobDashboard(req: ListJobDashboardRequestDto) {
-        const toDoList = await this.getJobDashboardListQuery(req, 1)
-        const inProgressList = await this.getJobDashboardListQuery(req, 2)
-        const pendingReviewList = await this.getJobDashboardListQuery(req, 3)
-        const inReviewList = await this.getJobDashboardListQuery(req, 4)
-        const completedList = await this.getJobDashboardListQuery(req, 5)
+    async listJobDashboard(req: ListJobDashboardRequestDto, user: JwtPayload) {
+
+        let userFilter: any = {}
+
+        if (!user.superAdmin || !user.manager) {
+            userFilter = {
+                ...userFilter,
+                $or: [
+                    { userIds: { $in: [user.sub] } },
+                    { createdBy: user.username }
+                ],
+                jobValid: true,
+            }
+        }
+
+        const toDoList = await this.getJobDashboardListQuery(req, 1, userFilter)
+        const inProgressList = await this.getJobDashboardListQuery(req, 2, userFilter)
+        const pendingReviewList = await this.getJobDashboardListQuery(req, 3, userFilter)
+        const inReviewList = await this.getJobDashboardListQuery(req, 4, userFilter)
+        const completedList = await this.getJobDashboardListQuery(req, 5, userFilter)
 
         return {
             toDoList: toDoList || [],
@@ -27,6 +41,42 @@ export class JobDashboardService {
             inReviewList: inReviewList || [],
             completedList: completedList || []
         }
+    }
+
+    async getJobDashboardListQuery(req: ListJobDashboardRequestDto, status: number, userFilter: any) {
+        const { name, memberId } = req
+
+        const allQuery: any = { 
+            ...(name ? { title: { $regex: name, $options: 'i' } } : {}),
+            ...userFilter
+        }
+
+        return await this.jobDashboardModel.aggregate([
+            { 
+                $match: { 
+                    ...allQuery, 
+                    status,
+                } 
+            },
+            {
+                $lookup: {
+                    from: 'sysusers', // Make sure this matches your DB collection name
+                    let: { userIds: { $map: { input: '$userIds', as: 'userIds', in: { $toObjectId: '$$userIds' } } } }, // Convert strings to ObjectIds
+                    pipeline: [
+                        { $match: { $expr: { $in: ['$_id', '$$userIds'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                username: 1,
+                                avatarBase64: 1
+                            }
+                        }
+                    ],
+                    as: 'users'
+                }
+            },
+            { $sort: { sortOrder: 1 } }
+        ]).exec()
     }
 
     async voidById(_id: string, user: JwtPayload) {
@@ -70,42 +120,6 @@ export class JobDashboardService {
                 }
             }
         }
-    }
-
-    async getJobDashboardListQuery(req: ListJobDashboardRequestDto, status: number) {
-         const { name, memberId } = req
-
-        const allQuery: any = { 
-            jobValid: true,
-            ...(name ? { title: { $regex: name, $options: 'i' } } : {}),
-        }
-
-        return await this.jobDashboardModel.aggregate([
-            { 
-                $match: { 
-                    ...allQuery, 
-                    status,
-                } 
-            },
-            {
-                $lookup: {
-                    from: 'sysusers', // Make sure this matches your DB collection name
-                    let: { userIds: { $map: { input: '$userIds', as: 'userIds', in: { $toObjectId: '$$userIds' } } } }, // Convert strings to ObjectIds
-                    pipeline: [
-                        { $match: { $expr: { $in: ['$_id', '$$userIds'] } } },
-                        {
-                            $project: {
-                                _id: 0,
-                                username: 1,
-                                avatarBase64: 1
-                            }
-                        }
-                    ],
-                    as: 'users'
-                }
-            },
-            { $sort: { sortOrder: 1 } }
-        ]).exec()
     }
 
     async updateTaskStatus(req: UpdateJobDashboardStatusDto) {
@@ -158,7 +172,7 @@ export class JobDashboardService {
         }
     }
 
-    async create(jobDashboard: JobDashboard) {
+    async create(jobDashboard: JobDashboard, createdBy: string) {
         const { _id, number, title, ..._description } = jobDashboard
         
         const check = await this.jobDashboardModel.findOne({ title })
@@ -195,7 +209,8 @@ export class JobDashboardService {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 jobValid: true,
-                sortOrder: maxSortOrder + 10
+                sortOrder: maxSortOrder + 10,
+                createdBy
             }
 
             const createdJobDashboard = new this.jobDashboardModel(newData)
@@ -311,5 +326,41 @@ export class JobDashboardService {
                 }
             }
         }
+    }
+
+    async asyncTasks(userId: string) {
+        
+        const filter = {
+            userIds: { $in: [userId] },
+            jobValid: true
+        }
+
+        return await this.jobDashboardModel.aggregate([
+            { 
+                $match: { 
+                    ...filter, 
+                    status: { $lt: 5 }
+                } 
+            },
+            {
+                $lookup: {
+                    from: 'sysusers', // Make sure this matches your DB collection name
+                    let: { userIds: { $map: { input: '$userIds', as: 'userIds', in: { $toObjectId: '$$userIds' } } } }, // Convert strings to ObjectIds
+                    pipeline: [
+                        { $match: { $expr: { $in: ['$_id', '$$userIds'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                username: 1,
+                                avatarBase64: 1
+                            }
+                        }
+                    ],
+                    as: 'users'
+                }
+            },
+            { $sort: { sortOrder: 1 } }
+        ]).exec()
+
     }
 }
