@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms'
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop'
 import {Job, newJob, demoJobs} from './job'
 import {FilterListApi, ListOption} from '../../components/filter-list/filter-list.component'
-import { deleteApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
+import { deleteApiWithAuth, getApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
 import { Subscription } from 'rxjs'
 import { UserStoreService } from '../../../../state/user.service'
 
@@ -482,24 +482,28 @@ export class JobBoardsComponent  {
   }
 
   countDone(job: Job) {
-    return job.checkLists.filter((c) => c.status === 1 && c.checked).length;
+    return job.checkLists &&job.checkLists.filter((c) => c.status === 1 && c.checked).length;
   }
   countAllDone(job: Job) {
-    return job.checkLists.filter((c) => c.status === 1).length;
+    return job.checkLists && job.checkLists.filter((c) => c.status === 1).length;
   }
 
   initials(id: string) {
     return this.members.find((m: any) => m._id === id)?.initial || id.slice(0, 1);
   }
 
-  open(job: Job) {
-    this.selected = structuredClone(job)
-    this.tagText = job.tags.join(', ')
-    this.labelText = job.labels.join(', ')
-    this.tab = 'details'
-    this.error = ''
-    this.comment = ''
-    this.checklist = ''
+  async open(job: Job) {
+    if (job && job._id) {
+      this.selected = await getApiWithAuth(`/tasks/get-one/${job._id}`);
+     // this.tagText =  job.tags.join(', ');
+    //  this.labelText = job.labels.join(', ');
+    } else {
+       this.selected = structuredClone(job);
+    }
+    this.tab = 'details';
+    this.error = '';
+    this.comment = '';
+    this.checklist = '';
   }
 
   create(status = 1) {

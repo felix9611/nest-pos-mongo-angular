@@ -250,10 +250,10 @@
                     <div
                       class="card-indicators flex items-center gap-[7px] text-[#b1aabb] text-[9px] max-[760px]:text-[12px] max-[760px]:gap-[9px]"
                     >
-                      @if (job.comments.length) {
+                      @if (job.comments && job.comments.length) {
                         <span>☏ {{ job.comments.length }}</span>
                       }
-                      @if (job.attachments.length) {
+                      @if (job.attachments && job.attachments.length) {
                         <span>♧ {{ job.attachments.length }}</span>
                       }
                       <div
@@ -553,31 +553,33 @@
           <h3>
             Check List <small>{{ countDone(job) }} / {{ job.checkLists.length }}</small>
           </h3>
-          @for (item of job.checkLists; track $index) {
-            @if (item.status === 1) {
-              <div
-                class="check-row flex gap-[9px] items-center [border-bottom:1px_solid_#f1ecf6] p-[7px_0] max-[760px]:gap-[6px] max-[760px]:flex-wrap max-[760px]:[&_input[type='checkbox']]:w-[22px] max-[760px]:[&_input[type='checkbox']]:h-[22px] max-[760px]:[&_input[type='checkbox']]:m-[0_5px_0_0] max-[760px]:[&_input[type='checkbox']]:[accent-color:#8064d4]"
-              >
-                <input
-                  class="[font:inherit]"
-                  type="checkbox"
-                  [(ngModel)]="item.checked"
-                  [attr.aria-label]="item.name"
-                />
-                <input
-                  class="check-name [font:inherit]"
-                  [(ngModel)]="item.name"
-                  aria-label="Check name"
-                  [class.struck]="item.checked"
-                />
-                <button
-                  class="icon-button [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [background:none] [border:0] text-[#b3a2bc] text-[18px] max-[760px]:min-w-[44px] max-[760px]:min-h-[44px]"
-                  aria-label="Remove itm"
-                  (click)="item.status = 0;"
+          @if (job.checkLists && job.checkLists.length) {
+            @for (item of job.checkLists; track $index) {
+              @if (item.status === 1) {
+                <div
+                  class="check-row flex gap-[9px] items-center [border-bottom:1px_solid_#f1ecf6] p-[7px_0] max-[760px]:gap-[6px] max-[760px]:flex-wrap max-[760px]:[&_input[type='checkbox']]:w-[22px] max-[760px]:[&_input[type='checkbox']]:h-[22px] max-[760px]:[&_input[type='checkbox']]:m-[0_5px_0_0] max-[760px]:[&_input[type='checkbox']]:[accent-color:#8064d4]"
                 >
-                  ×
-                </button>
-              </div>
+                  <input
+                    class="[font:inherit]"
+                    type="checkbox"
+                    [(ngModel)]="item.checked"
+                    [attr.aria-label]="item.name"
+                  />
+                  <input
+                    class="check-name [font:inherit]"
+                    [(ngModel)]="item.name"
+                    aria-label="Check name"
+                    [class.struck]="item.checked"
+                  />
+                  <button
+                    class="icon-button [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [background:none] [border:0] text-[#b3a2bc] text-[18px] max-[760px]:min-w-[44px] max-[760px]:min-h-[44px]"
+                    aria-label="Remove itm"
+                    (click)="item.status = 0;"
+                  >
+                    ×
+                  </button>
+                </div>
+              }
             }
           }
           <div
@@ -599,35 +601,37 @@
 
         @if (tab === 'comments') {
           <h3>Task Comments</h3>
-          @for (c of job.comments; track $index) {
-            @if (c.status === 1) {
-              <div
-                class="comment flex gap-[10px] m-[15px_0] [&_>_div]:[flex:1] [&_b]:text-[11px] [&_b]:text-[#887097] [&_p]:[background:#f8f5fb] [&_p]:p-[12px] [&_p]:rounded-[7px] [&_p]:text-[12px] [&_p]:leading-[1.8] [&_p]:whitespace-pre-wrap [&_p]:[overflow-wrap:anywhere] max-[760px]:gap-[8px] max-[760px]:[&_>_div]:min-w-[0] max-[760px]:[&_b]:text-[13px] max-[760px]:[&_p]:text-[15px]"
-              >
-                <span
-                  class="avatar inline-flex [flex-shrink:0] items-center justify-center rounded-[50%] h-[34px] w-[34px] [background:#e9ddf7] text-[#9975b7] text-[13px] font-[600] [border:2px_solid_white] [&.small]:h-[29px] [&.small]:w-[29px] [&.small]:text-[10px] [&.tiny]:h-[25px] [&.tiny]:w-[25px] [&.tiny]:text-[9px] [&.member-01]:[background:#e9dff5] [&.member-01]:text-[#9874b5] [&.member-02]:[background:#e4eee8] [&.member-02]:text-[#7b9b84] [&.member-03]:[background:#f9e8d6] [&.member-03]:text-[#c39770] [&.member-picker]:flex [&.member-picker]:gap-[8px] [&.member-picker]:flex-wrap [&.member-picker_button]:[border:1px_solid_#eee8f5] [&.member-picker_button]:rounded-[6px] [&.member-picker_button]:p-[5px_10px] [&.member-picker_button]:[background:white] [&.member-picker_button]:flex [&.member-picker_button]:items-center [&.member-picker_button]:gap-[6px] [&.member-picker_button]:text-[11px] [&.member-picker_button]:text-[#a395af] [&.member-picker_.chosen]:[background:#f6f1fc] [&.member-picker_.chosen]:[border-color:#cbbbdf] max-[760px]:[&.tiny]:w-[30px] max-[760px]:[&.tiny]:h-[30px] max-[760px]:[&.tiny]:text-[12px]"
-                  [class]="'avatar small member-' + c.userId"
+          @if (job.comments && job.comments.length > 0) {
+            @for (c of job.comments; track $index) {
+              @if (c.status === 1) {
+                <div
+                  class="comment flex gap-[10px] m-[15px_0] [&_>_div]:[flex:1] [&_b]:text-[11px] [&_b]:text-[#887097] [&_p]:[background:#f8f5fb] [&_p]:p-[12px] [&_p]:rounded-[7px] [&_p]:text-[12px] [&_p]:leading-[1.8] [&_p]:whitespace-pre-wrap [&_p]:[overflow-wrap:anywhere] max-[760px]:gap-[8px] max-[760px]:[&_>_div]:min-w-[0] max-[760px]:[&_b]:text-[13px] max-[760px]:[&_p]:text-[15px]"
                 >
-                  @if (!c.avatar) {
-                    {{ initials(c.username) }}
-                  } @else {
-                    <img class="rounded-full" [src]="c.avatar" />
-                  }
-                </span>
-                <div>
-                  <b>{{ c.username }}</b>
-                  <p>{{ c.comment }}</p>
+                  <span
+                    class="avatar inline-flex [flex-shrink:0] items-center justify-center rounded-[50%] h-[34px] w-[34px] [background:#e9ddf7] text-[#9975b7] text-[13px] font-[600] [border:2px_solid_white] [&.small]:h-[29px] [&.small]:w-[29px] [&.small]:text-[10px] [&.tiny]:h-[25px] [&.tiny]:w-[25px] [&.tiny]:text-[9px] [&.member-01]:[background:#e9dff5] [&.member-01]:text-[#9874b5] [&.member-02]:[background:#e4eee8] [&.member-02]:text-[#7b9b84] [&.member-03]:[background:#f9e8d6] [&.member-03]:text-[#c39770] [&.member-picker]:flex [&.member-picker]:gap-[8px] [&.member-picker]:flex-wrap [&.member-picker_button]:[border:1px_solid_#eee8f5] [&.member-picker_button]:rounded-[6px] [&.member-picker_button]:p-[5px_10px] [&.member-picker_button]:[background:white] [&.member-picker_button]:flex [&.member-picker_button]:items-center [&.member-picker_button]:gap-[6px] [&.member-picker_button]:text-[11px] [&.member-picker_button]:text-[#a395af] [&.member-picker_.chosen]:[background:#f6f1fc] [&.member-picker_.chosen]:[border-color:#cbbbdf] max-[760px]:[&.tiny]:w-[30px] max-[760px]:[&.tiny]:h-[30px] max-[760px]:[&.tiny]:text-[12px]"
+                    [class]="'avatar small member-' + c.userId"
+                  >
+                    @if (!c.avatar) {
+                      {{ initials(c.username) }}
+                    } @else {
+                      <img class="rounded-full" [src]="c.avatar" />
+                    }
+                  </span>
+                  <div>
+                    <b>{{ c.username }}</b>
+                    <p>{{ c.comment }}</p>
+                  </div>
+                  <button
+                    class="icon-button [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [background:none] [border:0] text-[#b3a2bc] text-[18px] max-[760px]:min-w-[44px] max-[760px]:min-h-[44px]"
+                    aria-label="Remove comment"
+                    (click)="c.status = 0;"
+                  >
+                    ×
+                  </button>
                 </div>
-                <button
-                  class="icon-button [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [background:none] [border:0] text-[#b3a2bc] text-[18px] max-[760px]:min-w-[44px] max-[760px]:min-h-[44px]"
-                  aria-label="Remove comment"
-                  (click)="c.status = 0;"
-                >
-                  ×
-                </button>
-              </div>
+              }
             }
-          } @empty {
+          } @else {
             <p class="empty-copy text-[#b0a4bc] text-[12px] leading-[1.8] max-[760px]:text-[14px]">
               Still no comments, share some work progress.
             </p>
@@ -656,30 +660,32 @@
               >↥<b>Upload Attachments</b><span>Choose files, each file up to 2 MB</span
               ><input class="[font:inherit]" type="file" multiple (change)="attach($event)"
             /></label>
-            @for (a of job.attachments; track $index) {
-              <div
-                class="attachment-row flex gap-[12px] items-center p-[13px_0] [border-bottom:1px_solid_#eee8f5] [&_div]:[flex:1] [&_div]:min-w-[0] [&_b]:text-[12px] [&_b]:[overflow-wrap:anywhere] [&_small]:block [&_small]:text-[#ab9db5] [&_small]:text-[10px] [&_small]:[margin-top:5px] [&_button]:[background:none] [&_button]:[border:0] [&_button]:text-[#9b7bbd] [&_button]:text-[11px] max-[760px]:gap-[8px] max-[760px]:flex-wrap max-[760px]:[&_div]:min-w-[120px] max-[760px]:[&_b]:text-[14px] max-[760px]:[&_small]:text-[12px] max-[760px]:[&_small]:leading-[1.7] max-[760px]:[&_button]:min-w-[44px] max-[760px]:[&_button]:min-h-[44px] max-[760px]:[&_button]:text-[14px]"
-              >
-                <span>▤</span>
-                <div>
-                  <b>{{ a.fileName }}</b
-                  ><small
-                    >{{ a.fileType || 'FILE' }} · {{ a.updatedAt | date: 'yyyy-MM-dd HH:mm' }}</small
+            @if (job.attachments && job.attachments.length > 0) {
+              @for (a of job.attachments; track $index) {
+                <div
+                  class="attachment-row flex gap-[12px] items-center p-[13px_0] [border-bottom:1px_solid_#eee8f5] [&_div]:[flex:1] [&_div]:min-w-[0] [&_b]:text-[12px] [&_b]:[overflow-wrap:anywhere] [&_small]:block [&_small]:text-[#ab9db5] [&_small]:text-[10px] [&_small]:[margin-top:5px] [&_button]:[background:none] [&_button]:[border:0] [&_button]:text-[#9b7bbd] [&_button]:text-[11px] max-[760px]:gap-[8px] max-[760px]:flex-wrap max-[760px]:[&_div]:min-w-[120px] max-[760px]:[&_b]:text-[14px] max-[760px]:[&_small]:text-[12px] max-[760px]:[&_small]:leading-[1.7] max-[760px]:[&_button]:min-w-[44px] max-[760px]:[&_button]:min-h-[44px] max-[760px]:[&_button]:text-[14px]"
+                >
+                  <span>▤</span>
+                  <div>
+                    <b>{{ a.fileName }}</b
+                    ><small
+                      >{{ a.fileType || 'FILE' }} · {{ a.updatedAt | date: 'yyyy-MM-dd HH:mm' }}</small
+                    >
+                  </div>
+                  <button
+                    class="[font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)]"
+                    (click)="download(a)"
                   >
+                    Download</button
+                  ><button
+                    class="[font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)]"
+                    aria-label="Remove attachment"
+                    (click)="job.attachments.splice($index, 1)"
+                  >
+                    ×
+                  </button>
                 </div>
-                <button
-                  class="[font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)]"
-                  (click)="download(a)"
-                >
-                  Download</button
-                ><button
-                  class="[font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)]"
-                  aria-label="Remove attachment"
-                  (click)="job.attachments.splice($index, 1)"
-                >
-                  ×
-                </button>
-              </div>
+              }
             }
           }
 
