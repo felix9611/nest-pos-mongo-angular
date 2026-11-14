@@ -212,20 +212,20 @@
                   >
                     {{ job.description }}
                   </p>
-                  @if (job.checkLists.length) {
+                  @if (job.checklistsCount && job.checklistsFinishedCount) {
                     <div
                       class="check-progress m-[3px_0_13px] [&_>_div:first-child]:flex [&_>_div:first-child]:justify-between [&_>_div:first-child]:text-[8px] [&_>_div:first-child]:text-[#aaa3b6] max-[760px]:[&_>_div:first-child]:text-[12px] max-[760px]:[&_>_div:first-child]:text-[#8b7b98]"
                     >
                       <div>
                         <span>☑ Checklist</span
-                        ><span>{{ countDone(job) }}/{{ job.checkLists.length }}</span>
+                        ><span>{{ job.checklistsFinishedCount }}/{{ job.checklistsCount }}</span>
                       </div>
                       <div
                         class="mini-track h-[3px] [background:#efedf6] rounded-[10px] overflow-hidden [margin-top:7px] [&_i]:block [&_i]:h-[100%] [&_i]:[background:#a58bd9] [&_i]:rounded-[10px] [&_.complete]:[background:#9ac3ad] max-[760px]:h-[5px] max-[760px]:[margin-top:9px]"
                       >
                         <i
-                          [style.width.%]="(countDone(job) / job.checkLists.length) * 100"
-                          [class.complete]="countDone(job) === job.checkLists.length"
+                          [style.width.%]="job.checklistsCount ? (job.checklistsFinishedCount / job.checklistsCount) * 100 : 0"
+                          [class.complete]="job.checklistsFinishedCount === job.checklistsCount"
                         ></i>
                       </div>
                     </div>
@@ -250,11 +250,11 @@
                     <div
                       class="card-indicators flex items-center gap-[7px] text-[#b1aabb] text-[9px] max-[760px]:text-[12px] max-[760px]:gap-[9px]"
                     >
-                      @if (job.comments && job.comments.length) {
-                        <span>☏ {{ job.comments.length }}</span>
+                      @if (job.commentsCount) {
+                        <span>☏ {{ job.commentsCount }}</span>
                       }
-                      @if (job.attachments && job.attachments.length) {
-                        <span>♧ {{ job.attachments.length }}</span>
+                      @if (job.attachmentsCount) {
+                        <span>♧ {{ job.attachmentsCount }}</span>
                       }
                       <div
                         class="avatar-stack flex items-center [padding-left:5px] [&_.avatar]:[margin-left:-5px]"

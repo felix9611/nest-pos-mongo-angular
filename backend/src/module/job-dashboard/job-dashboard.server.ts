@@ -83,6 +83,47 @@ export class JobDashboardService {
             {
                 $project: {
                     _id: 1,
+                    commentsCount: {
+                        $size: {
+                            $filter: {
+                                input: { $ifNull: ["$comments", []] },
+                                as: "comment",
+                                cond: { $eq: ["$$comment.status", 1] }
+                            }
+                        }
+                    },
+                    attachmentsCount: {
+                        $size: {
+                            $filter: {
+                                input: { $ifNull: ["$attachments", []] },
+                                as: "attachment",
+                                cond: { $eq: ["$$attachment.status", 1] }
+                            }
+                        }
+                    },
+                    checklistsFinishedCount: {
+                        $size: {
+                            $filter: {
+                                input: { $ifNull: ["$checkLists", []] },
+                                as: "checkList",
+                                cond: {
+                                    $and: [
+                                        { $eq: ["$$checkList.status", 1] },
+                                        { $eq: ["$$checkList.checked", true] }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    checklistsCount: {
+                        $size: {
+                            $filter: {
+                                input: { $ifNull: ["$checkLists", []] },
+                                as: "checkList",
+                                cond: { $eq: ["$$checkList.status", 1] }
+                            }
+                        }
+                    },
                     title: 1,
                     number: 1,
                     description: 1,
@@ -90,9 +131,9 @@ export class JobDashboardService {
                     tags: 1,
                     labels: 1,
                     jobEndDate: 1,
-                    comments: 1,
+                    // comments: 1,
                     createdAt: 1,
-                    checkLists: 1,
+                   // checkLists: 1,
                     jobValid: 1,
                     status: 1,
                     sortOrder: 1,
