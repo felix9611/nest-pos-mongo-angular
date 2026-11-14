@@ -47,6 +47,10 @@ export interface Job {
     avatarBase64: string
   }[]
   sortOrder: number
+  commentsCount?: number
+  attachmentsCount?: number
+  checklistsFinishedCount?: number
+  checklistsCount?: number
 }
 export const newJob = (status = 1): Job => ({
   _id: '',

@@ -46,6 +46,12 @@ export class JobDashboardController {
         }
     }
 
+    @Get('get-one/:id')
+    @UseGuards(AuthGuard)
+    async getOne(@Param('id') _id: string) {
+        return await this.jobDashboardService.getOneById(_id)
+    }
+
     @Delete('void/:id')
     @UseGuards(AuthGuard)
     async delete(@Param('id') _id: string, @Req() { user }: { user: JwtPayload }) {
