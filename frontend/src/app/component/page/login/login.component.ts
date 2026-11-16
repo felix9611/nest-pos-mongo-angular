@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit{
                 this.userStoreService.user$.subscribe((data: any) => {
                     if (data.superAdmin || data.manager) {
                         this.router.navigate(['/tasks'])
-                    } else {
+                    } else if (!(data.superAdmin || data.manager)) {
                         this.router.navigate(['/sale-point'])
                     }
                 })
