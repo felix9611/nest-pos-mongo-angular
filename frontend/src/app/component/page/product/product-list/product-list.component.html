@@ -2,10 +2,10 @@
     <div class="p-1  lg:p-6"  *ngIf="userRightInside.read">
         <div class="flex gap-2 py-5">
             <div class="w-[150px]">
-                <input class="h-full" nz-input type="text" name="assetCode" placeholder="Asset Code" [(ngModel)]="searchForm.assetCode" />
+                <input class="h-full" nz-input type="text" name="code" placeholder="Product Code" [(ngModel)]="searchForm.code" />
             </div>
             <div class="w-[150px]">
-                <input class="h-full" nz-input type="text" name="assetName" placeholder="Asset Name" [(ngModel)]="searchForm.assetName" />
+                <input class="h-full" nz-input type="text" name="name" placeholder="Product Name" [(ngModel)]="searchForm.name" />
             </div>
             
             <div class="w-[150px] h-full">
@@ -85,34 +85,36 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let data of dataTable.data">
-                        <td>{{data.productCode}}</td>
-                        <td>{{data.productName}}</td>
-                        <td>{{data.producttype.typeName}}</td>
-                        <td>{{data.department.deptName}}</td>
-                        <td>{{  dateFormat(data.createdAt)  }}</td>
-                        <td>{{  dateFormat(data.updatedAt)  }}</td>
-                        <td>
-                            <div class="flex gap-3">
-                                <div 
-                                    (click)="openQrCodeDialog(data)"
-                                    class="w-[100px] bg-[#8ee0ff] hover:bg-[#87d3ef] border-1 border-[#408eab] text-[#408eab] text-center p-1 rounded-lg">
-                                    QR Tag
+                    @for (data of dataLists; track data._id) {
+                        <tr>
+                            <td>{{data.productCode}}</td>
+                            <td>{{data.productName}}</td>
+                            <td>{{data.producttype.typeName}}</td>
+                            <td>{{data.department.deptName}}</td>
+                            <td>{{  dateFormat(data.createdAt)  }}</td>
+                            <td>{{  dateFormat(data.updatedAt)  }}</td>
+                            <td>
+                                <div class="flex gap-3">
+                                    <div 
+                                        (click)="openQrCodeDialog(data)"
+                                        class="w-[100px] bg-[#8ee0ff] hover:bg-[#87d3ef] border-1 border-[#408eab] text-[#408eab] text-center p-1 rounded-lg">
+                                        QR Tag
+                                    </div>
+                                    <div 
+                                        (click)="openEdit(data._id)"
+                                        class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
+                                        Detail
+                                    </div>
+                                    <div 
+                                        *ngIf="userRightInside.delete"
+                                        (click)="handleRomeve(data._id)"
+                                        class="w-[100px] bg-[#FFA8A8] hover:bg-[#EC7272] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
+                                        Remove
+                                    </div>
                                 </div>
-                                <div 
-                                    (click)="openEdit(data._id)"
-                                    class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
-                                    Detail
-                                </div>
-                                <div 
-                                    *ngIf="userRightInside.delete"
-                                    (click)="handleRomeve(data._id)"
-                                    class="w-[100px] bg-[#FFA8A8] hover:bg-[#EC7272] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
-                                    Remove
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
         </nz-table>
         <nz-pagination 
