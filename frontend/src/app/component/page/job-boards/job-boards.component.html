@@ -112,7 +112,7 @@
         ↥ <span>Export</span>
       </button>
       <div class="avatar-stack flex items-center [padding-left:5px] [&_.avatar]:[margin-left:-5px]">
-        @for (m of userLists; track m.id) {
+        @for (m of userLists; track m._id) {
           @if (m.avatarBase64) {
             <img class="avatar small rounded-full" [src]="m.avatarBase64" />
           } @else {
