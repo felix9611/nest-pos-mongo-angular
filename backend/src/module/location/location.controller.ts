@@ -85,7 +85,7 @@ export class LocationController {
     @Post('filter/list')
     @UseGuards(AuthGuard)
     async listWithFilter(@Body() req: ListLocationRequestDto, @Req() { user }: { user: JwtPayload }) {
-        return await this.locationService.listWithFilter(req)
+        return await this.locationService.listWithFilter(req, user)
     }
 
     @ApiOperation({ summary: 'Batch Create' })
