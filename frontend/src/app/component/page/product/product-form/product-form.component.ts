@@ -25,6 +25,7 @@ import { uploadImgToBase64 } from '../../../../../tool/imageUpload'
 import { FileViewComponent } from '../../../components/file-view-dialog/file-view-dialog.component'
 import { findMenuItem } from '../../../tool-function'
 import { UserStoreService } from '../../../../../state/user.service'
+import { FilterListApiSmall, ListOption } from '../../../components/filter-list-small/filter-list.component'
 // import { UploadComponentComponent } from '../../../components/upload-component/upload-component.component'
 
 @Component({
@@ -49,7 +50,8 @@ import { UserStoreService } from '../../../../../state/user.service'
         NzButtonModule, 
         NzIconModule,
         NzModalModule,
-        FileViewComponent
+        FileViewComponent,
+        FilterListApiSmall
     ],
     templateUrl: './product-form.component.html',
     styleUrl: './product-form.component.css',
@@ -256,5 +258,147 @@ export class ProductFormComponent implements OnInit {
     async loadCodeTypeList() {
         this.codeTypeLists = await getApiWithAuth('/base/code-type/get-type/Product-TaxType')
     }
+//  Department data
+    departmentTotal: number = 0
+    departments: any = []
+    departmentOptions: ListOption[] = [];
+    departmentSearchForm: any = {
+        name: '',
+        page: 1,
+        limit: 10
+    }
+    loadDeptLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.departmentSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.departments = res ?? [];
+            this.departmentTotal = res.length ?? 0;
+        
+            this.departmentOptions = this.departments.map((a: any) => ({
+                value: a._id,
+                label: `${a.deptCode} - ${a.deptName}`,
+            }))
+    
+            return this.departmentOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+//  Product Type data
+    productTypeTotal: number = 0
+    productTypes: any = []
+    productTypeOptions: ListOption[] = [];
+    productTypeSearchForm: any = {
+        name: '',
+        page: 1,
+        limit: 10
+    }
+    loadTypeLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.productTypeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.productTypes = res ?? [];
+            this.productTypeTotal = res.length ?? 0;
+        
+            this.productTypeOptions = this.productTypes.map((a: any) => ({
+                value: a._id,
+                label: `${a.typeCode} - ${a.typeName}`,
+            }))
+    
+            return this.productTypeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+//  Vendor data
+    vendorTotal: number = 0
+    vendors: any = []
+    vendorOptions: ListOption[] = [];
+    vendorSearchForm: any = {
+        name: '',
+        page: 1,
+        limit: 10
+    }
+    loadVendorLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.vendorSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.vendors = res ?? [];
+            this.vendorTotal = res.length ?? 0;
+        
+            this.vendorOptions = this.vendors.map((a: any) => ({
+                value: a._id,
+                label: `${a.vendorCode} - ${a.vendorName}`,
+            }))
+    
+            return this.vendorOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+    // Vendor data
+    taxListTotal: number = 0
+    taxLists: any = []
+    taxListOptions: ListOption[] = [];
+    taxListSearchForm: any = {
+        nameCode: '',
+        tax: '',
+        page: 1,
+        limit: 10
+    }
+    loadTaxListLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.vendorSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.taxLists = res ?? []
+            this.taxListTotal = res.length ?? 0
+        
+            this.taxListOptions = this.taxLists.map((x: any) => ({
+                value: x.taxType,
+                label: `${x.countryName} ${x.taxCode} (${Number(x.taxRate) * 100}%)`
+            }))
+    
+            return this.taxListOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
 
+    /* new filter field */
 }
