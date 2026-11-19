@@ -19,6 +19,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { ProductLocationListComponent } from '../product-location/product-location.component'
 import { Subscription } from 'rxjs'
 import { UserStoreService } from '../../../../../state/user.service'
+import { FilterListApiSmall, ListOption } from '../../../components/filter-list-small/filter-list.component'
 
 @Component({
     imports: [
@@ -37,7 +38,8 @@ import { UserStoreService } from '../../../../../state/user.service'
         MatIconModule, 
         MatButtonModule,
         NzInputNumberModule,
-        ProductLocationListComponent
+        ProductLocationListComponent,
+        FilterListApiSmall
     ],
     templateUrl: './stock-out.component.html'
 })
@@ -49,10 +51,9 @@ export class StockOutComponent implements OnInit {
     ) {
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
-            if (data.superAdmin !== true) {
-                this.locationList = data.locations
-                if (this.locationList.length === 1) {
-                    this.stockInForm.locationId = this.locationList[0]._id
+            if (!(data.superAdmin || data.manager)) {
+                if (data.locations.length === 1) {
+                    this.stockInForm.locationId = data.locations[0]._id
                 }
             }
         })
@@ -158,6 +159,43 @@ export class StockOutComponent implements OnInit {
             this.reloadProductLocation = true
         } else {
             this.message.error(res.error)
+        }
+    }
+
+    // Location data
+    placeTotal: number = 0
+    places: any = []
+    placeOptions: ListOption[] = [];
+    placeSearchForm: any = {
+        placeCode: '',
+        placeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadPlaceLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
+        
+            this.placeOptions = this.places.map((a: any) => ({
+                value: a._id,
+                label: `${a.placeCode} - ${a.placeName}`,
+            }))
+    
+            return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
         }
     }
 }
