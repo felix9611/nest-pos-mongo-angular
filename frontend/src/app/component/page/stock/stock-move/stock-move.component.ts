@@ -19,6 +19,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { ProductLocationListComponent } from '../product-location/product-location.component'
 import { UserStoreService } from '../../../../../state/user.service'
 import { Subscription } from 'rxjs'
+import { FilterListApiSmall, ListOption } from '../../../components/filter-list-small/filter-list.component'
 
 @Component({
     imports: [
@@ -37,7 +38,8 @@ import { Subscription } from 'rxjs'
         MatIconModule, 
         MatButtonModule,
         NzInputNumberModule,
-        ProductLocationListComponent
+        ProductLocationListComponent,
+        FilterListApiSmall
     ],
     templateUrl: './stock-move.component.html'
 })
@@ -49,9 +51,6 @@ export class StockMoveComponent implements OnInit {
     ) {
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
-            if (data.superAdmin !== true) {
-                this.locationList = data.locations
-            }
         })
     }
 
@@ -61,9 +60,7 @@ export class StockMoveComponent implements OnInit {
         }
     }
 
-    ngOnInit(): void {
-        this.loadLocationList()
-    }
+    ngOnInit(): void {}
 
     superAdmin: boolean = false
     reloadProductLocation: boolean = true
@@ -95,13 +92,6 @@ export class StockMoveComponent implements OnInit {
         retailPrice: 0,
         description: '',
         remark: ''
-    }
-
-    locationList: any[] = []
-    async loadLocationList() {
-        if (this.superAdmin === true) {
-            this.locationList = await getApiWithAuth('/base/location/getAll')
-        }
     }
 
     async productCodeChanged(event: any) {
@@ -158,6 +148,42 @@ export class StockMoveComponent implements OnInit {
         } else {
             this.message.success('Stock out success!')
             this.reloadProductLocation = true
+        }
+    }
+    // Location data
+    placeTotal: number = 0
+    places: any = []
+    placeOptions: ListOption[] = [];
+    placeSearchForm: any = {
+        placeCode: '',
+        placeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadPlaceLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
+        
+            this.placeOptions = this.places.map((a: any) => ({
+                value: a._id,
+                label: `${a.placeCode} - ${a.placeName}`,
+            }))
+    
+            return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
         }
     }
 }
