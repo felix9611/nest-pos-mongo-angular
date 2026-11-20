@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { InvoiceListRequestDto } from './interface'
 import { DownloadExcelDataComponent } from '../../../components/download-excel-component/download-excel-data-component.component'
+import { FilterListApiSmall, ListOption } from '../../../components/filter-list-small/filter-list.component'
 
 @Component({
     // selector: 'app-footer',
@@ -33,7 +34,8 @@ import { DownloadExcelDataComponent } from '../../../components/download-excel-c
         NzInputModule, 
         NzPaginationModule,
         NzDatePickerModule,
-        DownloadExcelDataComponent
+        DownloadExcelDataComponent,
+        FilterListApiSmall
     ],
     templateUrl: './invoice-list.component.html',
     styleUrl: './invoice-list.component.css',
@@ -167,5 +169,41 @@ export class InvoiceListComponent {
         const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
         this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
         this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
+    }
+    // Location data
+    placeTotal: number = 0
+    places: any = []
+    placeOptions: ListOption[] = [];
+    placeSearchForm: any = {
+        placeCode: '',
+        placeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadPlaceLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
+        
+            this.placeOptions = this.places.map((a: any) => ({
+                value: a._id,
+                label: `${a.placeCode}`,
+            }))
+    
+            return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
     }
 }

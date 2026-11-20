@@ -16,6 +16,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { UserStoreService } from '../../../../../state/user.service'
 import { debounceTime, Subscription, timer } from 'rxjs'
 import { findMenuItem } from '../../../tool-function'
+import { FilterListApiSmall, ListOption } from '../../../components/filter-list-small/filter-list.component'
 
 @Component({
     imports: [
@@ -28,7 +29,8 @@ import { findMenuItem } from '../../../tool-function'
             NzTableModule,
             MatIconModule,
             NzDatePickerModule,
-            NzCheckboxModule, 
+            NzCheckboxModule,
+            FilterListApiSmall 
         ],
         templateUrl: './return-invoice-form.component.html'
 })
@@ -52,8 +54,6 @@ export class ReturnInvoiceFormComponent implements OnInit {
                 }
          })
     }
-    
-
 
     ngOnDestroy() {
         if (this.userStoreService.menuRole$) {
@@ -67,9 +67,7 @@ export class ReturnInvoiceFormComponent implements OnInit {
         update: false
     }
 
-    ngOnInit(): void {
-        this.loadLocationList()
-    }
+    ngOnInit(): void {}
 
     returnInvoiceForm: UpdateReturnInvoiceDto = {
         returnInvoiceNo: '',
@@ -112,12 +110,6 @@ export class ReturnInvoiceFormComponent implements OnInit {
             const data = await getApiWithAuth(`/invoice/number/${event}`)
             this.invoiceDetail = data
         }
-    }
-
-    locationList: any[] = []
-    async loadLocationList() {
-        const data = await getApiWithAuth('/base/location/getAll')
-        this.locationList = data
     }
 
     searchInvoiceItem() {
@@ -169,7 +161,6 @@ export class ReturnInvoiceFormComponent implements OnInit {
         this.returnInvoiceForm.returnItems.splice(index, 1)
     }
 
-
     async submitForm() {
         const data = await postApiWithAuth('/return-invoice/create', this.returnInvoiceForm)
         if (data._id) {
@@ -196,6 +187,42 @@ export class ReturnInvoiceFormComponent implements OnInit {
             })
         } else {
             this.message.error(data.error)
+        }
+    }
+    // Location data
+    placeTotal: number = 0
+    places: any = []
+    placeOptions: ListOption[] = [];
+    placeSearchForm: any = {
+        placeCode: '',
+        placeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadPlaceLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
+        
+            this.placeOptions = this.places.map((a: any) => ({
+                value: a._id,
+                label: `${a.placeCode} - ${a.placeName}`,
+            }))
+    
+            return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
         }
     }
 }

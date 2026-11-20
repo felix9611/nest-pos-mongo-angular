@@ -85,11 +85,7 @@ export class LocationController {
     @Post('filter/list')
     @UseGuards(AuthGuard)
     async listWithFilter(@Body() req: ListLocationRequestDto, @Req() { user }: { user: JwtPayload }) {
-        if (user.superAdmin === true) {
-            return await this.locationService.listWithFilter(req)
-        } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
-        }
+        return await this.locationService.listWithFilter(req, user)
     }
 
     @ApiOperation({ summary: 'Batch Create' })

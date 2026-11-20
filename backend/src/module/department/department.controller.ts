@@ -76,11 +76,7 @@ export class DepartmentController {
     @Post('filter/list')
     @UseGuards(AuthGuard)
     async listWithFilters(@Body() req: ListDeptRequestDto, @Req() { user }: { user: JwtPayload }) {
-        if (user.superAdmin === true) {
-            return this.deptService.listWithFilters(req)
-        } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
-        }
+        return this.deptService.listWithFilters(req, user)
     }
     
     @ApiOperation({ summary: 'List and page' })

@@ -20,6 +20,7 @@ import { UploadDialogComponent } from '../../../components/upload-dialog-compone
 import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { DownloadExcelDataComponent } from '../../../components/download-excel-component/download-excel-data-component.component'
+import { FilterListApiSmall, ListOption } from '../../../components/filter-list-small/filter-list.component'
 
 @Component({
     // selector: 'app-footer',
@@ -38,7 +39,8 @@ import { DownloadExcelDataComponent } from '../../../components/download-excel-c
         NzDatePickerModule,
         DownloadExcelTemplateComponent,
         UploadDialogComponent,
-        DownloadExcelDataComponent
+        DownloadExcelDataComponent,
+        FilterListApiSmall
     ],
     templateUrl: './product-list.component.html',
     styleUrl: './product-list.component.css',
@@ -68,8 +70,7 @@ export class ProductListComponent {
 
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
-            if (data.superAdmin !== true) {
-                this.deptLists = data.departments
+            if (!(data.superAdmin || data.manager)) {
                 this.searchForm.deptIds = data.deptIds
             }
         })
@@ -88,7 +89,11 @@ export class ProductListComponent {
 
     searchForm: any = {
         page: 1,
-        limit: 10
+        limit: 10,
+        typeIds: [],
+        productCode: '',
+        productName: '',
+        deptIds: []
     }
 
     userRightInside: any = {
@@ -107,20 +112,6 @@ export class ProductListComponent {
 
     ngOnInit() {
         this.loadProductLists()
-        this.loadTypeList()
-        this.loadDeptList()
-    }
-
-    typeLists: any[] = []
-    async loadTypeList() {
-        this.typeLists = await getApiWithAuth('/product/product-type/getAll')
-    }
-
-    deptLists: any[] = []
-    async loadDeptList() {
-        if (this.superAdmin === true) {
-            this.deptLists = await getApiWithAuth('/sys/department/getAll')
-        }
     }
 
     async loadProductLists() {
@@ -205,5 +196,75 @@ export class ProductListComponent {
         const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
         this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
         this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
+    }
+//  Department data
+    departmentTotal: number = 0
+    departments: any = []
+    departmentOptions: ListOption[] = [];
+    departmentSearchForm: any = {
+        name: '',
+        page: 1,
+        limit: 10
+    }
+    loadDeptLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.departmentSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.departments = res ?? [];
+            this.departmentTotal = res.length ?? 0;
+        
+            this.departmentOptions = this.departments.map((a: any) => ({
+                value: a._id,
+                label: `${a.deptCode} - ${a.deptName}`,
+            }))
+    
+            return this.departmentOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+//  Product Type data
+    productTypeTotal: number = 0
+    productTypes: any = []
+    productTypeOptions: ListOption[] = [];
+    productTypeSearchForm: any = {
+        name: '',
+        page: 1,
+        limit: 10
+    }
+    loadTypeLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.productTypeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.productTypes = res ?? [];
+            this.productTypeTotal = res.length ?? 0;
+        
+            this.productTypeOptions = this.productTypes.map((a: any) => ({
+                value: a._id,
+                label: `${a.typeCode} - ${a.typeName}`,
+            }))
+    
+            return this.productTypeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
     }
 }

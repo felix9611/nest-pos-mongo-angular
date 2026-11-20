@@ -148,8 +148,8 @@ export class ReturnInvoiceService {
             {
                 $lookup: {
                     from: 'invoices', // Ensure correct collection name
-                    let: { invoiceNumberStr: '$invoiceNumber' }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$number', '$$invoiceNumberStr'] } } }],
+                    let: { invoiceNumber: '$invoiceNumber' }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$number', '$$invoiceNumber'] } } }],
                     as: 'invoice'
                 }
             },
@@ -202,14 +202,7 @@ export class ReturnInvoiceService {
         const total = await this.returnInvoiceModel.countDocuments(filter).exec()
         const lists = await this.returnInvoiceModel.aggregate([
             { $match: filter },
-            {
-                $lookup: {
-                    from: 'invoices', // Ensure correct collection name
-                    let: { invoiceNumberStr: '$invoiceNumber' }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$number', '$$invoiceNumberStr'] } } }],
-                    as: 'invoice'
-                }
-            },
+            {"$lookup":{"from":"invoices","let":{"invoiceNumberStr":"$invoiceNumber"},"pipeline":[{"$match":{"$expr":{"$eq":["$number","$$invoiceNumberStr"]}}}],"as":"invoice"}},
             {
                 $lookup: {
                     from: 'locations', // Ensure correct collection name

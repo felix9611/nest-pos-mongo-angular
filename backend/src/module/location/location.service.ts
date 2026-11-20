@@ -4,6 +4,7 @@ import { Location } from './location.schame'
 import { Model } from 'mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { CreateLocationDto, ListLocationRequestDto, UpdateLocationDto } from './location.dto'
+import { JwtPayload } from '../auth/auth.dto'
 
 @Injectable()
 export class LocationService {
@@ -159,7 +160,7 @@ export class LocationService {
         }
     }
 
-    async listWithFilter(request: ListLocationRequestDto) {
+    async listWithFilter(request: ListLocationRequestDto, user: JwtPayload) {
         const { name, place, contact } = request
 
         const filters = {
@@ -198,6 +199,11 @@ export class LocationService {
                         fax: { $regex: contact, $options: 'i' }
                     }
                 ]
+            } : {},
+
+
+            ...(!(user.manager || user.superAdmin)) ? {
+                _id: { $in: user.placeIds }
             } : {},
             status: 1
         }
