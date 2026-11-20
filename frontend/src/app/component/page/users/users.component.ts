@@ -61,6 +61,7 @@ export class UsersComponent {
 
         this.userSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
+            this.manager = data.manager
         })
     }
 
@@ -74,6 +75,7 @@ export class UsersComponent {
     }
 
     superAdmin: boolean = false
+    manager: boolean = false
 
     placeLists: any[] = []
     async loadLocationList() {
