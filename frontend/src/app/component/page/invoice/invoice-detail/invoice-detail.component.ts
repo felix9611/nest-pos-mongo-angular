@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
-import { getApiWithAuth } from '../../../../../tool/httpRequest-auth'
+import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { NzFormModule } from 'ng-zorro-antd/form'
@@ -14,6 +14,7 @@ import moment from 'moment'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { Subscription } from 'rxjs'
 import { UserStoreService } from '../../../../../state/user.service'
+import { FilterListApiSmall, ListOption } from '../../../components/filter-list-small/filter-list.component'
 
 
 @Component({
@@ -26,7 +27,8 @@ import { UserStoreService } from '../../../../../state/user.service'
         NzInputNumberModule,
         NzTableModule,
         MatIconModule,
-        NzDatePickerModule
+        NzDatePickerModule,
+        FilterListApiSmall
     ],
     templateUrl: './invoice-detail.component.html'
 })
@@ -40,9 +42,6 @@ export class InvoiceDetailComponent implements OnInit {
     ) {
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
-            if (data.superAdmin !== true) {
-                this.locationList = data.locations
-            }
         })
     }
 
@@ -53,7 +52,6 @@ export class InvoiceDetailComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loadLocationList()
         this.route.queryParams.subscribe((x: any) => {
             if (x.id) {
                 this.getDetail(x.id)
@@ -73,14 +71,6 @@ export class InvoiceDetailComponent implements OnInit {
         }
     }
 
-    locationList: any[] = []
-    async loadLocationList() {
-        if (this.superAdmin === true) {
-            const data = await getApiWithAuth('/base/location/getAll')
-            this.locationList = data
-        }
-    }
-
     invoiceDetail: any = {}
     
     dateFormat(data: string) {
@@ -89,5 +79,41 @@ export class InvoiceDetailComponent implements OnInit {
 
     goBackList() {
         this.routeTo.navigate(['invoice-list'])
+    }
+    // Location data
+    placeTotal: number = 0
+    places: any = []
+    placeOptions: ListOption[] = [];
+    placeSearchForm: any = {
+        placeCode: '',
+        placeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadPlaceLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
+        
+            this.placeOptions = this.places.map((a: any) => ({
+                value: a._id,
+                label: `${a.placeCode} - ${a.placeName}`,
+            }))
+    
+            return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
     }
 }

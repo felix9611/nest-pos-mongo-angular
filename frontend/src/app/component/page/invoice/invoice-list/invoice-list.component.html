@@ -11,21 +11,20 @@
                     [(ngModel)]="searchForm.dateRange"
                 ></nz-range-picker>
             </div>
-            <div class="w-[150px]">
+            <div class="w-[200px]">
                 <input class="h-full" nz-input type="text" name="number" placeholder="Invoice No." [(ngModel)]="searchForm.number" />
             </div>
-            <div class="w-[130px] h-full">
-                <nz-select
-                    nzSize="large"
-                    class="w-full h-full" 
-                    name="placeId" 
-                    [(ngModel)]="searchForm.locationIds"  
-                    nzMode="multiple" nzAllowClear   nzShowArrow
-                     nzPlaceHolder="Location">
-                    @for (option of placeLists; track option) {
-                      <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
-                    }
-                </nz-select>
+            <div class="w-[300px] h-full">
+                <app-filter-list-small
+                    label="Location"
+                    [apiUrl]="'/base/location/filter/list'"
+                    [requestBody]="placeSearchForm"
+                    [postApi]="loadPlaceLists"
+                    [multiple]="true"
+                    [searchDataKey]="['placeCode', 'placeName']"
+                    [(value)]="searchForm.locationIds"
+                    (valueChange)="searchForm.locationIds"
+                />
             </div>
             
             <div (click)="loadInvoiceLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
