@@ -15,6 +15,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { Subscription, timer } from 'rxjs'
 import { Router } from '@angular/router'
 import { UserStoreService } from '../../../../state/user.service'
+import { FilterListApiSmall, ListOption } from '../../components/filter-list-small/filter-list.component'
 
 @Component({
     templateUrl: './sale-point.component.html',
@@ -28,7 +29,8 @@ import { UserStoreService } from '../../../../state/user.service'
         NzTableModule,
         NzButtonModule,
         MatButtonModule, 
-        NzModalModule
+        NzModalModule,
+        FilterListApiSmall
     ]
 })
 export class SalePointComponent implements OnInit {
@@ -40,11 +42,9 @@ export class SalePointComponent implements OnInit {
     ) {
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
-            if (data.superAdmin !== true) {
-                this.locationList = data.locations
-                if (this.locationList.length === 1) {
-                    this.invoiceForm.locationId = this.locationList[0]._id
-                    this.invoiceForm.locationCode = this.locationList[0].code
+            if (!(data.superAdmin || data.manager)) {
+                if (data.locations && data.locations.length === 1) {
+                    this.invoiceForm.locationId = data.locations[0]._id
                 }
             }
         })
@@ -57,22 +57,11 @@ export class SalePointComponent implements OnInit {
     }
 
     ngOnInit(): void { 
-        this.loadLocationList()
         this.orgTotal = 0
         this.orgTotalAfterTax = 0
     }
 
     superAdmin: boolean = false
-
-    locationList: any[] = []
-    async loadLocationList() {
-        if (this.superAdmin === true) {
-            const data = await getApiWithAuth('/base/location/getAll')
-            this.locationList = data
-        }
-        this.inputedProductList = []
-        this.inputedPaymentList = []
-    }
 
     invoiceForm: CreateInvoiceForm = {
         memberId: '',
@@ -157,7 +146,7 @@ export class SalePointComponent implements OnInit {
             }
             
             this.taxInfoFilter.taxType = data.taxType
-            if (this.locationList.length === 1) {
+            if (this.places.length === 1) {
                 this.taxInfoFilter.countryCode = this.invoiceForm.locationCode
                 this.findTaxInfoForSalePoint()
             }
@@ -166,7 +155,7 @@ export class SalePointComponent implements OnInit {
 
     locationIdChanged(event: any) {
         if (event)  {
-            const data = this.locationList.find((item: any) => item._id === event)
+            const data = this.places.find((item: any) => item._id === event)
             this.taxInfoFilter.countryCode = data.country
             this.findTaxInfoForSalePoint()
         }
@@ -336,5 +325,41 @@ export class SalePointComponent implements OnInit {
         this.enterProductForm.taxRateDisplay = res.taxRate * 100
         this.enterProductForm.taxCode = res.taxCode
         this.enterProductForm.taxType = res.taxType
+    }
+    // Location data
+    placeTotal: number = 0
+    places: any = []
+    placeOptions: ListOption[] = [];
+    placeSearchForm: any = {
+        placeCode: '',
+        placeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadPlaceLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
+        
+            this.placeOptions = this.places.map((a: any) => ({
+                value: a._id,
+                label: `${a.placeCode} - ${a.placeName}`,
+            }))
+    
+            return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
     }
 }
