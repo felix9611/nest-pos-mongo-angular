@@ -4,6 +4,7 @@ import { Department } from './department.schame'
 import { Model } from 'mongoose'
 import { CreateDeptDto, ListDeptRequestDto, UpdateDeptDto } from './department.dto';
 import { ActionRecordService } from '../action-record/actionRecord.service';
+import { JwtPayload } from '../auth/auth.dto';
 
 @Injectable()
 export class DepartmentService {
@@ -160,7 +161,7 @@ export class DepartmentService {
         }
     }
 
-    async listWithFilters(request: ListDeptRequestDto) {
+    async listWithFilters(request: ListDeptRequestDto, user: JwtPayload) {
         const { name } = request
 
         const filters = {
@@ -173,6 +174,9 @@ export class DepartmentService {
                             deptCode: { $regex: name, $options: 'i' }
                         }
                     ],
+                } : {},
+                ...(!(user?.superAdmin || user.manager)) ? {
+                    _id: { $in: user.departmentIds }
                 } : {},
                 status: 1
         }
