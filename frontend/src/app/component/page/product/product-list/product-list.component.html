@@ -8,7 +8,7 @@
                 <input class="h-full" nz-input type="text" name="name" placeholder="Product Name" [(ngModel)]="searchForm.name" />
             </div>
             
-            <div class="w-[150px] h-full">
+            <div class="lg:w-[200px] h-full">
                 <app-filter-list-small
                     label="Product Type"
                     [apiUrl]="'/product/product-type/filter/list'"
@@ -20,7 +20,7 @@
                     (valueChange)="searchForm.typeIds"
                 />
             </div>
-            <div class="w-[150px] h-full">
+            <div class="lg:w-[200px] h-full">
                 <app-filter-list-small
                     label="Department"
                     [apiUrl]="'/sys/department/filter/list'"
