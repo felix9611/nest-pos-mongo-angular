@@ -3,10 +3,10 @@ export interface UserForm {
     username: string
     password?: string
     avatarBase64?: string
-    deptIds?: string[]
+    deptIds: string[]
     email: string
-    roles?: number[]
-    placeIds?: string[]
-    superAdmin?: boolean
-    manager?: boolean
+    roles: string[]
+    placeIds: string[]
+    superAdmin: boolean
+    manager: boolean
 }
