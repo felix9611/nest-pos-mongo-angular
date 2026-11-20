@@ -85,11 +85,7 @@ export class ProductTypeController {
     @Post('filter/list')
     @UseGuards(AuthGuard)
     async listWithFilters(@Body() req: ListproductTypeModelRequestDto, @Req() { user }: { user: JwtPayload }) {
-        if (user.superAdmin === true) {
-            return this.productTypeService.listWithFilters(req)
-        } else {
-            throw new HttpException({error: 'Access denied'}, HttpStatus.FORBIDDEN)
-        }
+        return this.productTypeService.listWithFilters(req)
     }
 
     @ApiOperation({ summary: 'Import List of Asset Type' })
