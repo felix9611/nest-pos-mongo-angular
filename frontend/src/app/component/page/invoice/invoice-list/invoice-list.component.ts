@@ -65,8 +65,7 @@ export class InvoiceListComponent {
 
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
-            if (data.superAdmin !== true) {
-                this.placeLists = data.locations
+            if (!(data.superAdmin || data.manager)) {
                 this.searchForm.locationIds = data.placeIds
             }
         })
