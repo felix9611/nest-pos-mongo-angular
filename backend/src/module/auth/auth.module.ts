@@ -1,10 +1,12 @@
+
 import { Module } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
-import { SysUserMoudule }from '../sys-user/sysUser.module'
-import { ApiKeyMoudule } from '../apikey/apikey.module'
+import {  SysUserMoudule }from '../sys-user/sysUser.module'
 import { JwtModule } from '@nestjs/jwt'
+import { jwtConstants } from './constants'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ApiKeyMoudule } from '../apikey/apikey.module'
 
 @Module({
   imports: [

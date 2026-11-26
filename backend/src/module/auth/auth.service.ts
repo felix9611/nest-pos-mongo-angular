@@ -2,59 +2,71 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { SysUserService } from '../sys-user/sysUser.service'
 import { JwtService } from '@nestjs/jwt'
 import { hashPassword, salt } from '../../tool/password-tools'
-import { jwtConstants } from './constants'
-import { ApiKeyLoginBody, JwtPayload } from './auth.dto'
+import { ApiKeyLoginBody, InvalidApiAddress } from './auth.dto'
 import { env } from 'process'
+import { isIP } from 'net'
 import { ApiKeyService } from '../apikey/apikey.service'
 
 @Injectable()
 export class AuthService {
     constructor(
-        private usersService: SysUserService,
-        private apiKeyService: ApiKeyService,
-        private jwtService: JwtService
+      private usersService: SysUserService,
+      private apiKeyService: ApiKeyService,
+      private jwtService: JwtService
     ) {}
 
   async signIn(
     username: string,
     password: string,
-    ipAddress: string
+    ipAddress: string,
+    ray: string
   ): Promise<any> {
-    const user = await this.usersService.findOneUserAllData(username)
+    const ip = typeof ipAddress === 'string' ? ipAddress.trim() : ''
 
-    if (!user) {
+    if (!ip || !isIP(ip) || InvalidApiAddress.includes(ip)) {
+      await this.usersService.saveLoginRecord(username, ipAddress, 'Failed', ray)
       return {
-        error: 'Username not found'
-      }
-    }
-
-    const passwordString = hashPassword(password, salt)
-
-    if (user?.password !== passwordString) {
-
-      await this.usersService.saveLoginRecord(username, ipAddress, 'Failed')
-
-      return {
-        msg: 'Password not match!'
+        msg: 'Not Allow to login!'
       }
     } else {
-      const payload = { 
-        sub: user._id, 
-        username: user.username, 
-        departmentIds: user.deptIds, 
-        placeIds: user.placeIds, 
-        roles: user.roles, 
-        superAdmin: user.superAdmin, 
-        manager: user.manager 
+        const user = await this.usersService.findOneUserAllData(username)
+
+      if (!user) {
+        return {
+          msg: 'Username not found'
+        }
       }
-      await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
-      return {
-        accessToken: await this.jwtService.signAsync(payload, {
-          secret: env.JWT_SECRET,
-          issuer: env.JWT_ISSUER
-        })
+
+      const passwordString = hashPassword(password, salt)
+
+      if (user?.password !== passwordString) {
+
+        await this.usersService.saveLoginRecord(username, ipAddress, 'Failed', ray)
+
+        return {
+          msg: 'Password not match!'
+        }
+      } else {
+        const payload = { 
+          sub: user._id, 
+          username: user.username, 
+          departmentIds: user.deptIds, 
+          placeIds: user.placeIds, 
+          deptIds: user.deptIds,
+          roles: user.roles, 
+          superAdmin: user.superAdmin, 
+          manager: user.manager 
+        }
+        await this.usersService.saveLoginRecord(username, ipAddress, 'Success', ray)
+        return {
+          accessToken: await this.jwtService.signAsync(payload, {
+            secret: env.JWT_SECRET,
+            issuer: env.JWT_ISSUER
+          })
+        }
       }
-    }
+      }
+    
     
   }
 
@@ -67,27 +79,15 @@ export class AuthService {
           issuer: env.JWT_ISSUER
         })
 
-        if (decoded?.source) {
-          const data = await this.apiKeyService.getKeyData(decoded?.source)
+        const user = await this.usersService.findOneUserAllData(decoded.username)
 
-          if (!data) {
-            throw new UnauthorizedException('Invalid access')
-          } else {
-            return {
-              status: true
-            }
-          }
+        if (!user) {
+          throw new UnauthorizedException('Invalid access')
         } else {
-          const user = await this.usersService.findOneUserAllData(decoded.username)
-
-          if (!user) {
-            throw new UnauthorizedException('Invalid access')
-          } else {
-            return {
-              status: true
-            }
+          return {
+            status: true
           }
-        }    
+        }
       } catch (error) {
         throw new UnauthorizedException('Invalid or expired token')
       }
@@ -126,7 +126,5 @@ export class AuthService {
         })
       }
     }
-
-    
   }
 }

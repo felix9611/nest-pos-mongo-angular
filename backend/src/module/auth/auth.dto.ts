@@ -8,9 +8,6 @@ export class LoginBody {
 
     @ApiProperty({ description: 'Password' })
     password!: string
-
-    @ApiProperty({ description: 'IP Address' })
-    ipAddress!: string
 }
 
 export class TokenBody {
@@ -61,14 +58,6 @@ export class UserDetailDto {
     roleLists?: SysRoleBody[]
 }
 
-export class ApiKeyLoginBody {
-    @ApiProperty({ description: 'Source' })
-    source!: string
-
-    @ApiProperty({ description: 'Answer' })
-    answer!: string
-}
-
 export interface JwtPayload {
   sub: string
   username: string
@@ -77,4 +66,22 @@ export interface JwtPayload {
   roles: string[]
   superAdmin: boolean
   manager: boolean
+  deptIds: string[]
 }
+
+export class ApiKeyLoginBody {
+    @ApiProperty({ description: 'Source' })
+    source!: string
+
+    @ApiProperty({ description: 'Answer' })
+    answer!: string
+}
+
+export const InvalidApiAddress = [
+  '0.0.0.0',
+  '127.0.0.1',
+  '1.1.1.1',
+  '1.2.3.4',
+  '::1',
+  '::'
+]
