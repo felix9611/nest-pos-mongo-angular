@@ -301,12 +301,13 @@ export class SysUserService {
     }
   }
 
-  async saveLoginRecord(username: string, ipAddress: string, loginStatus: string) {
+  async saveLoginRecord(username: string, ipAddress: string, loginStatus: string, ray: any) {
     const finalData = {
       username,
       loginTime: new Date(),
       ipAddress,
-      loginStatus
+      loginStatus,
+      ray
     }
 
     const create = new this.loginRecordModel(finalData)
