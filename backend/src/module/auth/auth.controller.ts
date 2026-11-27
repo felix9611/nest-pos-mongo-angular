@@ -17,6 +17,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Login successful', type: TokenBody })
   @ApiResponse({ status: 201, description: 'If Login unsuccessful', type: ReturnMsg })
   @Public()
+  @HttpCode(HttpStatus.OK)
   @Post('login')
   async signIn(@Body() signInDto: { username: string, password: string, ipAddress: string}, @Req() req: any) {
     const ipAddress =  process.env.PROD === 'YES' ? req.headers['cf-connecting-ip'] : signInDto.ipAddress
