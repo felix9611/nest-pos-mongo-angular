@@ -24,7 +24,7 @@ export class AuthService {
     const ip = typeof ipAddress === 'string'? ipAddress.trim(): ''
 
     // Validate IP address and Ray ID
-    if (!ip || !isIP(ip) || InvalidApiAddress.includes(ip) || !ray?.trim()) {
+    if (!ip || !isIP(ip) || InvalidApiAddress.includes(ip) || (process.env.PROD === 'YES' ? !ray?.trim() : ray)) {
       await this.usersService.saveLoginRecord(username, ip, 'Failed', ray)
 
       throw new UnauthorizedException(
